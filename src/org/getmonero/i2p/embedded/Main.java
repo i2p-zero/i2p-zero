@@ -13,6 +13,8 @@ public class Main {
 
   public static void main(String[] args) {
 
+    System.out.println("I2P router launched.");
+
     Properties p = new Properties();
     // add your configuration settings, directories, etc.
     // where to find the I2P installation files
