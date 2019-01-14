@@ -41,6 +41,7 @@ files in the current user's home directory if it does not already exist.
 `target/router/bin/router`
 
 If it launches successfully, you'll see the message:
+
 `I2P router launched. SAM listening on port 7656. Press Ctrl-C to terminate.`
 
 ## Check that the I2P router is running and that it is listening for SAM connections
