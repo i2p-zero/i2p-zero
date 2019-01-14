@@ -18,3 +18,4 @@ echo "*** Performing jlink"
 jlink --module-path target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --launcher router=org.getmonero.i2p.embedded --output target/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 echo "*** Done ***"
+echo "To run, type: target/router/bin/router"
