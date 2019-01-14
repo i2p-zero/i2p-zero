@@ -3,7 +3,7 @@
 basedir=`dirname $0`/..
 
 # convert the jar files from an existing I2P built into modules suitable for use with jlink
-basedir/bin/convert-jars-to-modules.sh
+$basedir/bin/convert-jars-to-modules.sh
 
 # compile the Main class that starts the I2P router and SAM listener
 javac --module-path lib -d target/classes $(find src -name '*.java')

@@ -16,7 +16,10 @@ sudo apt-get install i2p
 
 Then copy the following 5 JAR files from the I2P installation to the import/lib directory in your clone of this GitHub project:
 
-`for i in i2p.jar mstreaming.jar router.jar sam.jar streaming.jar; do cp /usr/share/i2p/lib/$i import/lib/; done`
+```
+mkdir -p import/lib
+for i in i2p.jar mstreaming.jar router.jar sam.jar streaming.jar; do cp /usr/share/i2p/lib/$i import/lib/; done
+```
 
 You will need OpenJDK 11 installed:
 
