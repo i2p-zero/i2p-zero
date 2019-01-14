@@ -5,5 +5,5 @@ module org.getmonero.i2p.embedded {
   requires router;
   requires sam;
   requires libintl;
-  requires gnu.getopt;
+  requires gnugetopt;
 }
