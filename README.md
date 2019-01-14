@@ -19,6 +19,7 @@ Then copy the following 56 JAR files from the I2P installation to the import/lib
 ```
 mkdir -p import/lib
 for i in i2p.jar mstreaming.jar router.jar sam.jar streaming.jar gnu-getopt.jar libintl.jar; do cp /usr/share/i2p/lib/$i import/lib/; done
+mv import/lib/gnu-getopt.jar import/lib/gnugetopt.jar
 ```
 
 You will need OpenJDK 11 installed:
