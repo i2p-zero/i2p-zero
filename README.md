@@ -14,7 +14,7 @@ sudo apt-get update
 sudo apt-get install i2p
 ```
 
-Then copy the following 56 JAR files from the I2P installation to the import/lib directory in your clone of this GitHub project:
+Then copy the following 6 JAR files from the I2P installation to the import/lib directory in your clone of this GitHub project:
 
 ```
 mkdir -p import/lib
