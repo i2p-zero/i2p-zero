@@ -13,7 +13,7 @@ public class Main {
 
   public static void main(String[] args) {
 
-    System.out.println("I2P router launched.");
+    System.out.println("I2P router launched. SAM listening on port 7656. Press Ctrl-C to terminate.");
 
     Properties p = new Properties();
     // add your configuration settings, directories, etc.
