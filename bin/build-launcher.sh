@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basedir=`dirname $0`/..
+basedir=$(dirname $(dirname $(readlink -fm $0)))
 
 # convert the jar files from an existing I2P built into modules suitable for use with jlink
 $basedir/bin/convert-jars-to-modules.sh

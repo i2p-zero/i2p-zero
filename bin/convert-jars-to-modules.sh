@@ -1,6 +1,6 @@
 #!/bin/bash
 
-basedir=`dirname $0`/..
+basedir=$(dirname $(dirname $(readlink -fm $0)))
 
 jarPaths=`find $basedir/import/lib -name '*.jar'`
 
