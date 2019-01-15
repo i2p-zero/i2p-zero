@@ -39,7 +39,7 @@ public class Main {
     }
 
     System.out.println("Options set: "
-        + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining( " " )));
+        + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
     Router r = new Router(p);
 
