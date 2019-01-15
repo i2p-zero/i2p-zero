@@ -38,6 +38,8 @@ to build a platform-specific launcher executable.
 The launcher will need access to the /usr/share/i2p base directory. It will create a .i2p directory for configuration
 files in the current user's home directory if it does not already exist.
 
+To run the router, type:
+
 `target/router/bin/router`
 
 If it launches successfully, you'll see the message:
