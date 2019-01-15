@@ -21,6 +21,7 @@ public class Main {
     p.put("i2p.dir.base", "/usr/share/i2p");
     // where to find the I2P data files
     p.put("i2p.dir.config", System.getProperty("user.home") + File.separator + ".i2p");
+
     // bandwidth limits in K bytes per second
     p.put("i2np.inboundKBytesPerSecond","50");
     p.put("i2np.outboundKBytesPerSecond","50");
@@ -32,7 +33,7 @@ public class Main {
       @Override
       public void run() {
         // don't call exit() when the router stops
-        r.setKillVMOnEnd(false);
+        r.setKillVMOnEnd(true);
         r.runRouter();
       }
     }.start();
@@ -41,6 +42,17 @@ public class Main {
       @Override
       public void run() {
         try {
+
+          while(true) {
+            if(r.isAlive()) {
+              break;
+            }
+            else {
+              Thread.sleep(1000);
+              System.out.println("Waiting for I2P router to start...");
+            }
+          }
+
           String[] args = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
           I2PAppContext context = r.getContext();
           ClientAppManager mgr = new ClientAppManagerImpl(context);
