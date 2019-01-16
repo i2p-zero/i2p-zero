@@ -4,6 +4,16 @@
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
 
+## Footprint
+
+The zero-dependency distribution sizes are as follows:
+
+OS | Uncompressed size (MB) | xz Compressed size (MB)
+------------ | ------------- | -------------
+Linux | 41.6 | 22.5
+MacOS | 29.5 | 17.5
+Windows | 33.6 | 20.1
+
 ## Building the launchers
 
 From a freshly installed Ubuntu system, first ensure git is installed:
