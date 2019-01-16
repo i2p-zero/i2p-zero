@@ -25,7 +25,7 @@ the jlink tool to build a zero-dependency platform-specific launcher.
 
 To run the router, type:
 
-`target/router/bin/launch.sh`
+`dist/router/bin/launch.sh`
 
 If it launches successfully, you'll see the message:
 
