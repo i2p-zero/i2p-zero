@@ -7,7 +7,7 @@ source $basedir/bin/java-config.sh
 mkdir -p $basedir/import
 cd $basedir/import
 
-if [ ! -d ""$basedir/i2p.i2p" ]; then
+if [ ! -d "$basedir/i2p.i2p" ]; then
   git clone https://github.com/i2p/i2p.i2p.git
 fi
 
@@ -25,7 +25,7 @@ if [ ! -d ""$basedir/jdks" ]; then
   unzip jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
 fi
 
-if [ ! -d ""$basedir/apache-ant-1.10.5" ]; then
+if [ ! -d "k$basedir/apache-ant-1.10.5" ]; then
   wget https://www-us.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
   tar zxvf apache-ant-1.10.5-bin.tar.gz
 fi
