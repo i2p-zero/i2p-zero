@@ -1,3 +1,5 @@
+![(https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png  =336x124)
+
 # I2P-zero: Zero dependency, small footprint, cross-platform I2P Java Router with SAM interface
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
