@@ -1,12 +1,16 @@
-# Embedded I2P Java Router with SAM interface
+# I2P-zero: Zero dependency, small footprint, cross-platform I2P Java Router with SAM interface
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
 
 ## Building the launchers
 
-First, retrieve this project from git:
+From a freshly installed Ubuntu system, first ensure git is installed:
 
-`git clone https://github.com/knaccc/embedded-i2p-java-router-with-sam.git`
+`sudo apt install git`
+
+Then, retrieve this project from git:
+
+`git clone https://github.com/knaccc/i2p-zero.git`
 
 Note that the current version of this script uses jdk-11.0.2. If this version of Java becomes no longer available for
 download, then update the references to jdk-11.0.2 in this folder structure to the later version. To locate a recent
