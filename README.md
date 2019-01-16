@@ -37,7 +37,7 @@ Run the `bin/build-all.sh` script, which will in turn call the following scripts
 2. `bin/build-original-i2p.sh` to build the I2P project retrieved from the I2P repository
 
 3. `build-launcher.sh` to convert the I2P JARs to modules, compile the Java source code in this project, and then use
-the jlink tool to build a zero-dependency platform-specific launchers.
+the jlink tool to build zero-dependency platform-specific launchers.
 
 ## Running the launchers
 
