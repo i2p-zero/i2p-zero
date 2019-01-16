@@ -13,7 +13,7 @@ fi
 
 git checkout tags/i2p-0.9.37
 
-if [ ! -d $basedir/jdks" ]; then
+if [ ! -d "$basedir/jdks" ]; then
   mkdir -p jdks
   mkdir -p jdks/linux jdks/mac jdks/win
   wget --directory-prefix=jdks/linux $JDK_DOWNLOAD_URL_LINUX
