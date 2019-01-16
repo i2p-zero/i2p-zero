@@ -2,7 +2,7 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
-export JAVA_HOME=`realpath $basedir/import/jdk-11.0.2`
+export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
 
 jarPaths=`find $basedir/import/lib -name '*.jar'`
 

@@ -4,7 +4,7 @@ basedir=$(dirname $(dirname $(readlink -fm $0)))
 
 cd $basedir/import
 
-export JAVA_HOME=`realpath $basedir/import/jdk-11.0.2`
+export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
 
 
 # build the jars we're going to modularize

@@ -1,8 +1,8 @@
 # Embedded I2P Java Router with SAM interface
 
-This project will build a native launcher. The launcher will include the I2P router, a SAM listener and a minimal JVM.
+This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
 
-## Building the launcher
+## Building the launchers
 
 First, retrieve this project from git:
 
@@ -12,6 +12,8 @@ Note that the current version of this script uses jdk-11.0.2. If this version of
 download, then update the references to jdk-11.0.2 in this folder structure to the later version. To locate a recent
 JDK download URL, see https://jdk.java.net/11/
 
+Also note that JDKs for Linux, MacOS and Windows will be downloaded, which will total several hundred megabytes.
+
 Run the `bin/build-all.sh` script, which will in turn call the following scripts:
 
 1. `bin/import-packages.sh` to retrieve the I2P Java sources, OpenJDK and the Ant build tool
@@ -19,13 +21,17 @@ Run the `bin/build-all.sh` script, which will in turn call the following scripts
 2. `bin/build-original-i2p.sh` to build the I2P project retrieved from the I2P repository
 
 3. `build-launcher.sh` to convert the I2P JARs to modules, compile the Java source code in this project, and then use
-the jlink tool to build a zero-dependency platform-specific launcher.
+the jlink tool to build a zero-dependency platform-specific launchers.
 
-## Running the launcher
+## Running the launchers
 
-To run the router, type:
+To run the Linux or MacOS router, type:
 
-`dist/router/bin/launch.sh`
+`dist/linux/router/bin/launch.sh`
+
+For Windows, run:
+
+`dist/windows/router/bin/launch.bat`
 
 If it launches successfully, you'll see the message:
 
