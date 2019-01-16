@@ -11,7 +11,9 @@ if [ ! -d "$basedir/import/i2p.i2p" ]; then
   git clone https://github.com/i2p/i2p.i2p.git
 fi
 
+cd $basedir/import/i2p.i2p
 git checkout tags/i2p-0.9.37
+cd ..
 
 if [ ! -d "$basedir/import/jdks" ]; then
   mkdir -p jdks
