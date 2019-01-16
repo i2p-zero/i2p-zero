@@ -25,7 +25,7 @@ Then, retrieve this project from git:
 `git clone https://github.com/knaccc/i2p-zero.git`
 
 Note that the current version of this script uses jdk-11.0.2. If this version of Java becomes no longer available for
-download, then update the references to jdk-11.0.2 in this folder structure to the later version. To locate a recent
+download, then update the references to jdk-11.0.2 in java-config.sh to the later version. To locate a recent
 JDK download URL, see https://jdk.java.net/11/
 
 Also note that JDKs for Linux, MacOS and Windows will be downloaded, which will total several hundred megabytes.

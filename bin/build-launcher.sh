@@ -2,13 +2,6 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
-OS=`uname -s`
-if [ $OS = "Darwin" ]; then
-    export JAVA_HOME=`realpath $basedir/import/jdks/mac/jdk-11.0.2.jdk/Contents/Home`
-else
-    export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
-fi
-
 # convert the jar files from an existing I2P build into modules suitable for use with jlink
 $basedir/bin/convert-jars-to-modules.sh
 
@@ -24,13 +17,13 @@ mkdir -p $basedir/dist/linux $basedir/dist/mac $basedir/dist/win
 
 # create OS specific launchers which will bundle together the code and a minimal JVM
 echo "*** Performing jlink (Linux)"
-$JAVA_HOME/bin/jlink --module-path $JAVA_HOME/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --launcher router=org.getmonero.i2p.embedded --output dist/linux/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/linux/jdk-${JDK_VERSION}/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --output dist/linux/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 echo "*** Performing jlink (Mac)"
-$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/mac/jdk-11.0.2.jdk/Contents/Home/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --launcher router=org.getmonero.i2p.embedded --output dist/mac/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/mac/jdk-${JDK_VERSION}.jdk/Contents/Home/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --output dist/mac/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 echo "*** Performing jlink (Windows)"
-$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/win/jdk-11.0.2/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --launcher router=org.getmonero.i2p.embedded --output dist/win/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/win/jdk-${JDK_VERSION}/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --output dist/win/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 
 cp $basedir/resources/launch.sh $basedir/dist/linux/router/bin/
@@ -51,6 +44,8 @@ zip -d $basedir/dist/mac/router/i2p.base/jbigi.jar *-freebsd-*
 zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-osx-*
 zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-linux-*
 zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-freebsd-*
+
+du -sh $basedir/dist/*
 
 echo "*** Done ***"
 echo "To run, type: dist/linux/router/bin/launch.sh"
