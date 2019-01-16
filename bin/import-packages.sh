@@ -25,7 +25,7 @@ if [ ! -d ""$basedir/jdks" ]; then
   unzip jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
 fi
 
-if [ ! -d "k$basedir/apache-ant-1.10.5" ]; then
+if [ ! -d "$basedir/apache-ant-1.10.5" ]; then
   wget https://www-us.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
   tar zxvf apache-ant-1.10.5-bin.tar.gz
 fi
