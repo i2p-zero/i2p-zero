@@ -25,9 +25,13 @@ the jlink tool to build a zero-dependency platform-specific launchers.
 
 ## Running the launchers
 
-To run the Linux or MacOS router, type:
+To run the Linux router, type:
 
 `dist/linux/router/bin/launch.sh`
+
+To run the MacOS router, type:
+
+`dist/mac/router/bin/launch.sh`
 
 For Windows, run:
 
