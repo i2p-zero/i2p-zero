@@ -1,4 +1,4 @@
-![(https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png  =336x124)
+![](https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png  =336x124)
 
 # I2P-zero: Zero dependency, small footprint, cross-platform I2P Java Router with SAM interface
 
