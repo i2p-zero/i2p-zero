@@ -2,3 +2,5 @@ out/
 target/
 .idea/
 *.swp
+dist/
+import/

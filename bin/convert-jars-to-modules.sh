@@ -2,7 +2,12 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
-export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
+OS=`uname -s`
+if [ $OS = "Darwin" ]; then
+    export JAVA_HOME=`realpath $basedir/import/jdks/mac/jdk-11.0.2.jdk/Contents/Home`
+else
+    export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
+fi
 
 jarPaths=`find $basedir/import/lib -name '*.jar'`
 
