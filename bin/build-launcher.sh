@@ -2,7 +2,12 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
-export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
+OS=`uname -s`
+if [ $OS = "Darwin" ]; then
+    export JAVA_HOME=`realpath $basedir/import/jdks/mac/jdk-11.0.2.jdk/Contents/Home`
+else
+    export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-11.0.2`
+fi
 
 # convert the jar files from an existing I2P build into modules suitable for use with jlink
 $basedir/bin/convert-jars-to-modules.sh
