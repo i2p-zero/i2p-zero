@@ -4,7 +4,5 @@ module org.getmonero.i2p.embedded {
   requires streaming;
   requires router;
   requires sam;
-  requires libintl;
-  requires gnugetopt;
   requires jdk.crypto.ec;
 }
