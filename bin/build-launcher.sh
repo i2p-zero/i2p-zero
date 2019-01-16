@@ -2,6 +2,8 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
+source $basedir/bin/java-config.sh
+
 # convert the jar files from an existing I2P build into modules suitable for use with jlink
 $basedir/bin/convert-jars-to-modules.sh
 
