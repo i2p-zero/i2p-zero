@@ -6,4 +6,5 @@ module org.getmonero.i2p.embedded {
   requires sam;
   requires libintl;
   requires gnugetopt;
+  requires jdk.crypto.ec;
 }
