@@ -13,6 +13,7 @@ $JAVA_HOME/bin/javac --module-path import/lib -d target/classes $(find src -name
 echo "*** Packaging as a modular jar"
 $JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.embedded.jar --main-class org.getmonero.i2p.embedded.Main -C target/classes .
 
+rm -fr $basedir/dist
 mkdir -p $basedir/dist/linux $basedir/dist/mac $basedir/dist/win
 
 # create OS specific launchers which will bundle together the code and a minimal JVM
