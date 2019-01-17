@@ -36,19 +36,18 @@ cp $basedir/resources/launch.bat $basedir/dist/win/router/bin/
 for i in linux mac win; do cp -r $basedir/import/i2p.base $basedir/dist/$i/router/; done
 for i in linux mac win; do mkdir -p $basedir/dist/$i/router/i2p.config; done
 
-zip -d $basedir/dist/linux/router/i2p.base/jbigi.jar *-osx-*
-zip -d $basedir/dist/linux/router/i2p.base/jbigi.jar *-windows-*
-zip -d $basedir/dist/linux/router/i2p.base/jbigi.jar *-freebsd-*
+# remove unnecessary native libs from jbigi.jar
+for i in linux mac win; do
+  for j in freebsd linux mac win; do
+    if [ "$i" != "$j" ]; then
+      if [ "$j" = "mac" ]; then j="osx"; fi
+      if [ "$j" = "win" ]; then j="windows"; fi
+      zip -d $basedir/dist/$i/router/i2p.base/jbigi.jar *-${j}-*
+    fi
+  done
+done
 
-zip -d $basedir/dist/mac/router/i2p.base/jbigi.jar *-linux-*
-zip -d $basedir/dist/mac/router/i2p.base/jbigi.jar *-windows-*
-zip -d $basedir/dist/mac/router/i2p.base/jbigi.jar *-freebsd-*
-
-zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-osx-*
-zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-linux-*
-zip -d $basedir/dist/win/router/i2p.base/jbigi.jar *-freebsd-*
-
-du -sh $basedir/dist/*
+du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
 
 echo "*** Done ***"
 echo "To run, type: dist/linux/router/bin/launch.sh"
