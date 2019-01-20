@@ -1,4 +1,4 @@
-package org.getmonero.i2p.embedded;
+package org.getmonero.i2p.zero;
 
 import net.i2p.data.Base64;
 import net.i2p.i2ptunnel.I2PTunnel;

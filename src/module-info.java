@@ -1,4 +1,4 @@
-module org.getmonero.i2p.embedded {
+module org.getmonero.i2p.zero {
   requires i2p;
   requires mstreaming;
   requires streaming;

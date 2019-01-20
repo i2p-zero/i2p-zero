@@ -1,4 +1,4 @@
-package org.getmonero.i2p.embedded;
+package org.getmonero.i2p.zero;
 
 import java.io.File;
 import java.util.Properties;
