@@ -1,6 +1,6 @@
 <img src="https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
 
-# Zero dependency, small footprint, cross-platform I2P Java Router with SAM interface
+# Zero dependency, small footprint, cross-platform I2P Java Router with simple tunnel controller and SAM interface
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
 
@@ -67,24 +67,32 @@ Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to th
 
 ## Tunnel control
 
-Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
+### Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
 
 `dist/linux/router/bin/tunnel-control.sh server.create <host> <port>`
 
 
-Close the tunnel listening for connections on the specified port. Returns "OK".
+### Close the tunnel listening for connections on the specified port. Returns "OK".
 
 `dist/linux/router/bin/tunnel-control.sh server.destroy <i2p destination public key>`
 
 
-Create a tunnel that listens for connections on localhost and forwards connections over I2P to the specified destination public key. Returns a newly created localhost port number.
+### Create a tunnel that listens for connections on localhost and forwards connections over I2P to the specified destination public key. Returns a newly created localhost port number.
 
 `dist/linux/router/bin/tunnel-control.sh client.create <i2p destination public key>`
 
 
-Close the tunnel listening for connections on the specified port. Returns "OK".
+### Close the tunnel listening for connections on the specified port. Returns "OK".
 
 `dist/linux/router/bin/tunnel-control.sh client.destroy <port>`
+
+### Create a socks tunnel, listening on the specified port
+
+`dist/linux/router/bin/tunnel-control.sh socks.create <port>`
+
+### Destroy the socks tunnel listening on the specified port
+
+`dist/linux/router/bin/tunnel-control.sh socks.destroy <port>`
 
 
 ## Watch the I2P log for messages

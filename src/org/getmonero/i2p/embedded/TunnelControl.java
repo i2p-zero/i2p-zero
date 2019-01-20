@@ -17,6 +17,7 @@ public class TunnelControl implements Runnable {
 
   private Map<Integer, I2PTunnel> clientTunnels = new HashMap<>();
   private Map<String, I2PTunnel> serverTunnels = new HashMap<>();
+  private Map<Integer, I2PTunnel> socksTunnels = new HashMap<>();
   private int clientPortSeq = 30000;
   private int serverSeq = 0;
   private String tunnelConfigDirPrefix;
@@ -100,6 +101,31 @@ public class TunnelControl implements Runnable {
             }.start();
             out.println("OK");
           }
+          if(args[0].equals("socks.create")) {
+            int port = Integer.parseInt(args[1]);
+            new Thread() {
+              @Override
+              public void run() {
+                // sockstunnel port
+                var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
+                socksTunnels.put(port, t);
+              }
+            }.start();
+            out.println("OK");
+          }
+          if(args[0].equals("socks.destroy")) {
+            int port = Integer.parseInt(args[1]);
+            new Thread() {
+              @Override
+              public void run() {
+                var t = socksTunnels.get(port);
+                socksTunnels.remove(port);
+                t.runClose(new String[]{"forced", "all"}, t);
+              }
+            }.start();
+            out.println("OK");
+          }
+
         }
         catch (Exception e) {
           e.printStackTrace();
