@@ -4,7 +4,8 @@
 
 ##
 
-This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
+This project will run under Linux, and build native launchers for Linux, MacOS and Windows.
+The launchers will include the I2P router, a SAM listener, simple tunnel and socks tunnel functionality and a minimal JVM.
 
 ## Footprint
 
