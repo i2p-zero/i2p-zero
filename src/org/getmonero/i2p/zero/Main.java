@@ -43,51 +43,41 @@ public class Main {
 
     Router r = new Router(p);
 
-    new Thread() {
-      @Override
-      public void run() {
-        r.setKillVMOnEnd(true);
-        r.runRouter();
-      }
-    }.start();
+    new Thread(()->{
+      r.setKillVMOnEnd(true);
+      r.runRouter();
+    }).start();
 
-    new Thread() {
-      @Override
-      public void run() {
-        try {
-
-          while(true) {
-            if(r.isAlive()) {
-              break;
-            }
-            else {
-              Thread.sleep(1000);
-              System.out.println("Waiting for I2P router to start...");
-            }
+    new Thread(()->{
+      try {
+        while(true) {
+          if(r.isAlive()) {
+            break;
           }
-
-          String[] args = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
-          I2PAppContext context = r.getContext();
-          ClientAppManager mgr = new ClientAppManagerImpl(context);
-          SAMBridge samBridge = new SAMBridge(context, mgr, args);
-          samBridge.startup();
-
-          new Thread(new TunnelControl(new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
-
+          else {
+            Thread.sleep(1000);
+            System.out.println("Waiting for I2P router to start...");
+          }
         }
-        catch (Exception e) {
-          e.printStackTrace();
-        }
-      }
-    }.start();
 
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        System.out.println("I2P router will shut down gracefully");
-        r.shutdownGracefully();
+        String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
+        I2PAppContext context = r.getContext();
+        ClientAppManager mgr = new ClientAppManagerImpl(context);
+        SAMBridge samBridge = new SAMBridge(context, mgr, samArgs);
+        samBridge.startup();
+
+        new Thread(new TunnelControl(new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
+
       }
-    });
+      catch (Exception e) {
+        e.printStackTrace();
+      }
+    }).start();
+
+    Runtime.getRuntime().addShutdownHook(new Thread(()->{
+      System.out.println("I2P router will shut down gracefully");
+      r.shutdownGracefully();
+    }));
 
   }
 

@@ -56,73 +56,55 @@ public class TunnelControl implements Runnable {
             String destPubKey = Base64.encode(Files.readAllBytes(new File(pubkeyPath).toPath()));
 
             // listen using the I2P server keypair, and forward incoming connections to a destination and port
-            new Thread() {
-              @Override
-              public void run() {
-                I2PTunnel t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server "+destHost+" "+destPort+" " + seckeyPath});
-                serverTunnels.put(destPubKey, t);
-              }
-            }.start();
+            new Thread(()->{
+              I2PTunnel t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server "+destHost+" "+destPort+" " + seckeyPath});
+              serverTunnels.put(destPubKey, t);
+            }).start();
             out.println(destPubKey);
           }
           else if(args[0].equals("server.destroy")) {
             String destPubKey = args[1];
-            new Thread() {
-              @Override
-              public void run() {
-                var t = serverTunnels.get(destPubKey);
-                serverTunnels.remove(destPubKey);
-                t.runClose(new String[]{"forced", "all"}, t);
-              }
-            }.start();
+            new Thread(()->{
+              var t = serverTunnels.get(destPubKey);
+              serverTunnels.remove(destPubKey);
+              t.runClose(new String[]{"forced", "all"}, t);
+            }).start();
             out.println("OK");
           }
           else if(args[0].equals("client.create")) {
             String destPubKey = args[1];
             int port = clientPortSeq++;
-            new Thread() {
-              @Override
-              public void run() {
-                var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "client " + port + " " + destPubKey});
-                clientTunnels.put(port, t);
-              }
-            }.start();
+            new Thread(()->{
+              var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "client " + port + " " + destPubKey});
+              clientTunnels.put(port, t);
+            }).start();
             out.println(port);
           }
           if(args[0].equals("client.destroy")) {
             int port = Integer.parseInt(args[1]);
-            new Thread() {
-              @Override
-              public void run() {
-                var t = clientTunnels.get(port);
-                clientTunnels.remove(port);
-                t.runClose(new String[]{"forced", "all"}, t);
-              }
-            }.start();
+            new Thread(()->{
+              var t = clientTunnels.get(port);
+              clientTunnels.remove(port);
+              t.runClose(new String[]{"forced", "all"}, t);
+            }).start();
             out.println("OK");
           }
           if(args[0].equals("socks.create")) {
             int port = Integer.parseInt(args[1]);
-            new Thread() {
-              @Override
-              public void run() {
-                // sockstunnel port
-                var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
-                socksTunnels.put(port, t);
-              }
-            }.start();
+            new Thread(()->{
+              // sockstunnel port
+              var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
+              socksTunnels.put(port, t);
+            }).start();
             out.println("OK");
           }
           if(args[0].equals("socks.destroy")) {
             int port = Integer.parseInt(args[1]);
-            new Thread() {
-              @Override
-              public void run() {
-                var t = socksTunnels.get(port);
-                socksTunnels.remove(port);
-                t.runClose(new String[]{"forced", "all"}, t);
-              }
-            }.start();
+            new Thread(()->{
+              var t = socksTunnels.get(port);
+              socksTunnels.remove(port);
+              t.runClose(new String[]{"forced", "all"}, t);
+            }).start();
             out.println("OK");
           }
 
