@@ -71,6 +71,9 @@ public class Main {
           ClientAppManager mgr = new ClientAppManagerImpl(context);
           SAMBridge samBridge = new SAMBridge(context, mgr, args);
           samBridge.startup();
+
+          new Thread(new TunnelControl(new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
+
         }
         catch (Exception e) {
           e.printStackTrace();

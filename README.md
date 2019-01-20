@@ -63,3 +63,23 @@ Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to th
 ## Check that the I2P router is running and that it is listening for SAM connections
 
 `fuser 7656/tcp`
+
+
+## Tunnel control
+
+Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
+`dist/linux/router/bin/tunnel-control.sh server.create <host> <port>`
+
+// Close the tunnel listening for connections on the specified port. Returns "OK".
+`dist/linux/router/bin/tunnel-control.sh server.destroy <i2p destination public key>`
+
+Create a tunnel that listens for connections on localhost and forwards connections over I2P to the specified destination public key. Returns a newly created localhost port number.
+`dist/linux/router/bin/tunnel-control.sh client.create <i2p destination public key>`
+
+Close the tunnel listening for connections on the specified port. Returns "OK".
+`dist/linux/router/bin/tunnel-control.sh client.destroy <port>`
+
+
+## Watch the I2P log for messages
+
+`tail -f dist/linux/router/i2p.config/wrapper.log`

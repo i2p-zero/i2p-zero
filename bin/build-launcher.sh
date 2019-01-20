@@ -4,9 +4,6 @@ basedir=$(dirname $(dirname $(readlink -fm $0)))
 
 source $basedir/bin/java-config.sh
 
-# convert the jar files from an existing I2P build into modules suitable for use with jlink
-$basedir/bin/convert-jars-to-modules.sh
-
 # compile the Main class that starts the I2P router and SAM listener
 echo "*** Compiling Main class"
 $JAVA_HOME/bin/javac --module-path import/lib -d target/classes $(find src -name '*.java')
@@ -29,8 +26,10 @@ echo "*** Performing jlink (Windows)"
 $JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/win/jdk-${JDK_VERSION}/jmods:target/modules:target/org.getmonero.i2p.embedded.jar --add-modules org.getmonero.i2p.embedded --output dist/win/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 
-cp $basedir/resources/launch.sh $basedir/dist/linux/router/bin/
-cp $basedir/resources/launch.sh $basedir/dist/mac/router/bin/
+for i in linux mac; do
+  cp $basedir/resources/launch.sh $basedir/dist/$i/router/bin/
+  cp $basedir/resources/tunnel-control.sh $basedir/dist/$i/router/bin/
+done
 cp $basedir/resources/launch.bat $basedir/dist/win/router/bin/
 
 for i in linux mac win; do cp -r $basedir/import/i2p.base $basedir/dist/$i/router/; done
