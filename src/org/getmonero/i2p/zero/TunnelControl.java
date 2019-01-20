@@ -36,6 +36,8 @@ public class TunnelControl implements Runnable {
     // server.destroy <i2p destination public key> // closes the tunnel listening for connections on the specified port, and returns OK
     // client.create <i2p destination public key> // returns a newly created localhost port number, where connections will be sent over I2P to the destination public key
     // client.destroy <port> // closes the tunnel listening for connections on the specified port, and returns OK
+    // socks.create <port> // creates a socks proxy listening on the specified port
+    // socks.destroy <port> // closes the socks proxy listening on the specified port, and returns OK
     //
     // send a command with bash: exec 3<>/dev/tcp/localhost/30000; echo "server.create localhost 80" >&3; cat <&3
     //
@@ -92,7 +94,6 @@ public class TunnelControl implements Runnable {
           if(args[0].equals("socks.create")) {
             int port = Integer.parseInt(args[1]);
             new Thread(()->{
-              // sockstunnel port
               var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
               socksTunnels.put(port, t);
             }).start();
