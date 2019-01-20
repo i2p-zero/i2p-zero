@@ -1,6 +1,8 @@
 <img src="https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
 
-# Zero dependency, small footprint, cross-platform I2P Java Router with simple tunnel/socks controller and SAM interface
+## Zero dependency, small footprint, cross-platform I2P Java Router with simple tunnel/socks controller and SAM interface
+
+##
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows. The launchers will include the I2P router, a SAM listener and a minimal JVM.
 
