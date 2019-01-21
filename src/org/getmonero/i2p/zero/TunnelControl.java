@@ -33,7 +33,7 @@ public class TunnelControl implements Runnable {
     // listen for socket connections to the tunnel controller.
     // listen for the commands on port 30000:
     // server.create <host> <port> // returns a newly created destination public key, which will listen for i2p connections and forward them to the specified host and port
-    // server.destroy <i2p destination public key> // closes the tunnel listening for connections on the specified port, and returns OK
+    // server.destroy <i2p destination public key> // closes the tunnel listening for connections on the specified destination public key, and returns OK
     // client.create <i2p destination public key> // returns a newly created localhost port number, where connections will be sent over I2P to the destination public key
     // client.destroy <port> // closes the tunnel listening for connections on the specified port, and returns OK
     // socks.create <port> // creates a socks proxy listening on the specified port

@@ -70,32 +70,34 @@ Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to th
 
 ## Tunnel control
 
+Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
+
 #### Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
 
-`dist/linux/router/bin/tunnel-control.sh server.create <host> <port>`
+`tunnel-control.sh server.create <host> <port>`
 
 
-#### Close the tunnel listening for connections on the specified port. Returns "OK".
+#### Close the tunnel listening for connections on the specified destination public key. Returns "OK".
 
-`dist/linux/router/bin/tunnel-control.sh server.destroy <i2p destination public key>`
+`tunnel-control.sh server.destroy <i2p destination public key>`
 
 
 #### Create a tunnel that listens for connections on localhost and forwards connections over I2P to the specified destination public key. Returns a newly created localhost port number.
 
-`dist/linux/router/bin/tunnel-control.sh client.create <i2p destination public key>`
+`tunnel-control.sh client.create <i2p destination public key>`
 
 
 #### Close the tunnel listening for connections on the specified port. Returns "OK".
 
-`dist/linux/router/bin/tunnel-control.sh client.destroy <port>`
+`tunnel-control.sh client.destroy <port>`
 
 #### Create a socks tunnel, listening on the specified port
 
-`dist/linux/router/bin/tunnel-control.sh socks.create <port>`
+`tunnel-control.sh socks.create <port>`
 
 #### Destroy the socks tunnel listening on the specified port
 
-`dist/linux/router/bin/tunnel-control.sh socks.destroy <port>`
+`tunnel-control.sh socks.destroy <port>`
 
 
 ## Watch the I2P log for messages

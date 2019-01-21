@@ -29,7 +29,7 @@ public class Main {
     p.put("router.sharePercentage","80");
 
     // allow default properties to be overridden via command line args, e.g. --i2p.dir.base=/usr/share/i2p
-    for(String arg : args) {
+    for(var arg : args) {
       if(arg.startsWith("--")) {
         String[] s = arg.split("=");
         String argName = s[0].substring("--".length());
