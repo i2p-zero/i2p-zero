@@ -17,13 +17,13 @@ mkdir -p $basedir/dist/linux $basedir/dist/mac $basedir/dist/win
 
 # create OS specific launchers which will bundle together the code and a minimal JVM
 echo "*** Performing jlink (Linux)"
-$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/linux/jdk-${JDK_VERSION}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/linux/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_LINUX}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/linux/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 echo "*** Performing jlink (Mac)"
-$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/mac/jdk-${JDK_VERSION}.jdk/Contents/Home/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/mac/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_MAC}/Contents/Home/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/mac/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 echo "*** Performing jlink (Windows)"
-$JAVA_HOME/bin/jlink --module-path $basedir/import/jdks/win/jdk-${JDK_VERSION}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/win/router --strip-debug --compress 2 --no-header-files --no-man-pages
+$JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_WIN}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/win/router --strip-debug --compress 2 --no-header-files --no-man-pages
 
 
 for i in linux mac; do

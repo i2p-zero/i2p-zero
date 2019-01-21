@@ -2,19 +2,21 @@
 
 basedir=$(dirname $(dirname $(readlink -fm $0)))
 
-JDK_VERSION=11.0.2
+JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK11U-jdk_x64_linux_hotspot_11.0.1_13.tar.gz
+JDK_DOWNLOAD_FILENAME_MAC=OpenJDK11U-jdk_x64_mac_hotspot_11.0.1_13.tar.gz
+JDK_DOWNLOAD_FILENAME_WIN=OpenJDK11U-jdk_x64_windows_hotspot_11.0.1_13.zip
 
-JDK_DOWNLOAD_FILENAME_LINUX=openjdk-${JDK_VERSION}_linux-x64_bin.tar.gz
-JDK_DOWNLOAD_FILENAME_MAC=openjdk-${JDK_VERSION}_osx-x64_bin.tar.gz
-JDK_DOWNLOAD_FILENAME_WIN=openjdk-${JDK_VERSION}_windows-x64_bin.zip
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.1%2B13/OpenJDK11U-jdk_x64_linux_hotspot_11.0.1_13.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.1%2B13/OpenJDK11U-jdk_x64_mac_hotspot_11.0.1_13.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.1%2B13/OpenJDK11U-jdk_x64_windows_hotspot_11.0.1_13.zip
 
-JDK_DOWNLOAD_URL_LINUX=https://download.java.net/java/GA/jdk11/7/GPL/$JDK_DOWNLOAD_FILENAME_LINUX
-JDK_DOWNLOAD_URL_MAC=https://download.java.net/java/GA/jdk11/7/GPL/$JDK_DOWNLOAD_FILENAME_MAC
-JDK_DOWNLOAD_URL_WIN=https://download.java.net/java/GA/jdk11/7/GPL/$JDK_DOWNLOAD_FILENAME_WIN
+JAVA_HOME_LINUX=`realpath $basedir/import/jdks/linux/jdk-11.0.1+13`
+JAVA_HOME_MAC=`realpath $basedir/import/jdks/mac/jdk-11.0.1+13/Contents/Home`
+JAVA_HOME_WIN=`realpath $basedir/import/jdks/win/jdk-11.0.1+13`
 
 OS=`uname -s`
 if [ $OS = "Darwin" ]; then
-  export JAVA_HOME=`realpath $basedir/import/jdks/mac/jdk-${JDK_VERSION}.jdk/Contents/Home`
+  export JAVA_HOME=$JAVA_HOME_MAC
 else
-  export JAVA_HOME=`realpath $basedir/import/jdks/linux/jdk-${JDK_VERSION}`
+  export JAVA_HOME=$JAVA_HOME_LINUX
 fi
