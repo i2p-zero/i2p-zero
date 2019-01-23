@@ -64,18 +64,10 @@ public class TunnelControl implements Runnable {
               I2PTunnel t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server "+destHost+" "+destPort+" " + seckeyPath});
               serverTunnels.put(destPubKey, t);
             }).start();
-            out.println(destPubKey);
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(seckeyPath);
-                Destination d = new Destination();
-                d.readBytes(fis);
-                out.println("Server destination: " + d.toBase32());
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (fis != null)
-                    try { fis.close(); } catch (Exception e) {}
+            try (var fis = new FileInputStream(seckeyPath)) {
+              Destination d = new Destination();
+              d.readBytes(fis);
+              out.println(d.toBase32());
             }
           }
           else if(args[0].equals("server.destroy")) {
