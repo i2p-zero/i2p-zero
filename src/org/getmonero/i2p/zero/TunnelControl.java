@@ -1,12 +1,14 @@
 package org.getmonero.i2p.zero;
 
 import net.i2p.data.Base64;
+import net.i2p.data.Destination;
 import net.i2p.i2ptunnel.I2PTunnel;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.file.Files;
@@ -63,6 +65,18 @@ public class TunnelControl implements Runnable {
               serverTunnels.put(destPubKey, t);
             }).start();
             out.println(destPubKey);
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(seckeyPath);
+                Destination d = new Destination();
+                d.readBytes(fis);
+                out.println("Server destination: " + d.toBase32());
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (fis != null)
+                    try { fis.close(); } catch (Exception e) {}
+            }
           }
           else if(args[0].equals("server.destroy")) {
             String destPubKey = args[1];
