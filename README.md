@@ -70,6 +70,8 @@ Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to th
 
 ## Tunnel control
 
+Note that it may take a short while for new tunnels to be set up.
+
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
 #### Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
