@@ -1,8 +1,13 @@
 package org.getmonero.i2p.zero;
 
+import net.i2p.I2PAppContext;
+import net.i2p.app.ClientAppManager;
+import net.i2p.app.ClientAppManagerImpl;
 import net.i2p.data.Base64;
 import net.i2p.data.Destination;
 import net.i2p.i2ptunnel.I2PTunnel;
+import net.i2p.router.Router;
+import net.i2p.sam.SAMBridge;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,7 +28,9 @@ public class TunnelControl implements Runnable {
   private int clientPortSeq = 30000;
   private int serverSeq = 0;
   private String tunnelConfigDirPrefix;
-  public TunnelControl(File tunnelConfigDir) {
+  private Router router;
+  public TunnelControl(Router router, File tunnelConfigDir) {
+    this.router = router;
     tunnelConfigDir.delete();
     tunnelConfigDir.mkdir();
     this.tunnelConfigDirPrefix = tunnelConfigDir.getAbsolutePath() + File.separator;
@@ -50,6 +57,7 @@ public class TunnelControl implements Runnable {
           var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
           var args = in.readLine().split(" ");
+
           if(args[0].equals("server.create")) {
             String destHost = args[1];
             String destPort = args[2];
@@ -88,7 +96,7 @@ public class TunnelControl implements Runnable {
             }).start();
             out.println(port);
           }
-          if(args[0].equals("client.destroy")) {
+          else if(args[0].equals("client.destroy")) {
             int port = Integer.parseInt(args[1]);
             new Thread(()->{
               var t = clientTunnels.get(port);
@@ -97,7 +105,7 @@ public class TunnelControl implements Runnable {
             }).start();
             out.println("OK");
           }
-          if(args[0].equals("socks.create")) {
+          else if(args[0].equals("socks.create")) {
             int port = Integer.parseInt(args[1]);
             new Thread(()->{
               var t = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
@@ -105,13 +113,21 @@ public class TunnelControl implements Runnable {
             }).start();
             out.println("OK");
           }
-          if(args[0].equals("socks.destroy")) {
+          else if(args[0].equals("socks.destroy")) {
             int port = Integer.parseInt(args[1]);
             new Thread(()->{
               var t = socksTunnels.get(port);
               socksTunnels.remove(port);
               t.runClose(new String[]{"forced", "all"}, t);
             }).start();
+            out.println("OK");
+          }
+          else if(args[0].equals("sam.create")) {
+            String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
+            I2PAppContext context = router.getContext();
+            ClientAppManager mgr = new ClientAppManagerImpl(context);
+            SAMBridge samBridge = new SAMBridge(context, mgr, samArgs);
+            samBridge.startup();
             out.println("OK");
           }
 

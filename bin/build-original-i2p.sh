@@ -8,6 +8,7 @@ source $basedir/bin/java-config.sh
 
 # build the jars we're going to modularize
 cd $basedir/import/i2p.i2p
+export LG2=en
 $basedir/import/apache-ant-1.10.5/bin/ant pkg
 $basedir/import/apache-ant-1.10.5/bin/ant updaterWithJbigi
 cd ..

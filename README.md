@@ -99,6 +99,10 @@ Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create a
 
 `tunnel-control.sh socks.destroy <port>`
 
+#### Start a SAM listener on port 7656. Returns "OK"
+
+`tunnel-control.sh sam.create`
+
 
 ## Watch the I2P log for messages
 

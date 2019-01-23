@@ -4,11 +4,7 @@ import java.io.File;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import net.i2p.I2PAppContext;
-import net.i2p.app.ClientAppManager;
-import net.i2p.app.ClientAppManagerImpl;
 import net.i2p.router.Router;
-import net.i2p.sam.SAMBridge;
 
 public class Main {
 
@@ -41,17 +37,17 @@ public class Main {
     System.out.println("Options set: "
         + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
-    Router r = new Router(p);
+    Router router = new Router(p);
 
     new Thread(()->{
-      r.setKillVMOnEnd(true);
-      r.runRouter();
+      router.setKillVMOnEnd(true);
+      router.runRouter();
     }).start();
 
     new Thread(()->{
       try {
         while(true) {
-          if(r.isAlive()) {
+          if(router.isAlive()) {
             break;
           }
           else {
@@ -60,13 +56,7 @@ public class Main {
           }
         }
 
-        String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
-        I2PAppContext context = r.getContext();
-        ClientAppManager mgr = new ClientAppManagerImpl(context);
-        SAMBridge samBridge = new SAMBridge(context, mgr, samArgs);
-        samBridge.startup();
-
-        new Thread(new TunnelControl(new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
+        new Thread(new TunnelControl(router, new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
 
       }
       catch (Exception e) {
@@ -76,7 +66,7 @@ public class Main {
 
     Runtime.getRuntime().addShutdownHook(new Thread(()->{
       System.out.println("I2P router will shut down gracefully");
-      r.shutdownGracefully();
+      router.shutdownGracefully();
     }));
 
   }
