@@ -1,6 +1,10 @@
 #!/bin/bash
 
-basedir=$(dirname $(dirname $(readlink -fm $0)))
+if [ $(uname -s) = Darwin ]; then
+    basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
+else
+    basedir=$(dirname $(dirname $(readlink -fm $0)))
+fi
 
 # retrieve the I2P Java sources, OpenJDK and the Ant build tool
 $basedir/bin/import-packages.sh

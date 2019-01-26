@@ -1,6 +1,10 @@
 #!/bin/bash
 
-basedir=$(dirname $(dirname $(readlink -fm $0)))
+if [ $(uname -s) = Darwin ]; then
+    basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
+else
+    basedir=$(dirname $(dirname $(readlink -fm $0)))
+fi
 
 cd $basedir/import
 

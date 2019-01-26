@@ -1,6 +1,10 @@
 #!/bin/bash
 
-basedir=$(dirname $(dirname $(readlink -fm $0)))
+if [ $(uname -s) = Darwin ]; then
+    basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
+else
+    basedir=$(dirname $(dirname $(readlink -fm $0)))
+fi
 
 JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK11U-jdk_x64_linux_hotspot_11.0.1_13.tar.gz
 JDK_DOWNLOAD_FILENAME_MAC=OpenJDK11U-jdk_x64_mac_hotspot_11.0.1_13.tar.gz
