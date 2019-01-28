@@ -7,6 +7,12 @@
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows.
 The launchers will include the I2P router, a SAM listener, simple tunnel and socks tunnel functionality and a minimal JVM.
 
+## GUI Screenshots
+
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot1.png" align="center" width="472" height="451">
+<br/>
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="498">
+
 ## Footprint
 
 The zero-dependency distribution sizes are as follows:
