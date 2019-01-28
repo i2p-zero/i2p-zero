@@ -1,6 +1,6 @@
 <img src="https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
 
-## Zero dependency, small footprint, cross-platform I2P Java Router with GUI and simple tunnel/socks controller and SAM interface
+## Zero dependency, small footprint, cross-platform I2P Java Router with GUI, simple tunnel/socks controller and SAM interface
 
 ##
 
