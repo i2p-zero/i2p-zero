@@ -158,6 +158,9 @@ public class Controller {
             bandwidthOut5m.setText(format2dp.format(routerWrapper.get5mRateOutKBps()) + " KBps");
             bandwidthOutAll.setText(format2dp.format(routerWrapper.getAvgRateOutKBps()) + " KBps");
             totalTransferredOut.setText(format2dp.format(routerWrapper.getTotalOutMB()) + " MB   ");
+
+            statusLabel.setText("Status: " + routerWrapper.getReachability().getMessage());
+
           });
         }
         try { Thread.sleep(1000); } catch (InterruptedException e) {}
