@@ -115,7 +115,7 @@ public class Controller {
         stage.setHeight(370);
       }
       else if(tunnelsTab.isSelected()) {
-        stage.setWidth(700);
+        stage.setWidth(900);
       }
     };
     bandwidthTab.setOnSelectionChanged(tabSelectionEventHandler);
@@ -162,6 +162,8 @@ public class Controller {
             totalTransferredOut.setText(format2dp.format(routerWrapper.getTotalOutMB()) + " MB   ");
 
             statusLabel.setText("Status: " + routerWrapper.getReachability().getMessage());
+
+            tunnelsTableView.refresh();
 
           });
         }
