@@ -211,8 +211,6 @@ public class RouterWrapper {
 
   final static String PROP_I2NP_NTCP_HOSTNAME = "i2np.ntcp.hostname";
   final static String PROP_I2NP_NTCP_PORT = "i2np.ntcp.port";
-  final static String PROP_I2NP_NTCP_AUTO_PORT = "i2np.ntcp.autoport";
-  final static String PROP_I2NP_NTCP_AUTO_IP = "i2np.ntcp.autoip";
 
   public NetworkStateMessage getReachability() {
     RouterContext _context = router.getContext();

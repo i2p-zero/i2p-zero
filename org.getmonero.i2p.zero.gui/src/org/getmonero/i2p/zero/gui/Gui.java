@@ -49,6 +49,7 @@ public class Gui extends Application {
   @Override
   public void stop() throws Exception {
     isStopping = true;
+    if(controller.getRouterWrapper().isStarted()) controller.getRouterWrapper().stop();
   }
 
   public boolean isStopping() {
