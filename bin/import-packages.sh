@@ -39,7 +39,7 @@ fi
 
 if [ ! -d "$basedir/import/javafx-sdk-11.0.2" ]; then
   if [ $(uname -s) = Darwin ]; then
-    wget JAVAFX_SDK_DOWNLOAD_URL_MAC
+    wget $JAVAFX_SDK_DOWNLOAD_URL_MAC
     unzip openjfx-11.0.2_osx-x64_bin-sdk.zip
   else
     wget $JAVAFX_SDK_DOWNLOAD_URL_LINUX
