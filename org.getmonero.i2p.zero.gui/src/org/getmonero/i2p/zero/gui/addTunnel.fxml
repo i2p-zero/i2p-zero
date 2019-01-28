@@ -31,7 +31,7 @@
       </Pane>
       <Pane fx:id="serverTunnelConfigPane" layoutX="27.0" layoutY="132.0" prefHeight="97.0" prefWidth="523.0" visible="false">
          <children>
-            <TextField fx:id="serverHostField" layoutX="135.0" />
+            <TextField fx:id="serverHostField" layoutX="135.0" text="localhost" />
             <Label layoutX="1.0" layoutY="5.0" text="Destination host" />
             <TextField fx:id="serverPortField" layoutX="478.0" prefHeight="27.0" prefWidth="77.0" />
             <Label layoutX="366.0" layoutY="5.0" text="Destination port" />
