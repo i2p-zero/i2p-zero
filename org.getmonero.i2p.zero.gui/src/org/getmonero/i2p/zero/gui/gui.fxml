@@ -83,6 +83,7 @@
                         <TableView fx:id="tunnelsTableView" prefHeight="139.0" prefWidth="318.0">
                           <columns>
                             <TableColumn fx:id="typeCol" prefWidth="93.0" text="Type" />
+                            <TableColumn fx:id="stateCol" prefWidth="93.0" text="State" />
                             <TableColumn fx:id="hostCol" prefWidth="186.0" text="Host" />
                             <TableColumn fx:id="portCol" minWidth="0.0" prefWidth="70.0" text="Port" />
                             <TableColumn fx:id="i2PCol" prefWidth="280.0" text="I2P address" />

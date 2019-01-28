@@ -41,6 +41,7 @@ public class Controller {
   @FXML private Button tunnelRemoveButton;
   @FXML private TableView<Tunnel> tunnelsTableView;
   @FXML private TableColumn typeCol;
+  @FXML private TableColumn stateCol;
   @FXML private TableColumn hostCol;
   @FXML private TableColumn portCol;
   @FXML private TableColumn i2PCol;
@@ -64,11 +65,12 @@ public class Controller {
   @FXML private void initialize() {
 
     typeCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("type"));
+    stateCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("state"));
     hostCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("host"));
     portCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("port"));
     i2PCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("I2P"));
 
-    DoubleBinding usedWidth = typeCol.widthProperty().add(hostCol.widthProperty()).add(portCol.widthProperty());
+    DoubleBinding usedWidth = typeCol.widthProperty().add(stateCol.widthProperty()).add(hostCol.widthProperty()).add(portCol.widthProperty());
     i2PCol.prefWidthProperty().bind(tunnelsTableView.widthProperty().subtract(usedWidth).subtract(2));
 
     tunnelsTableView.setItems(tunnelTableList);

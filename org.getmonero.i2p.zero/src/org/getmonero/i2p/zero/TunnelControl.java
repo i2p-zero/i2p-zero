@@ -43,6 +43,7 @@ public class TunnelControl implements Runnable {
     public String getHost();
     public String getPort();
     public String getI2P();
+    public String getState();
     public void destroy();
   }
 
@@ -59,6 +60,7 @@ public class TunnelControl implements Runnable {
     }
     public void destroy() {
       new Thread(()->{
+        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
         tunnel.runClose(new String[]{"forced", "all"}, tunnel);
       }).start();
     }
@@ -67,6 +69,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
+    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
   }
   public static class ServerTunnel implements Tunnel {
     public String dest;
@@ -92,6 +95,7 @@ public class TunnelControl implements Runnable {
     }
     public void destroy() {
       new Thread(()->{
+        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
         tunnel.runClose(new String[]{"forced", "all"}, tunnel);
       }).start();
     }
@@ -99,6 +103,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return host; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
+    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
 
   }
   public static class SocksTunnel implements Tunnel {
@@ -112,6 +117,7 @@ public class TunnelControl implements Runnable {
     }
     public void destroy() {
       new Thread(()->{
+        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
         tunnel.runClose(new String[]{"forced", "all"}, tunnel);
       }).start();
     }
@@ -119,6 +125,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return "n/a"; }
+    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
   }
 
   public List<Tunnel> getTunnels() {

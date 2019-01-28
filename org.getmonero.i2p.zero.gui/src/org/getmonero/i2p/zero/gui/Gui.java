@@ -2,7 +2,6 @@ package org.getmonero.i2p.zero.gui;
 
 import java.awt.Taskbar;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
