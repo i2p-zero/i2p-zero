@@ -1,0 +1,44 @@
+@font-face {
+    font-family: 'Open Sans Regular';
+    src: url('OpenSans-Regular.ttf');
+}
+
+.tab .tab-label {
+    -fx-font-size: 12px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.text-area {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.radio-button {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.label {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.button {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.slider {
+    -fx-font-size: 12px;
+    -fx-font-family: 'Open Sans Regular';
+}
+
+.table-view {
+    -fx-font-size: 13px;
+    -fx-font-family: 'Open Sans Regular';
+}

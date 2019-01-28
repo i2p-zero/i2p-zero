@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+
+<BorderPane fx:id="rootBorderPane" minHeight="340.0" minWidth="360.0" prefHeight="340.0" prefWidth="360.0" stylesheets="@gui.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.getmonero.i2p.zero.gui.Controller">
+   <center>
+      <TabPane>
+         <tabs>
+            <Tab fx:id="bandwidthTab" closable="false" text="Bandwidth">
+               <content>
+                  <BorderPane minHeight="-Infinity" minWidth="-Infinity">
+                     <center>
+                        <StackPane BorderPane.alignment="CENTER">
+                           <children>
+                            <AnchorPane maxHeight="230.0" maxWidth="340.0" minHeight="211.0" minWidth="340.0" prefHeight="216.0" prefWidth="340.0">
+                                 <children>
+                                    <Slider fx:id="bandwidthSlider" blockIncrement="0.5" layoutX="19.0" layoutY="165.0" majorTickUnit="5.0" max="20.0" min="0.5" minorTickCount="0" prefHeight="33.0" prefWidth="295.0" showTickLabels="true" value="0.5" />
+                                    <Label layoutX="22.0" layoutY="134.0" style="-fx-font-size: 16;" styleClass="bandwidthLabel" text="Max. Bandwidth">
+                                    </Label>
+                                    <Label fx:id="maxBandwidthLabel" layoutX="166.0" layoutY="134.0" prefHeight="22.0" prefWidth="149.0" style="-fx-font-size: 16;" text="0.5 Mbps" textAlignment="right">
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="3.0" style="-fx-font-size: 16;" text="Bandwidth usage">
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="34.0" styleClass="bandwidth" text="1 second average">
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="54.0" styleClass="bandwidth" text="5 minute averge">
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="74.0" text="All-time average">
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="94.0" text="Total transferred">
+                                    </Label>
+                                    <Label fx:id="bandwidthIn1s" alignment="CENTER_RIGHT" layoutX="140.0" layoutY="34.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="bandwidthIn5m" alignment="CENTER_RIGHT" layoutX="140.0" layoutY="54.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="bandwidthInAll" alignment="CENTER_RIGHT" layoutX="140.0" layoutY="74.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="totalTransferredIn" alignment="CENTER_RIGHT" layoutX="140.0" layoutY="94.0" prefHeight="18.0" prefWidth="80.0" text="0.00 MB">
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" layoutX="140.0" layoutY="14.0" prefHeight="18.0" prefWidth="80.0" text="In">
+                                    </Label>
+                                    <Label fx:id="bandwidthOut1s" alignment="CENTER_RIGHT" layoutX="231.0" layoutY="34.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="bandwidthOut5m" alignment="CENTER_RIGHT" layoutX="231.0" layoutY="54.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="bandwidthOutAll" alignment="CENTER_RIGHT" layoutX="231.0" layoutY="74.0" prefHeight="18.0" prefWidth="80.0" text="0.00 KBps">
+                                    </Label>
+                                    <Label fx:id="totalTransferredOut" alignment="CENTER_RIGHT" layoutX="231.0" layoutY="94.0" prefHeight="18.0" prefWidth="80.0" text="0.00 MB">
+                                    </Label>
+                                    <Label alignment="CENTER_RIGHT" layoutX="231.0" layoutY="14.0" prefHeight="18.0" prefWidth="80.0" text="Out">
+                                    </Label>
+                                 </children>
+                                 <StackPane.margin>
+                                    <Insets top="16.0" />
+                                 </StackPane.margin>
+                              </AnchorPane>
+                              <AnchorPane fx:id="bandwidthDisabledOverlay" opacity="0.61" prefHeight="79.0" prefWidth="143.0" style="-fx-background-color: #fff;" visible="false" />
+                           </children>
+                        </StackPane>
+                     </center>
+                  </BorderPane>
+               </content>
+            </Tab>
+            <Tab fx:id="tunnelsTab" closable="false" text="Tunnels">
+              <content>
+
+                  <BorderPane layoutX="9.0" layoutY="56.0" prefWidth="355.0">
+                     <center>
+                        <TableView fx:id="tunnelsTableView" prefHeight="139.0" prefWidth="318.0">
+                          <columns>
+                            <TableColumn fx:id="typeCol" prefWidth="93.0" text="Type" />
+                            <TableColumn fx:id="hostCol" prefWidth="186.0" text="Host" />
+                            <TableColumn fx:id="portCol" minWidth="0.0" prefWidth="70.0" text="Port" />
+                            <TableColumn fx:id="i2PCol" prefWidth="280.0" text="I2P address" />
+                          </columns>
+                        </TableView>
+                     </center>
+                      <bottom>
+                        <BorderPane>
+                           <right>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="32.0" prefWidth="339.0" BorderPane.alignment="CENTER">
+                                     <children>
+      
+                                        <Button fx:id="tunnelAddButton" layoutX="301.0" layoutY="7.0" mnemonicParsing="false" text="Add">
+                                        </Button>
+                                        <Button fx:id="tunnelRemoveButton" disable="true" layoutX="231.0" layoutY="7.0" mnemonicParsing="false" text="Remove">
+                                        </Button>
+                                     </children>
+                              </AnchorPane>
+                           </right>
+                        </BorderPane>
+
+                      </bottom>
+                     <padding>
+                        <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+                     </padding>
+
+                  </BorderPane>
+              </content>
+            </Tab>
+            <Tab fx:id="helpTab" closable="false" text="Help">
+               <content>
+                   <BorderPane>
+                     <center>
+                           <TextArea fx:id="helpTextArea" editable="false" text="I2P hides your IP address when you connect to other I2P destinations. &#10;&#10;For example, if you are using a Monero wallet: When your Monero wallet needs to announce a transaction, none of the other Monero I2P nodes that it announces the transaction to will be able to know your IP address.&#10;&#10;You can create your own I2P destination addresses using the Tunnels tab. Connections received to these I2P addresses will be forwarded to the destination of your choice (such as a local web server). You can also create your own client tunnels, which will allow existing software to easily communicate with remote I2P destinations.&#10;&#10;I2P achives privacy by routing your traffic through a series of other I2P nodes. Each node between you and your final destination will not be able to tell whether the next node in the chain is your final destination.&#10;&#10;The nodes you connect to will not know whether you are originating a tunnel, or whether you're simply acting as a link in the chain of somebody else's tunnel.&#10;&#10;I2P automatically encrypts all traffic, so no node will be able to know what kind of traffic it is forwarding on behalf of others. &#10;&#10;For more information, visit https://geti2p.net" wrapText="true" BorderPane.alignment="CENTER">
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets></TextArea>
+                     </center>
+                   </BorderPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </center>
+   <top>
+      <BorderPane prefHeight="76.0" prefWidth="400.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+         <left>
+            <Pane prefHeight="71.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@i2p-zero.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Pane>
+         </left>
+         <right>
+            <Pane prefHeight="76.0" prefWidth="155.0" style="-fx-background-color: #fff;" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="masterToggle" fitHeight="34.0" fitWidth="101.0" layoutX="23.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@toggle-on.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="statusLabel" layoutY="44.0" prefHeight="18.0" prefWidth="148.0" style="-fx-alignment: center;" text="Status: Firewalled">
+                  </Label>
+               </children>
+            </Pane>
+         </right>
+      </BorderPane>
+   </top>
+</BorderPane>

@@ -37,4 +37,28 @@ if [ ! -d "$basedir/import/apache-ant-1.10.5" ]; then
   tar zxvf apache-ant-1.10.5-bin.tar.gz
 fi
 
+if [ ! -d "$basedir/import/javafx-sdk-11.0.2" ]; then
+  if [ $(uname -s) = Darwin ]; then
+    wget JAVAFX_SDK_DOWNLOAD_URL_MAC
+    unzip openjfx-11.0.2_osx-x64_bin-sdk.zip
+  else
+    wget $JAVAFX_SDK_DOWNLOAD_URL_LINUX
+    unzip openjfx-11.0.2_linux-x64_bin-sdk.zip
+  fi
+fi
+
+if [ ! -d "$basedir/import/javafx-jmods" ]; then
+  mkdir -p javafx-jmods
+  mkdir -p javafx-jmods/linux javafx-jmods/mac javafx-jmods/win
+  wget --directory-prefix=javafx-jmods/linux $JAVAFX_JMODS_DOWNLOAD_URL_LINUX
+  wget --directory-prefix=javafx-jmods/mac $JAVAFX_JMODS_DOWNLOAD_URL_MAC
+  wget --directory-prefix=javafx-jmods/win $JAVAFX_JMODS_DOWNLOAD_URL_WIN
+
+  unzip jdks/linux/$JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX -d javafx-jmods/linux/
+  unzip jdks/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
+  unzip jdks/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
+fi
+
+
+
 

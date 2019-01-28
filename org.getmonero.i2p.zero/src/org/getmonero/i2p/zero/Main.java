@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import net.i2p.router.Router;
-
 public class Main {
 
   public static void main(String[] args) {
@@ -37,37 +35,7 @@ public class Main {
     System.out.println("Options set: "
         + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
-    Router router = new Router(p);
-
-    new Thread(()->{
-      router.setKillVMOnEnd(true);
-      router.runRouter();
-    }).start();
-
-    new Thread(()->{
-      try {
-        while(true) {
-          if(router.isAlive()) {
-            break;
-          }
-          else {
-            Thread.sleep(1000);
-            System.out.println("Waiting for I2P router to start...");
-          }
-        }
-
-        new Thread(new TunnelControl(router, new File(new File(p.getProperty("i2p.dir.config")), "tunnel"))).start();
-
-      }
-      catch (Exception e) {
-        e.printStackTrace();
-      }
-    }).start();
-
-    Runtime.getRuntime().addShutdownHook(new Thread(()->{
-      System.out.println("I2P router will shut down gracefully");
-      router.shutdownGracefully();
-    }));
+    new RouterWrapper(p).start();
 
   }
 

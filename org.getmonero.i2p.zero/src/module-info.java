@@ -6,4 +6,5 @@ module org.getmonero.i2p.zero {
   requires sam;
   requires i2ptunnel;
   requires jdk.crypto.ec;
+  exports org.getmonero.i2p.zero;
 }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="241.0" prefWidth="770.0" stylesheets="@gui.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.getmonero.i2p.zero.gui.AddTunnelController">
+   <children>
+      <Label layoutX="18.0" layoutY="9.0" prefHeight="27.0" prefWidth="120.0" text="Add a tunnel">
+      </Label>
+      <RadioButton fx:id="clientTunnelRadioButton" layoutX="19.0" layoutY="48.0" mnemonicParsing="false" selected="true" style="" text="Client tunnel - create a local port that forwards requests to a specified I2P destination address">
+         <toggleGroup>
+            <ToggleGroup fx:id="tunnelType" />
+         </toggleGroup>
+      </RadioButton>
+       <RadioButton fx:id="serverTunnelRadioButton" layoutX="19.0" layoutY="73.0" mnemonicParsing="false" text="Server tunnel - create an I2P destination address that will forward requests to the specified host and port" toggleGroup="$tunnelType" />
+      <RadioButton fx:id="socksProxyRadioButton" layoutX="19.0" layoutY="97.0" mnemonicParsing="false" text="SOCKS proxy - applications (like web browsers) that support SOCKS can use your proxy to connect to I2P destinations" toggleGroup="$tunnelType" />
+      <Button fx:id="addButton" defaultButton="true" disable="true" layoutX="712.0" layoutY="197.0" mnemonicParsing="false" text="Add" />
+      <Button fx:id="cancelButton" cancelButton="true" layoutX="647.0" layoutY="197.0" mnemonicParsing="false" text="Cancel" />
+      <Pane fx:id="clientTunnelConfigPane" layoutX="27.0" layoutY="133.0" prefHeight="67.0" prefWidth="523.0">
+         <children>
+            <TextField fx:id="clientDestAddrField" layoutX="165.0" prefHeight="27.0" prefWidth="353.0" />
+            <Label layoutX="1.0" layoutY="4.0" text="I2P destination address" />
+            <TextField fx:id="clientPortField" layoutX="165.0" layoutY="33.0" prefHeight="28.0" prefWidth="84.0" />
+            <Label layoutX="1.0" layoutY="37.0" text="Local port" />
+         </children>
+      </Pane>
+      <Pane fx:id="serverTunnelConfigPane" layoutX="27.0" layoutY="132.0" prefHeight="97.0" prefWidth="523.0" visible="false">
+         <children>
+            <TextField fx:id="serverHostField" layoutX="135.0" />
+            <Label layoutX="1.0" layoutY="5.0" text="Destination host" />
+            <TextField fx:id="serverPortField" layoutX="478.0" prefHeight="27.0" prefWidth="77.0" />
+            <Label layoutX="366.0" layoutY="5.0" text="Destination port" />
+            <TextField fx:id="serverKeyField" layoutX="135.0" layoutY="33.0" prefHeight="28.0" prefWidth="420.0" />
+            <Label layoutX="1.0" layoutY="38.0" text="Server secret key" />
+            <TextField fx:id="serverAddrField" layoutX="135.0" layoutY="66.0" prefHeight="28.0" prefWidth="420.0" />
+            <Label layoutX="1.0" layoutY="71.0" text="Server public address" />
+         </children>
+      </Pane>
+      <Pane fx:id="socksProxyConfigPane" layoutX="27.0" layoutY="132.0" prefHeight="39.0" prefWidth="523.0" visible="false">
+         <children>
+            <TextField fx:id="socksPortField" layoutX="124.0" prefHeight="27.0" prefWidth="77.0" />
+            <Label layoutX="1.0" layoutY="5.0" text="Local SOCKS port" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

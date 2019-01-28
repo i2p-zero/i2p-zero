@@ -1,6 +1,6 @@
 <img src="https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
 
-## Zero dependency, small footprint, cross-platform I2P Java Router with simple tunnel/socks controller and SAM interface
+## Zero dependency, small footprint, cross-platform I2P Java Router with GUI and simple tunnel/socks controller and SAM interface
 
 ##
 
@@ -47,14 +47,19 @@ the jlink tool to build zero-dependency platform-specific launchers.
 To run the Linux router, type:
 
 `dist/linux/router/bin/launch.sh`
+or `dist/linux/router/bin/launch-gui.sh`
 
 To run the MacOS router, type:
 
 `dist/mac/router/bin/launch.sh`
+or `dist/mac/router/bin/launch-gui.sh`
 
 For Windows, run:
 
 `dist/windows/router/bin/launch.bat`
+or `dist/windows/router/bin/launch-gui.bat`
+
+Note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
 
 If it launches successfully, you'll see the message:
 
