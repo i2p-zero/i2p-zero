@@ -14,7 +14,7 @@ rm -fr target/org.getmonero.i2p.zero.gui/classes
 # compile the Main class that starts the I2P router and SAM listener
 echo "*** Compiling Main class"
 $JAVA_HOME/bin/javac --module-path import/lib -d target/org.getmonero.i2p.zero/classes $(find org.getmonero.i2p.zero/src -name '*.java')
-$JAVA_HOME/bin/javac --module-path import/lib:import/javafx-sdk-11.0.2/lib:target/org.getmonero.i2p.zero/classes -d target/org.getmonero.i2p.zero.gui/classes $(find org.getmonero.i2p.zero.gui/src -name '*.java')
+$JAVA_HOME/bin/javac --module-path import/lib:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib:target/org.getmonero.i2p.zero/classes -d target/org.getmonero.i2p.zero.gui/classes $(find org.getmonero.i2p.zero.gui/src -name '*.java')
 cp -r org.getmonero.i2p.zero.gui/src/* target/org.getmonero.i2p.zero.gui/classes
 find target -type f -name '*.java' -delete
 
@@ -40,7 +40,7 @@ for i in linux mac win; do
   esac
   echo "Using JAVA_HOME_VARIANT: $JAVA_HOME_VARIANT"
   $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/$i/router --strip-debug --compress 2 --no-header-files --no-man-pages
-  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:import/javafx-jmods/$i/javafx-jmods-11.0.2:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --strip-debug --compress 2 --no-header-files --no-man-pages
+  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --strip-debug --compress 2 --no-header-files --no-man-pages
 done
 
 for i in linux mac linux-gui mac-gui; do
