@@ -75,7 +75,7 @@ public class TunnelControl implements Runnable {
     public String dest;
     public String host;
     public int port;
-    public I2PTunnel tunnel;
+    public volatile I2PTunnel tunnel;
     public KeyPair keyPair;
     public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir) throws Exception {
       this.host = host;
