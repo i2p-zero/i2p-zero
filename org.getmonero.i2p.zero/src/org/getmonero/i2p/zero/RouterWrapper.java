@@ -20,9 +20,12 @@ public class RouterWrapper {
   private boolean started = false;
   private Properties routerProperties;
   private TunnelControl tunnelControl;
+  private File configDir;
 
   public RouterWrapper(Properties p) {
     this.routerProperties = p;
+    configDir = new File(routerProperties.getProperty("i2p.dir.config"));
+    if(!configDir.exists()) configDir.mkdir();
   }
 
   public boolean isStarted() {
@@ -54,7 +57,7 @@ public class RouterWrapper {
             }
           }
 
-          tunnelControl = new TunnelControl(router, new File(new File(routerProperties.getProperty("i2p.dir.config")), "tunnel"));
+          tunnelControl = new TunnelControl(router, new File(configDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
 
         }
