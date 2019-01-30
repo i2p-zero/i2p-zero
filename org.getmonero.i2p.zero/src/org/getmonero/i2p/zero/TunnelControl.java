@@ -310,17 +310,23 @@ public class TunnelControl implements Runnable {
             case "server.create": {
               String destHost = args[1];
               int destPort = Integer.parseInt(args[2]);
-              File serverTunnelConfigDir = new File(args[3]);
+              File serverTunnelConfigDir = null;
+              if(args.length>=4) serverTunnelConfigDir = new File(args[3]);
               File serverKeyFile;
               KeyPair keyPair;
-              if (!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length == 0) {
-                serverTunnelConfigDir.mkdir();
+              if(serverTunnelConfigDir!=null) {
+                if (!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length == 0) {
+                  serverTunnelConfigDir.mkdir();
+                  keyPair = KeyPair.gen();
+                  serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
+                  keyPair.write(serverKeyFile.getPath());
+                } else {
+                  serverKeyFile = serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys"))[0];
+                  keyPair = KeyPair.read(serverKeyFile.getPath());
+                }
+              }
+              else {
                 keyPair = KeyPair.gen();
-                serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
-                keyPair.write(serverKeyFile.getPath());
-              } else {
-                serverKeyFile = serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys"))[0];
-                keyPair = KeyPair.read(serverKeyFile.getPath());
               }
               var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
               tunnelList.addTunnel(tunnel);

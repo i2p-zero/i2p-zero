@@ -85,26 +85,26 @@ Note that it may take a short while for new tunnels to be set up.
 
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
-#### Listen for i2p connections and forward them to the specified host and port, storing/reading the server key file in/from the specified directory.
+#### Listen for I2P connections and forward them to the specified host and port. Returns the I2P base 32 destination address for the server tunnel created.
 
-If the directory doesn't exist with a file named serverTunnelSecretKey in it,
+Optionally, specify a directory for storing/reading the server key file.
+If the directory doesn't exist with a file named *.b32.i2p.keys in it,
 returns a newly created destination address and writes the secret key for the
-new address to a file called serverTunnelSecretKey in the specified directory. Otherwise, read the existing
-secret key from that directory. The server tunnel will listen for i2p connections and forward them to the
-specified host and port. Returns the I2P b32 destination address for the server tunnel (which deterministically depends
- on the contents of the serverTunnelSecretKey file).
+new address to a file called <I2P dest addr>.keys in the specified directory. Otherwise, read the existing
+secret key from that directory. The server tunnel will listen for I2P connections and forward them to the
+specified host and port. Note that the base 32 I2P destination address deterministically depends on the contents of the .keys file).
 
-`tunnel-control.sh server.create <host> <port> <directory>`
+`tunnel-control.sh server.create <host> <port> <(optional) directory>`
 
 
 #### Close the tunnel listening for connections on the specified destination public key. Returns "OK".
 
-`tunnel-control.sh server.destroy <i2p destination public key>`
+`tunnel-control.sh server.destroy <I2P destination public key>`
 
 
 #### Create a tunnel that listens for connections on localhost on the specified port and forwards connections over I2P to the specified destination public key.
 
-`tunnel-control.sh client.create <local port> <i2p destination public key>`
+`tunnel-control.sh client.create <local port> <I2P destination public key>`
 
 
 #### Close the tunnel listening for connections on the specified port. Returns "OK".
