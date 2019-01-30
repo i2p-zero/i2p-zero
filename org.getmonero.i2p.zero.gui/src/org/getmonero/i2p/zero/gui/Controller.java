@@ -21,6 +21,7 @@ import org.getmonero.i2p.zero.RouterWrapper;
 import static org.getmonero.i2p.zero.TunnelControl.Tunnel;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Properties;
 
 public class Controller {
@@ -56,7 +57,7 @@ public class Controller {
 
   DecimalFormat format2dp = new DecimalFormat("0.00");
   private boolean masterState = true;
-  public final ObservableList<Tunnel> tunnelTableList = FXCollections.observableArrayList();
+  private final ObservableList<Tunnel> tunnelTableList = FXCollections.observableArrayList();
 
   private Stage getStage() {
     return (Stage) rootBorderPane.getScene().getWindow();
@@ -86,8 +87,7 @@ public class Controller {
 
     tunnelRemoveButton.setOnAction(e->{
       Tunnel t = tunnelsTableView.getSelectionModel().getSelectedItem();
-      getRouterWrapper().getTunnelControl().getTunnels().remove(t);
-      tunnelTableList.remove(t);
+      getRouterWrapper().getTunnelControl().getTunnelList().removeTunnel(t);
       t.destroy();
       tunnelRemoveButton.setDisable(true);
     });
@@ -147,6 +147,18 @@ public class Controller {
     });
 
     startRouter();
+
+    new Thread(()->{
+      while(getRouterWrapper()==null || getRouterWrapper().getTunnelControl()==null) {
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+      }
+      var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
+      tunnelList.addPropertyChangeListener(event->{
+        tunnelTableList.clear();
+        tunnelTableList.addAll((List<Tunnel>) event.getNewValue());
+      });
+    }).start();
+
 
     var bandwidthUpdateThread = new Thread(()->{
       while(!Gui.instance.isStopping()) {

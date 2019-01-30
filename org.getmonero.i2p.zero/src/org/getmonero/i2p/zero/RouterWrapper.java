@@ -81,7 +81,7 @@ public class RouterWrapper {
             }
           }
 
-          tunnelControl = new TunnelControl(router, new File(i2PConfigDir, "tunnelTemp"));
+          tunnelControl = new TunnelControl(router, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
 
         }

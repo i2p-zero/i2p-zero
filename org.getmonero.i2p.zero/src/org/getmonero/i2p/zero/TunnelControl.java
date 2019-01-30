@@ -10,7 +10,13 @@ import net.i2p.data.Destination;
 import net.i2p.i2ptunnel.I2PTunnel;
 import net.i2p.router.Router;
 import net.i2p.sam.SAMBridge;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -21,24 +27,122 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class TunnelControl implements Runnable {
 
-  private List<Tunnel> tunnels = new ArrayList<>();
-  private int clientPortSeq = 30000;
   private Router router;
   private boolean stopping = false;
   private ServerSocket controlServerSocket;
+  private File tunnelControlConfigDir;
   private File tunnelControlTempDir;
+  private TunnelList tunnelList;
 
+  public static class TunnelList {
+    private File tunnelControlConfigDir;
+    private File tunnelControlTempDir;
+    private List<Tunnel> tunnels = new ArrayList<>();
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-  public TunnelControl(Router router, File tunnelControlTempDir) {
+    public TunnelList(File tunnelControlConfigDir, File tunnelControlTempDir) {
+      this.tunnelControlConfigDir = tunnelControlConfigDir;
+      this.tunnelControlTempDir = tunnelControlTempDir;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+      pcs.addPropertyChangeListener(listener);
+    }
+    private void fireChangeEvent() {
+      pcs.firePropertyChange(new PropertyChangeEvent(this, "list", null, tunnels));
+    }
+
+    public void addTunnel(Tunnel t) {
+      tunnels.add(t);
+      save();
+      fireChangeEvent();
+    }
+    public void removeTunnel(Tunnel t) {
+      tunnels.remove(t);
+      save();
+      fireChangeEvent();
+    }
+    public Stream<Tunnel> getTunnelsCopyStream() {
+      return new ArrayList<>(tunnels).stream();
+    }
+    public void load() {
+      try {
+        File tunnelControlConfigFile = new File(tunnelControlConfigDir, "tunnels.json");
+        if (tunnelControlConfigFile.exists()) {
+          tunnels.clear();
+          JSONObject root = (JSONObject) new JSONParser().parse(Files.readString(tunnelControlConfigFile.toPath()));
+          JSONArray list = (JSONArray) root.get("tunnels");
+          list.stream().forEach((o)->{
+            JSONObject obj = (JSONObject) o;
+            String type = (String) obj.get("type");
+            switch (type) {
+              case "server":
+                tunnels.add(new ServerTunnel((String) obj.get("host"), Integer.parseInt((String) obj.get("port")), new KeyPair((String) obj.get("keypair")), tunnelControlTempDir));
+                break;
+              case "client":
+                tunnels.add(new ClientTunnel((String) obj.get("dest"), Integer.parseInt((String) obj.get("port"))));
+                break;
+              case "socks":
+                tunnels.add(new SocksTunnel(Integer.parseInt((String) obj.get("port"))));
+                break;
+            }
+          });
+          fireChangeEvent();
+        }
+
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    public void save() {
+      try {
+        JSONObject root = new JSONObject();
+        JSONArray tunnelsArray = new JSONArray();
+        root.put("tunnels", tunnelsArray);
+        for(Tunnel t : tunnels) {
+          JSONObject entry = new JSONObject();
+          entry.put("type", t.getType());
+          tunnelsArray.add(entry);
+          switch (t.getType()) {
+            case "server":
+              entry.put("host", t.getHost());
+              entry.put("port", t.getPort());
+              entry.put("dest", t.getI2P());
+              entry.put("keypair", ((ServerTunnel) t).keyPair.toString());
+              break;
+
+            case "client":
+              entry.put("dest", t.getI2P());
+              entry.put("port", t.getPort());
+              break;
+
+            case "socks":
+              entry.put("port", t.getPort());
+              break;
+          }
+        }
+        Files.writeString(new File(tunnelControlConfigDir, "tunnels.json").toPath(), root.toJSONString());
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+  }
+
+  public TunnelControl(Router router, File tunnelControlConfigDir, File tunnelControlTempDir) {
     this.router = router;
     tunnelControlTempDir.delete();
     tunnelControlTempDir.mkdir();
 
+    this.tunnelControlConfigDir = tunnelControlConfigDir;
     this.tunnelControlTempDir = tunnelControlTempDir;
     Runtime.getRuntime().addShutdownHook(new Thread(()->this.tunnelControlTempDir.delete()));
+
+    tunnelList = new TunnelList(tunnelControlConfigDir, tunnelControlTempDir);
   }
 
   public interface Tunnel {
@@ -80,22 +184,27 @@ public class TunnelControl implements Runnable {
     public int port;
     public volatile I2PTunnel tunnel;
     public KeyPair keyPair;
-    public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir) throws Exception {
-      this.host = host;
-      this.port = port;
-      this.keyPair = keyPair;
-      this.dest = keyPair.b32Dest;
+    public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir) {
+      try {
+        this.host = host;
+        this.port = port;
+        this.keyPair = keyPair;
+        this.dest = keyPair.b32Dest;
 
-      String uuid = new BigInteger(128, new Random()).toString(16);
-      String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey."+uuid+".dat";
+        String uuid = new BigInteger(128, new Random()).toString(16);
+        String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey." + uuid + ".dat";
 
-      Files.write(Path.of(seckeyPath), Base64.decode(keyPair.seckey));
-      new File(seckeyPath).deleteOnExit(); // clean up temporary file that was only required because new I2PTunnel() requires it to be written to disk
+        Files.write(Path.of(seckeyPath), Base64.decode(keyPair.seckey));
+        new File(seckeyPath).deleteOnExit(); // clean up temporary file that was only required because new I2PTunnel() requires it to be written to disk
 
-      // listen using the I2P server keypair, and forward incoming connections to a destination and port
-      new Thread(()->{
-        tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server "+host+" "+port+" " + seckeyPath});
-      }).start();
+        // listen using the I2P server keypair, and forward incoming connections to a destination and port
+        new Thread(() -> {
+          tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server " + host + " " + port + " " + seckeyPath});
+        }).start();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     }
     public void destroy() {
       new Thread(()->{
@@ -132,8 +241,8 @@ public class TunnelControl implements Runnable {
     @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
   }
 
-  public List<Tunnel> getTunnels() {
-    return tunnels;
+  public TunnelList getTunnelList() {
+    return tunnelList;
   }
 
   public static class KeyPair {
@@ -145,13 +254,24 @@ public class TunnelControl implements Runnable {
       this.pubkey = pubkey;
       this.b32Dest = b32Dest;
     }
-    public KeyPair(String base64EncodedCommaDelimitedPair) throws Exception {
-      String[] a = base64EncodedCommaDelimitedPair.split(",");
-      this.seckey = a[0];
-      this.pubkey = a[1];
-      Destination d = new Destination();
-      d.readBytes(new ByteArrayInputStream(Base64.decode(this.seckey)));
-      this.b32Dest = d.toBase32();
+
+    @Override
+    public String toString() {
+      return seckey + "," + pubkey;
+    }
+
+    public KeyPair(String base64EncodedCommaDelimitedPair) {
+      try {
+        String[] a = base64EncodedCommaDelimitedPair.split(",");
+        this.seckey = a[0];
+        this.pubkey = a[1];
+        Destination d = new Destination();
+        d.readBytes(new ByteArrayInputStream(Base64.decode(this.seckey)));
+        this.b32Dest = d.toBase32();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
     }
     public static KeyPair gen() throws Exception {
       ByteArrayOutputStream seckey = new ByteArrayOutputStream();
@@ -166,7 +286,7 @@ public class TunnelControl implements Runnable {
       return new KeyPair(Files.readString(Paths.get(path)));
     }
     public void write(String path) throws Exception {
-      Files.writeString(Paths.get(path), seckey + "," + pubkey);
+      Files.writeString(Paths.get(path), toString());
     }
 
   }
@@ -174,8 +294,10 @@ public class TunnelControl implements Runnable {
   @Override
   public void run() {
 
+    tunnelList.load();
+
     try {
-      controlServerSocket = new ServerSocket(clientPortSeq++, 0, InetAddress.getLoopbackAddress());
+      controlServerSocket = new ServerSocket(30000, 0, InetAddress.getLoopbackAddress());
       while (!stopping) {
         try (var socket = controlServerSocket.accept()) {
           var out = new PrintWriter(socket.getOutputStream(), true);
@@ -185,48 +307,51 @@ public class TunnelControl implements Runnable {
 
           switch(args[0]) {
 
-            case "server.create":
+            case "server.create": {
               String destHost = args[1];
               int destPort = Integer.parseInt(args[2]);
               File serverTunnelConfigDir = new File(args[3]);
               File serverKeyFile;
               KeyPair keyPair;
-              if(!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length==0) {
+              if (!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length == 0) {
                 serverTunnelConfigDir.mkdir();
                 keyPair = KeyPair.gen();
                 serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
                 keyPair.write(serverKeyFile.getPath());
-              }
-              else {
+              } else {
                 serverKeyFile = serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys"))[0];
                 keyPair = KeyPair.read(serverKeyFile.getPath());
               }
               var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
-              tunnels.add(tunnel);
+              tunnelList.addTunnel(tunnel);
               out.println(tunnel.dest);
               break;
+            }
 
-            case "server.destroy":
+            case "server.destroy": {
               String dest = args[1];
-              new ArrayList<>(tunnels).stream().filter(t->t.getType().equals("server") && ((ServerTunnel) t).dest.equals(dest)).forEach(t->{
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("server") && ((ServerTunnel) t).dest.equals(dest)).forEach(t -> {
                 t.destroy();
-                tunnels.remove(t);
+                tunnelList.removeTunnel(t);
               });
               out.println("OK");
               break;
+            }
 
-            case "client.create":
+            case "client.create": {
               String destPubKey = args[1];
-              var clientTunnel = new ClientTunnel(destPubKey, clientPortSeq++);
-              tunnels.add(clientTunnel);
+              int port = Integer.parseInt(args[2]);
+              var clientTunnel = new ClientTunnel(destPubKey, port);
+              tunnelList.addTunnel(clientTunnel);
               out.println(clientTunnel.port);
               break;
+            }
 
             case "client.destroy": {
               int port = Integer.parseInt(args[1]);
-              new ArrayList<>(tunnels).stream().filter(t->t.getType().equals("client") && ((ClientTunnel) t).port == port).forEach(t->{
+              tunnelList.getTunnelsCopyStream().filter(t->t.getType().equals("client") && ((ClientTunnel) t).port == port).forEach(t->{
                 t.destroy();
-                tunnels.remove(t);
+                tunnelList.removeTunnel(t);
               });
               out.println("OK");
               break;
@@ -234,21 +359,22 @@ public class TunnelControl implements Runnable {
 
             case "socks.create": {
               int port = Integer.parseInt(args[1]);
-              tunnels.add(new SocksTunnel(port));
+              tunnelList.addTunnel(new SocksTunnel(port));
               out.println("OK");
               break;
             }
 
-            case "socks.destroy":
+            case "socks.destroy": {
               int port = Integer.parseInt(args[1]);
-              new ArrayList<>(tunnels).stream().filter(t->t.getType().equals("socks") && ((SocksTunnel) t).port == port).forEach(t->{
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("socks") && ((SocksTunnel) t).port == port).forEach(t -> {
                 t.destroy();
-                tunnels.remove(t);
+                tunnelList.removeTunnel(t);
               });
               out.println("OK");
               break;
+            }
 
-            case "sam.create":
+            case "sam.create": {
               String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
               I2PAppContext context = router.getContext();
               ClientAppManager mgr = new ClientAppManagerImpl(context);
@@ -256,6 +382,7 @@ public class TunnelControl implements Runnable {
               samBridge.startup();
               out.println("OK");
               break;
+            }
 
           }
 

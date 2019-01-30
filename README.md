@@ -102,22 +102,22 @@ specified host and port. Returns the I2P b32 destination address for the server 
 `tunnel-control.sh server.destroy <i2p destination public key>`
 
 
-#### Create a tunnel that listens for connections on localhost and forwards connections over I2P to the specified destination public key. Returns a newly created localhost port number.
+#### Create a tunnel that listens for connections on localhost on the specified port and forwards connections over I2P to the specified destination public key.
 
-`tunnel-control.sh client.create <i2p destination public key>`
+`tunnel-control.sh client.create <local port> <i2p destination public key>`
 
 
 #### Close the tunnel listening for connections on the specified port. Returns "OK".
 
-`tunnel-control.sh client.destroy <port>`
+`tunnel-control.sh client.destroy <local port>`
 
 #### Create a socks tunnel, listening on the specified port
 
-`tunnel-control.sh socks.create <port>`
+`tunnel-control.sh socks.create <local port>`
 
 #### Destroy the socks tunnel listening on the specified port
 
-`tunnel-control.sh socks.destroy <port>`
+`tunnel-control.sh socks.destroy <local port>`
 
 #### Start a SAM listener on port 7656. Returns "OK"
 
