@@ -36,8 +36,9 @@ public class TunnelControl implements Runnable {
     this.router = router;
     tunnelControlTempDir.delete();
     tunnelControlTempDir.mkdir();
+
     this.tunnelControlTempDir = tunnelControlTempDir;
-    this.tunnelControlTempDir.deleteOnExit();
+    Runtime.getRuntime().addShutdownHook(new Thread(()->this.tunnelControlTempDir.delete()));
   }
 
   public interface Tunnel {
