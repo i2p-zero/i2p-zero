@@ -17,6 +17,7 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +37,7 @@ public class TunnelControl implements Runnable {
     tunnelControlTempDir.delete();
     tunnelControlTempDir.mkdir();
     this.tunnelControlTempDir = tunnelControlTempDir;
+    this.tunnelControlTempDir.deleteOnExit();
   }
 
   public interface Tunnel {
@@ -132,16 +134,6 @@ public class TunnelControl implements Runnable {
     return tunnels;
   }
 
-  public KeyPair genKeyPair() throws Exception {
-    ByteArrayOutputStream seckey = new ByteArrayOutputStream();
-    ByteArrayOutputStream pubkey = new ByteArrayOutputStream();
-    I2PClient client = I2PClientFactory.createClient();
-    Destination d = client.createDestination(seckey);
-    d.writeBytes(pubkey);
-    String b32Dest = d.toBase32();
-    return new KeyPair(Base64.encode(seckey.toByteArray()), Base64.encode(pubkey.toByteArray()), b32Dest);
-  }
-
   public static class KeyPair {
     public String seckey;
     public String pubkey;
@@ -159,22 +151,26 @@ public class TunnelControl implements Runnable {
       d.readBytes(new ByteArrayInputStream(Base64.decode(this.seckey)));
       this.b32Dest = d.toBase32();
     }
+    public static KeyPair gen() throws Exception {
+      ByteArrayOutputStream seckey = new ByteArrayOutputStream();
+      ByteArrayOutputStream pubkey = new ByteArrayOutputStream();
+      I2PClient client = I2PClientFactory.createClient();
+      Destination d = client.createDestination(seckey);
+      d.writeBytes(pubkey);
+      String b32Dest = d.toBase32();
+      return new KeyPair(Base64.encode(seckey.toByteArray()), Base64.encode(pubkey.toByteArray()), b32Dest);
+    }
+    public static KeyPair read(String path) throws Exception {
+      return new KeyPair(Files.readString(Paths.get(path)));
+    }
+    public void write(String path) throws Exception {
+      Files.writeString(Paths.get(path), seckey + "," + pubkey);
+    }
+
   }
 
   @Override
   public void run() {
-
-    // listen for socket connections to the tunnel controller.
-    // listen for the commands on port 30000:
-    // server.create <host> <port> // returns a newly created destination public key, which will listen for i2p connections and forward them to the specified host and port
-    // server.destroy <i2p destination public key> // closes the tunnel listening for connections on the specified destination public key, and returns OK
-    // client.create <i2p destination public key> // returns a newly created localhost port number, where connections will be sent over I2P to the destination public key
-    // client.destroy <port> // closes the tunnel listening for connections on the specified port, and returns OK
-    // socks.create <port> // creates a socks proxy listening on the specified port
-    // socks.destroy <port> // closes the socks proxy listening on the specified port, and returns OK
-    //
-    // send a command with bash: exec 3<>/dev/tcp/localhost/30000; echo "server.create localhost 80" >&3; cat <&3
-    //
 
     try {
       controlServerSocket = new ServerSocket(clientPortSeq++, 0, InetAddress.getLoopbackAddress());
@@ -190,7 +186,18 @@ public class TunnelControl implements Runnable {
             case "server.create":
               String destHost = args[1];
               int destPort = Integer.parseInt(args[2]);
-              var tunnel = new ServerTunnel(destHost, destPort, genKeyPair(), getTunnelControlTempDir());
+              File serverTunnelConfigDir = new File(args[3]);
+              if(!serverTunnelConfigDir.exists()) serverTunnelConfigDir.mkdir();
+              File serverKeyFile = new File(serverTunnelConfigDir, "serverTunnelSecretKey");
+              KeyPair keyPair;
+              if(serverKeyFile.exists()) {
+                keyPair = KeyPair.read(serverKeyFile.getPath());
+              }
+              else {
+                keyPair = KeyPair.gen();
+                keyPair.write(serverKeyFile.getPath());
+              }
+              var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
               tunnels.add(tunnel);
               out.println(tunnel.dest);
               break;

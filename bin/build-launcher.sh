@@ -70,7 +70,6 @@ done
 
 
 for i in linux mac win linux-gui mac-gui win-gui; do cp -r $basedir/import/i2p.base $basedir/dist/$i/router/; done
-for i in linux mac win linux-gui mac-gui win-gui; do mkdir -p $basedir/dist/$i/router/i2p.config; done
 
 # remove unnecessary native libs from jbigi.jar
 for i in linux mac win linux-gui mac-gui win-gui; do

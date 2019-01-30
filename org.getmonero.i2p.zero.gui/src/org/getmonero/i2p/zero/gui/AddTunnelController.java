@@ -89,7 +89,7 @@ public class AddTunnelController {
         socksProxyConfigPane.setVisible(false);
         if (newToggle.equals(clientTunnelRadioButton)) clientTunnelConfigPane.setVisible(true);
         if (newToggle.equals(serverTunnelRadioButton)) {
-          var keyPair = tunnelControl.genKeyPair();
+          var keyPair = TunnelControl.KeyPair.gen();
           serverKeyField.setText(keyPair.seckey + "," + keyPair.pubkey);
           serverAddrField.setText(keyPair.b32Dest);
           serverTunnelConfigPane.setVisible(true);

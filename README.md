@@ -85,9 +85,16 @@ Note that it may take a short while for new tunnels to be set up.
 
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
-#### Listen for i2p connections and forward them to the specified host and port. Returns a newly created destination public key.
+#### Listen for i2p connections and forward them to the specified host and port, storing/reading the server key file in/from the specified directory.
 
-`tunnel-control.sh server.create <host> <port>`
+If the directory doesn't exist with a file named serverTunnelSecretKey in it,
+returns a newly created destination address and writes the secret key for the
+new address to a file called serverTunnelSecretKey in the specified directory. Otherwise, read the existing
+secret key from that directory. The server tunnel will listen for i2p connections and forward them to the
+specified host and port. Returns the I2P b32 destination address for the server tunnel (which deterministically depends
+ on the contents of the serverTunnelSecretKey file).
+
+`tunnel-control.sh server.create <host> <port> <directory>`
 
 
 #### Close the tunnel listening for connections on the specified destination public key. Returns "OK".
