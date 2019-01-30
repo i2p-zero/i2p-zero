@@ -189,15 +189,17 @@ public class TunnelControl implements Runnable {
               String destHost = args[1];
               int destPort = Integer.parseInt(args[2]);
               File serverTunnelConfigDir = new File(args[3]);
-              if(!serverTunnelConfigDir.exists()) serverTunnelConfigDir.mkdir();
-              File serverKeyFile = new File(serverTunnelConfigDir, "serverTunnelSecretKey");
+              File serverKeyFile;
               KeyPair keyPair;
-              if(serverKeyFile.exists()) {
-                keyPair = KeyPair.read(serverKeyFile.getPath());
+              if(!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length==0) {
+                serverTunnelConfigDir.mkdir();
+                keyPair = KeyPair.gen();
+                serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
+                keyPair.write(serverKeyFile.getPath());
               }
               else {
-                keyPair = KeyPair.gen();
-                keyPair.write(serverKeyFile.getPath());
+                serverKeyFile = serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys"))[0];
+                keyPair = KeyPair.read(serverKeyFile.getPath());
               }
               var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
               tunnels.add(tunnel);

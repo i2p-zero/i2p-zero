@@ -10,6 +10,9 @@ import net.i2p.router.transport.FIFOBandwidthRefiller;
 import net.i2p.router.transport.TransportUtil;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Properties;
@@ -20,12 +23,33 @@ public class RouterWrapper {
   private boolean started = false;
   private Properties routerProperties;
   private TunnelControl tunnelControl;
-  private File configDir;
+  private File i2PConfigDir;
+  private File i2PBaseDir;
 
   public RouterWrapper(Properties p) {
     this.routerProperties = p;
-    configDir = new File(routerProperties.getProperty("i2p.dir.config"));
-    if(!configDir.exists()) configDir.mkdir();
+
+    p.put("i2p.dir.base", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "base");
+    p.put("i2p.dir.config", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "config");
+
+    i2PConfigDir = new File(routerProperties.getProperty("i2p.dir.config"));
+    if(!i2PConfigDir.exists()) i2PConfigDir.mkdirs();
+
+    i2PBaseDir = new File(routerProperties.getProperty("i2p.dir.base"));
+    if(!i2PBaseDir.exists()) {
+      i2PBaseDir.mkdirs();
+      copyFolderRecursively(Path.of(routerProperties.getProperty("i2p.dir.base.template")), i2PBaseDir.toPath());
+    }
+  }
+
+  public void copyFolderRecursively(Path src, Path dest)  {
+    try {
+      Files.walk(src).forEach(source -> {
+        try { Files.copy(source, dest.resolve(src.relativize(source)), StandardCopyOption.REPLACE_EXISTING); } catch (Exception e) { throw new RuntimeException(e); }
+      });
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public boolean isStarted() {
@@ -57,7 +81,7 @@ public class RouterWrapper {
             }
           }
 
-          tunnelControl = new TunnelControl(router, new File(configDir, "tunnelTemp"));
+          tunnelControl = new TunnelControl(router, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
 
         }

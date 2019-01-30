@@ -191,8 +191,6 @@ public class Controller {
     var params = Gui.instance.getParameters().getNamed();
 
     Properties routerProperties = new Properties();
-    routerProperties.put("i2p.dir.base", params.get("i2p.dir.base"));
-    routerProperties.put("i2p.dir.config", params.get("i2p.dir.config"));
     routerProperties.put("i2np.inboundKBytesPerSecond", getBandwidthLimitKBPerSec());
     routerProperties.put("i2np.outboundKBytesPerSecond", getBandwidthLimitKBPerSec());
     routerProperties.put("router.sharePercentage", 80);
