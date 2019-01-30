@@ -97,9 +97,9 @@ specified host and port. Note that the base 32 I2P destination address determini
 `tunnel-control.sh server.create <host> <port> <(optional) directory>`
 
 
-#### Close the tunnel listening for connections on the specified destination public key. Returns "OK".
+#### Close the tunnel listening for connections on the specified I2P destination address. Returns "OK".
 
-`tunnel-control.sh server.destroy <I2P destination public key>`
+`tunnel-control.sh server.destroy <base 32 I2P address>`
 
 
 #### Create a tunnel that listens for connections on localhost on the specified port and forwards connections over I2P to the specified destination public key.
