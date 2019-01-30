@@ -89,6 +89,7 @@ public class TunnelControl implements Runnable {
       String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey."+uuid+".dat";
 
       Files.write(Path.of(seckeyPath), Base64.decode(keyPair.seckey));
+      new File(seckeyPath).deleteOnExit(); // clean up temporary file that was only required because new I2PTunnel() requires it to be written to disk
 
       // listen using the I2P server keypair, and forward incoming connections to a destination and port
       new Thread(()->{
