@@ -119,6 +119,10 @@ specified host and port. Returns the I2P b32 destination address for the server 
 
 `tunnel-control.sh socks.destroy <local port>`
 
+#### Destroy all tunnels. Returns "OK"
+
+`tunnel-control.sh all.destroy`
+
 #### Start a SAM listener on port 7656. Returns "OK"
 
 `tunnel-control.sh sam.create`
