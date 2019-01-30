@@ -123,6 +123,10 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh all.destroy`
 
+#### List all tunnels. Returns JSON string containing information about all tunnels currently in existence
+
+`tunnel-control.sh all.list`
+
 #### Start a SAM listener on port 7656. Returns "OK"
 
 `tunnel-control.sh sam.create`

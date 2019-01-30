@@ -98,7 +98,7 @@ public class TunnelControl implements Runnable {
         throw new RuntimeException(e);
       }
     }
-    public void save() {
+    public String getJSON(boolean includeKeyPairs) {
       try {
         JSONObject root = new JSONObject();
         JSONArray tunnelsArray = new JSONArray();
@@ -112,7 +112,7 @@ public class TunnelControl implements Runnable {
               entry.put("host", t.getHost());
               entry.put("port", t.getPort());
               entry.put("dest", t.getI2P());
-              entry.put("keypair", ((ServerTunnel) t).keyPair.toString());
+              if(includeKeyPairs) entry.put("keypair", ((ServerTunnel) t).keyPair.toString());
               break;
 
             case "client":
@@ -125,7 +125,15 @@ public class TunnelControl implements Runnable {
               break;
           }
         }
-        Files.writeString(new File(tunnelControlConfigDir, "tunnels.json").toPath(), root.toJSONString());
+        return root.toJSONString();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+    public void save() {
+      try {
+        Files.writeString(new File(tunnelControlConfigDir, "tunnels.json").toPath(), getJSON(true));
       }
       catch (Exception e) {
         throw new RuntimeException(e);
@@ -386,6 +394,11 @@ public class TunnelControl implements Runnable {
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
+              break;
+            }
+
+            case "all.list": {
+              out.println(tunnelList.getJSON(false));
               break;
             }
 
