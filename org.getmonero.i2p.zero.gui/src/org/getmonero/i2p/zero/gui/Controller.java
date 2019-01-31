@@ -153,9 +153,9 @@ public class Controller {
         try { Thread.sleep(100); } catch (InterruptedException e) {}
       }
       var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
-      tunnelList.addPropertyChangeListener(event->{
+      tunnelList.addChangeListener(tunnels->{
         tunnelTableList.clear();
-        tunnelTableList.addAll((List<Tunnel>) event.getNewValue());
+        tunnelTableList.addAll(tunnels);
       });
     }).start();
 

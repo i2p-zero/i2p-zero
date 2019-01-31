@@ -14,9 +14,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -42,18 +39,18 @@ public class TunnelControl implements Runnable {
     private File tunnelControlConfigDir;
     private File tunnelControlTempDir;
     private List<Tunnel> tunnels = new ArrayList<>();
-    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private List<ChangeListener<List<Tunnel>>> changeListeners = new ArrayList<>();
 
     public TunnelList(File tunnelControlConfigDir, File tunnelControlTempDir) {
       this.tunnelControlConfigDir = tunnelControlConfigDir;
       this.tunnelControlTempDir = tunnelControlTempDir;
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-      pcs.addPropertyChangeListener(listener);
+    public void addChangeListener(ChangeListener<List<Tunnel>> listener) {
+      changeListeners.add(listener);
     }
     private void fireChangeEvent() {
-      pcs.firePropertyChange(new PropertyChangeEvent(this, "list", null, tunnels));
+      for(var listener : changeListeners) listener.onChange(tunnels);
     }
 
     public void addTunnel(Tunnel t) {
