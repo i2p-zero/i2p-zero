@@ -6,12 +6,13 @@ else
     basedir=$(dirname $(dirname $(readlink -fm $0)))
 fi
 
-cd $basedir/import
-
 source $basedir/bin/java-config.sh
+
+cd $basedir/import
 
 # build the jars we're going to modularize
 cd $basedir/import/i2p.i2p
+export LG2=en
 $basedir/import/apache-ant-1.10.5/bin/ant buildRouter buildI2PTunnelJars buildSAM jbigi
 cd ..
 
