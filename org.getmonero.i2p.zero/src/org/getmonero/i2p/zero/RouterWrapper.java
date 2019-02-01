@@ -42,6 +42,10 @@ public class RouterWrapper {
     }
   }
 
+  public Router getRouter() {
+    return router;
+  }
+
   public void copyFolderRecursively(Path src, Path dest)  {
     try {
       Files.walk(src).forEach(source -> {
@@ -81,7 +85,7 @@ public class RouterWrapper {
             }
           }
 
-          tunnelControl = new TunnelControl(router, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
+          tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
 
         }

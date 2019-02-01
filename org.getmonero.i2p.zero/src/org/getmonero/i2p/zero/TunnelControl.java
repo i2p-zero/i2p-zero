@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 
 public class TunnelControl implements Runnable {
 
-  private Router router;
+  private RouterWrapper routerWrapper;
   private boolean stopping = false;
   private ServerSocket controlServerSocket;
   private File tunnelControlConfigDir;
@@ -138,8 +138,8 @@ public class TunnelControl implements Runnable {
     }
   }
 
-  public TunnelControl(Router router, File tunnelControlConfigDir, File tunnelControlTempDir) {
-    this.router = router;
+  public TunnelControl(RouterWrapper routerWrapper, File tunnelControlConfigDir, File tunnelControlTempDir) {
+    this.routerWrapper = routerWrapper;
     tunnelControlTempDir.delete();
     tunnelControlTempDir.mkdir();
 
@@ -399,9 +399,14 @@ public class TunnelControl implements Runnable {
               break;
             }
 
+            case "router.reachability": {
+              out.println(routerWrapper.getReachability().getMessage());
+              break;
+            }
+
             case "sam.create": {
               String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
-              I2PAppContext context = router.getContext();
+              I2PAppContext context = routerWrapper.getRouter().getContext();
               ClientAppManager mgr = new ClientAppManagerImpl(context);
               SAMBridge samBridge = new SAMBridge(context, mgr, samArgs);
               samBridge.startup();

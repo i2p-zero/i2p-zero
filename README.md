@@ -85,6 +85,10 @@ Note that it may take a short while for new tunnels to be set up.
 
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
+#### Get the router reachability status. Returns a string such as "testing", "firewalled", "running", "error"
+
+`tunnel-control.sh router.reachability`
+
 #### Listen for I2P connections and forward them to the specified host and port. Returns the I2P base 32 destination address for the server tunnel created.
 
 Optionally, specify a directory for storing/reading the server key file.
