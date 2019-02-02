@@ -75,7 +75,7 @@ done
 
 # build map app structure
 mv $basedir/dist/mac-gui/router $basedir/dist/mac-gui/router-tmp
-mkdir -p $basedir/dist/mac-gui/router
+mkdir -p $basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/
 cp -R $basedir/resources/i2p-zero.app $basedir/dist/mac-gui/router/
 mv $basedir/dist/mac-gui/router-tmp/* $basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/
 rm -fr $basedir/dist/mac-gui/router-tmp
