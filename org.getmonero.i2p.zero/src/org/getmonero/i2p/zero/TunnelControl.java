@@ -349,6 +349,14 @@ public class TunnelControl implements Runnable {
               break;
             }
 
+            case "server.state": {
+              String dest = args[1];
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("server") && ((ServerTunnel) t).dest.equals(dest)).forEach(t -> {
+                out.println(((ServerTunnel) t).tunnel==null ? "opening" : "open");
+              });
+              break;
+            }
+
             case "client.create": {
               String destPubKey = args[1];
               int port = Integer.parseInt(args[2]);
@@ -368,6 +376,14 @@ public class TunnelControl implements Runnable {
               break;
             }
 
+            case "client.state": {
+              int port = Integer.parseInt(args[1]);
+              tunnelList.getTunnelsCopyStream().filter(t->t.getType().equals("client") && ((ClientTunnel) t).port == port).forEach(t->{
+                out.println(((ClientTunnel) t).tunnel==null ? "opening" : "open");
+              });
+              break;
+            }
+
             case "socks.create": {
               int port = Integer.parseInt(args[1]);
               tunnelList.addTunnel(new SocksTunnel(port));
@@ -382,6 +398,13 @@ public class TunnelControl implements Runnable {
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
+              break;
+            }
+            case "socks.state": {
+              int port = Integer.parseInt(args[1]);
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("socks") && ((SocksTunnel) t).port == port).forEach(t -> {
+                out.println(((SocksTunnel) t).tunnel==null ? "opening" : "open");
+              });
               break;
             }
 
