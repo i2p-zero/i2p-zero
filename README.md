@@ -54,7 +54,7 @@ To run the Linux router, type:
 
 `dist/linux/router/bin/launch.sh`
 or `dist/linux-gui/router/bin/launch-gui.sh`
-or double click the `dist/linux-gui/router/i2p-zero.desktop' file
+or double click the `dist/linux-gui/router/i2p-zero.desktop` file
 
 To run the MacOS router, type:
 
