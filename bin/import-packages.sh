@@ -6,16 +6,16 @@ else
     basedir=$(dirname $(dirname $(readlink -fm $0)))
 fi
 
-source $basedir/bin/java-config.sh
+source "$basedir/bin/java-config.sh"
 
-mkdir -p $basedir/import
-cd $basedir/import
+mkdir -p "$basedir/import"
+cd "$basedir/import"
 
 if [ ! -d "$basedir/import/i2p.i2p" ]; then
   git clone https://github.com/i2p/i2p.i2p.git
 fi
 
-cd $basedir/import/i2p.i2p
+cd "$basedir/import/i2p.i2p"
 git fetch
 git checkout tags/i2p-0.9.38
 cd ..
@@ -61,7 +61,4 @@ if [ ! -d "$basedir/import/javafx-jmods" ]; then
   unzip javafx-jmods/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
   unzip javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
 fi
-
-
-
 
