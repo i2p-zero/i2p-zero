@@ -5,7 +5,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>i2p-zero</string>
 	<key>CFBundleExecutable</key>
-	<string>launch-gui.sh</string>
+	<string>bin/launch-gui.sh</string>
 	<key>CFBundleIdentifier</key>
 	<string>org.getmonero.i2p.zero.gui</string>
 	<key>CFBundleName</key>
