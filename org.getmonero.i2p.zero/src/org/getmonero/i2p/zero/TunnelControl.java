@@ -8,7 +8,6 @@ import net.i2p.client.I2PClientFactory;
 import net.i2p.data.Base64;
 import net.i2p.data.Destination;
 import net.i2p.i2ptunnel.I2PTunnel;
-import net.i2p.router.Router;
 import net.i2p.sam.SAMBridge;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -95,7 +94,7 @@ public class TunnelControl implements Runnable {
         throw new RuntimeException(e);
       }
     }
-    public String getJSON(boolean includeKeyPairs) {
+    public String getJSON(boolean includeKeyPairs, boolean includeState) {
       try {
         JSONObject root = new JSONObject();
         JSONArray tunnelsArray = new JSONArray();
@@ -103,6 +102,7 @@ public class TunnelControl implements Runnable {
         for(Tunnel t : tunnels) {
           JSONObject entry = new JSONObject();
           entry.put("type", t.getType());
+          if(includeState) entry.put("state", t.getState());
           tunnelsArray.add(entry);
           switch (t.getType()) {
             case "server":
@@ -130,7 +130,7 @@ public class TunnelControl implements Runnable {
     }
     public void save() {
       try {
-        Files.writeString(new File(tunnelControlConfigDir, "tunnels.json").toPath(), getJSON(true));
+        Files.writeString(new File(tunnelControlConfigDir, "tunnels.json").toPath(), getJSON(true, false));
       }
       catch (Exception e) {
         throw new RuntimeException(e);
@@ -181,7 +181,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
-    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
+    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
   }
   public static class ServerTunnel implements Tunnel {
     public String dest;
@@ -221,7 +221,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return host; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
-    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
+    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
 
   }
   public static class SocksTunnel implements Tunnel {
@@ -243,7 +243,7 @@ public class TunnelControl implements Runnable {
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return "n/a"; }
-    @Override public String getState() { return tunnel==null ? "opening..." : "open"; }
+    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
   }
 
   public TunnelList getTunnelList() {
@@ -418,7 +418,7 @@ public class TunnelControl implements Runnable {
             }
 
             case "all.list": {
-              out.println(tunnelList.getJSON(false));
+              out.println(tunnelList.getJSON(false, true));
               break;
             }
 
