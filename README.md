@@ -53,17 +53,18 @@ the jlink tool to build zero-dependency platform-specific launchers.
 To run the Linux router, type:
 
 `dist/linux/router/bin/launch.sh`
-or `dist/linux/router/bin/launch-gui.sh`
+or `dist/linux-gui/router/bin/launch-gui.sh`
+or double click the `dist/linux-gui/router/i2p-zero.desktop' file
 
 To run the MacOS router, type:
 
 `dist/mac/router/bin/launch.sh`
-or run the app located in `dist/mac/router/i2p-zero.app`
+or run the app located in `dist/mac-gui/router/i2p-zero.app`
 
 For Windows, run:
 
 `dist/windows/router/bin/launch.bat`
-or `dist/windows/router/bin/launch-gui.bat`
+or `dist/windows-gui/router/bin/launch-gui.bat`
 
 Note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
 

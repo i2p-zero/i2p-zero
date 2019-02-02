@@ -80,6 +80,9 @@ cp -R $basedir/resources/i2p-zero.app $basedir/dist/mac-gui/router/
 mv $basedir/dist/mac-gui/router-tmp/* $basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/
 rm -fr $basedir/dist/mac-gui/router-tmp
 
+# specify .desktop file so linux-gui can be launched via double-click
+cp $basedir/resources/i2p-zero.desktop $basedir/dist/linux-gui/router/
+
 du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
 
 echo "*** Done ***"
