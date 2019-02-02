@@ -59,7 +59,7 @@ or double click the `dist/linux-gui/router/i2p-zero.desktop` file
 To run the MacOS router, type:
 
 `dist/mac/router/bin/launch.sh`
-or run the app located in `dist/mac-gui/router/i2p-zero.app`
+or run the app located at `dist/mac-gui/router/i2p-zero.app`
 
 For Windows, run:
 
