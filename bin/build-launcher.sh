@@ -39,8 +39,8 @@ for i in linux mac win; do
         JAVA_HOME_VARIANT=${JAVA_HOME_WIN} ;;
   esac
   echo "Using JAVA_HOME_VARIANT: $JAVA_HOME_VARIANT"
-  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/$i/router --strip-debug --compress 2 --no-header-files --no-man-pages
-  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --strip-debug --compress 2 --no-header-files --no-man-pages
+  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/$i/router --compress 2 --no-header-files --no-man-pages
+  $JAVA_HOME/bin/jlink --module-path ${JAVA_HOME_VARIANT}/jmods:import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --compress 2 --no-header-files --no-man-pages
 done
 
 for i in linux mac linux-gui mac-gui; do
