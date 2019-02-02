@@ -7,7 +7,7 @@ public class Main {
 
   public static void main(String[] args) {
 
-    System.out.println("I2P router launched. SAM listening on port 7656.\n" +
+    System.out.println("I2P router launched.\n" +
         "Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).");
 
     Properties p = new Properties();

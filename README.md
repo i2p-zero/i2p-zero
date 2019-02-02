@@ -48,30 +48,38 @@ Run the `bin/build-all.sh` script, which will in turn call the following scripts
 3. `build-launcher.sh` to convert the I2P JARs to modules, compile the Java source code in this project, and then use
 the jlink tool to build zero-dependency platform-specific launchers.
 
-## Running the launchers
+## Running the GUI
+
+To run the Linux router, type:
+
+`dist/linux-gui/router/bin/launch-gui.sh`
+or double-click the `dist/linux-gui/router/i2p-zero.desktop` file
+
+To run the MacOS router, double-click the app located at `dist/mac-gui/router/i2p-zero.app`
+
+For Windows, double-click on `dist/windows-gui/router/bin/launch-gui.bat`
+
+Note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
+
+
+## Running the command line version
 
 To run the Linux router, type:
 
 `dist/linux/router/bin/launch.sh`
-or `dist/linux-gui/router/bin/launch-gui.sh`
-or double click the `dist/linux-gui/router/i2p-zero.desktop` file
 
 To run the MacOS router, type:
 
 `dist/mac/router/bin/launch.sh`
-or run the app located at `dist/mac-gui/router/i2p-zero.app`
 
 For Windows, run:
 
 `dist/windows/router/bin/launch.bat`
-or `dist/windows-gui/router/bin/launch-gui.bat`
-
-Note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
 
 If it launches successfully, you'll see the message:
 
 ```
-I2P router launched. SAM listening on port 7656.
+I2P router launched.
 Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).
 ```
 
