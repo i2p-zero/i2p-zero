@@ -62,20 +62,23 @@ done
 for i in linux mac win linux-gui mac-gui win-gui; do cp -r $basedir/import/i2p.base $basedir/dist/$i/router/; done
 
 # remove unnecessary native libs from jbigi.jar
-for i in linux mac win linux-gui mac-gui win-gui; do
+for i in linux mac win; do
   for j in freebsd linux mac win; do
     if [ "$i" != "$j" ]; then
       if [ "$j" = "mac" ]; then j="osx"; fi
       if [ "$j" = "win" ]; then j="windows"; fi
       zip -d $basedir/dist/$i/router/i2p.base/jbigi.jar *-${j}-*
+      zip -d $basedir/dist/$i-gui/router/i2p.base/jbigi.jar *-${j}-*
     fi
   done
 done
 
-mkdir -p $basedir/dist/mac-gui/router-app/
-cp -R $basedir/resources/i2p-zero.app $basedir/dist/mac-gui/router-app/
-mv $basedir/dist/mac-gui/router/* $basedir/dist/mac-gui/router-app/i2p-zero.app/Contents/MacOS/
-rm -fr $basedir/dist/mac-gui/router
+# build map app structure
+mv $basedir/dist/mac-gui/router $basedir/dist/mac-gui/router-tmp
+mkdir -p $basedir/dist/mac-gui/router
+cp -R $basedir/resources/i2p-zero.app $basedir/dist/mac-gui/router/
+mv $basedir/dist/mac-gui/router-tmp/* $basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/
+rm -fr $basedir/dist/mac-gui/router-tmp
 
 du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
 
