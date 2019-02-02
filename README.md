@@ -85,7 +85,7 @@ Note that it may take a short while for new tunnels to be set up.
 
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
-#### Get the router reachability status. Returns a string such as "testing", "firewalled", "running", "error"
+#### Get the router reachability status. Returns a string such as "Testing", "Tirewalled", "Running", "Error"
 
 `tunnel-control.sh router.reachability`
 
