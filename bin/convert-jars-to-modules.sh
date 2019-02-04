@@ -28,16 +28,18 @@ mkdir -p "$basedir/target/modules"
 echo "*** Determining dependencies for $combinedJarPath"
 "$JAVA_HOME"/bin/jdeps --add-modules=ALL-MODULE-PATH --generate-module-info "$basedir/target/module-info" "$combinedJarPath"
 
+modulesToRemove="java.desktop java.management java.rmi java.sql java.naming"
+
 if [ $(uname -s) = Darwin ]; then
   sed -i '' -e '$ d' "$basedir/target/module-info/combined/module-info.java"
-  sed -i '' '/java.desktop/d' "$basedir/target/module-info/combined/module-info.java"
-  sed -i '' '/java.management.rmi/d' "$basedir/target/module-info/combined/module-info.java"
-  sed -i '' '/java.rmi/d' "$basedir/target/module-info/combined/module-info.java"
+  for i in $modulesToRemove; do
+    sed -i '' "/$i/d" "$basedir/target/module-info/combined/module-info.java"
+  done
 else
   sed -i '$ d' "$basedir/target/module-info/combined/module-info.java"
-  sed '/java.desktop/d' "$basedir/target/module-info/combined/module-info.java"
-  sed '/java.management.rmi/d' "$basedir/target/module-info/combined/module-info.java"
-  sed '/java.rmi/d' "$basedir/target/module-info/combined/module-info.java"
+  for i in $modulesToRemove; do
+    sed "/$i/d" "$basedir/target/module-info/combined/module-info.java"
+  done
 fi
 echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/module-info/combined/module-info.java"
 
