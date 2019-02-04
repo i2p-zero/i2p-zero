@@ -18,7 +18,7 @@ mkdir -p "$basedir/target/lib-combined-tmp"
 jarPaths=`find "$basedir/import/lib" -name '*.jar'`
 combinedJarPath="$basedir/target/lib-combined/combined.jar"
 for jarPath in $jarPaths; do unzip -quo $jarPath -d "$basedir/target/lib-combined-tmp"; done
-jar cf "$combinedJarPath" -C "$basedir/target/lib-combined-tmp" .
+$JAVA_HOME/bin/jar cf "$combinedJarPath" -C "$basedir/target/lib-combined-tmp" .
 
 rm -fr "$basedir/target/module-info"
 mkdir -p "$basedir/target/module-info"
