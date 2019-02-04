@@ -37,7 +37,7 @@ public class Main {
     RouterWrapper routerWrapper = new RouterWrapper(p);
     routerWrapper.start();
 
-    Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop()));
+    Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop(true)));
 
   }
 

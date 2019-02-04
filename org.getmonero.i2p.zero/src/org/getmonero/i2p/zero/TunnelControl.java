@@ -184,11 +184,15 @@ public class TunnelControl implements Runnable {
       return tunnel==null ? "opening" : "open";
     }
     public boolean getEnabled() { return enabled; }
-    public void destroy() {
+    public void destroy(boolean fastDestroy) {
       new Thread(()->{
-        // subsequent line commented out, because the tunnels will sleep for 20 seconds at a time, which is too long
-        // while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
-        if(tunnel!=null) tunnel.runClose(new String[]{"forced", "all"}, tunnel);
+        // tunnels may sleep for 20 seconds while waiting to open. we may be in a hurry
+        if(!fastDestroy) {
+          while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
+        }
+        if(tunnel!=null) {
+          tunnel.runClose(new String[]{"forced", "all"}, tunnel);
+        }
       }).start();
     }
   }
@@ -300,10 +304,10 @@ public class TunnelControl implements Runnable {
     }
 
     @Override
-    public void destroy() {
+    public void destroy(boolean fastDestroy) {
       try {
         server.stop();
-        super.destroy();
+        super.destroy(fastDestroy);
       }
       catch (Exception e) {
         throw new RuntimeException(e);
@@ -508,7 +512,7 @@ public class TunnelControl implements Runnable {
             case "server.destroy": {
               String dest = args[1];
               tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("server") && ((ServerTunnel) t).dest.equals(dest)).forEach(t -> {
-                t.destroy();
+                t.destroy(false);
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
@@ -536,7 +540,7 @@ public class TunnelControl implements Runnable {
             case "client.destroy": {
               int port = Integer.parseInt(args[1]);
               tunnelList.getTunnelsCopyStream().filter(t->t.getType().equals("client") && ((ClientTunnel) t).port == port).forEach(t->{
-                t.destroy();
+                t.destroy(false);
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
@@ -561,7 +565,7 @@ public class TunnelControl implements Runnable {
             case "socks.destroy": {
               int port = Integer.parseInt(args[1]);
               tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("socks") && ((SocksTunnel) t).port == port).forEach(t -> {
-                t.destroy();
+                t.destroy(false);
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
@@ -585,7 +589,7 @@ public class TunnelControl implements Runnable {
             case "http.destroy": {
               int port = Integer.parseInt(args[1]);
               tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("http") && ((SocksTunnel) t).port == port).forEach(t -> {
-                t.destroy();
+                t.destroy(false);
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
@@ -601,7 +605,7 @@ public class TunnelControl implements Runnable {
 
             case "all.destroy": {
               tunnelList.getTunnelsCopyStream().forEach(t -> {
-                t.destroy();
+                t.destroy(false);
                 tunnelList.removeTunnel(t);
               });
               out.println("OK");
@@ -648,10 +652,10 @@ public class TunnelControl implements Runnable {
 
   }
 
-  public void stop() {
+  public void stop(boolean fastStop) {
     stopping = true;
     try {
-      getTunnelList().tunnels.forEach(TunnelControl.Tunnel::destroy);
+      getTunnelList().tunnels.forEach(t->t.destroy(fastStop));
       controlServerSocket.close();
     }
     catch (Exception e) {

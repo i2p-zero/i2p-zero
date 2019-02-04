@@ -98,18 +98,20 @@ public class RouterWrapper {
 
   }
 
-  public void stop() {
+  public void stop(boolean fastStop) {
     if(!started) return;
     started = false;
-    tunnelControl.stop();
+    tunnelControl.stop(fastStop);
     System.out.println("I2P router will shut down gracefully");
     router.shutdownGracefully();
 
-    // don't wait more than 2 seconds for shutdown. If tunnels are still opening, they can pause for up to 20 seconds, which is too long
-    new Thread(()->{
-      try { Thread.sleep(2000); } catch (InterruptedException e) {}
-      System.exit(0);
-    }).start();
+    if(fastStop) {
+      // don't wait more than 2 seconds for shutdown. If tunnels are still opening, they can pause for up to 20 seconds, which is too long
+      new Thread(() -> {
+        try { Thread.sleep(2000); } catch (InterruptedException e) {}
+        System.exit(0);
+      }).start();
+    }
   }
 
   long lastTriggerTimestamp = 0;

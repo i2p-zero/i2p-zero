@@ -108,7 +108,7 @@ public class Controller {
     tunnelRemoveButton.setOnAction(e->{
       Tunnel t = tunnelsTableView.getSelectionModel().getSelectedItem();
       getRouterWrapper().getTunnelControl().getTunnelList().removeTunnel(t);
-      t.destroy();
+      t.destroy(false);
       tunnelRemoveButton.setDisable(true);
     });
 
@@ -188,7 +188,7 @@ public class Controller {
                 getEepSiteTunnel().start();
               }
               else {
-                getEepSiteTunnel().destroy();
+                getEepSiteTunnel().destroy(false);
               }
             }
           });
@@ -247,7 +247,7 @@ public class Controller {
       else {
         masterToggle.setImage(new Image("org/getmonero/i2p/zero/gui/toggle-off.png"));
         statusLabel.setVisible(false);
-        routerWrapper.stop();
+        routerWrapper.stop(false);
         tunnelTableList.clear();
         tunnelAddButton.setDisable(true);
       }
