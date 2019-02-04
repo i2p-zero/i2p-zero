@@ -9,9 +9,11 @@ The launchers will include the I2P router, a SAM listener, simple tunnel and soc
 
 ## GUI Screenshots
 
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot1.png" align="center" width="472" height="451">
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot1.png" align="center" width="497" height="440">
 <br/>
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="498">
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="549">
+<br/>
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot3.png" align="center" width="942" height="570">
 
 ## Footprint
 
@@ -19,9 +21,12 @@ The zero-dependency distribution sizes are as follows:
 
 OS | Uncompressed size (MB) | xz Compressed size (MB)
 ------------ | ------------- | -------------
-Linux | 42.6 | 23.4
-MacOS | 40.2 | 21.1
-Windows | 33.1 | 20.8
+Linux | 64.9 | 42.1
+Linux GUI | 73.5 | 49.9
+MacOS | 53.9 | 37.1
+MacOS GUI | 63.3 | 44.1
+Windows | 53.6 | 38.7
+Windows GUI | 61.8 | 45.3
 
 ## Building the launchers
 

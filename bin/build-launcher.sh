@@ -24,7 +24,6 @@ echo "*** Packaging GUI as a modular jar"
 $JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/classes/org.getmonero.i2p.zero.gui .
 
 
-                                         hh
 rm -fr "$basedir/dist"
 for i in linux mac win linux-gui mac-gui win-gui; do mkdir -p "$basedir/dist/$i"; done
 
