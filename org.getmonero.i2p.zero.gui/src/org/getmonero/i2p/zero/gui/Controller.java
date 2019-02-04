@@ -74,6 +74,7 @@ public class Controller {
 
   DecimalFormat format2dp = new DecimalFormat("0.00");
   private boolean masterState = true;
+  private boolean shuttingDown = false;
   private final ObservableList<Tunnel> tunnelTableList = FXCollections.observableArrayList();
   private boolean eepSiteTabInitialized = false;
   
@@ -235,37 +236,29 @@ public class Controller {
     });
 
     masterToggle.setOnMouseClicked(e->{
+      if(shuttingDown) return;
       masterState = !masterState;
       bandwidthDisabledOverlay.setVisible(!masterState);
-
       if(masterState) {
         masterToggle.setImage(new Image("org/getmonero/i2p/zero/gui/toggle-on.png"));
         statusLabel.setVisible(true);
         routerWrapper.start();
+        listenForTunnelChanges();
         tunnelAddButton.setDisable(false);
       }
       else {
+        shuttingDown = true;
         masterToggle.setImage(new Image("org/getmonero/i2p/zero/gui/toggle-off.png"));
-        statusLabel.setVisible(false);
-        routerWrapper.stop(false);
         tunnelTableList.clear();
         tunnelAddButton.setDisable(true);
+        statusLabel.setText("Shutting down...");
+        routerWrapper.stop(true);
       }
     });
 
     startRouter();
 
-    new Thread(()->{
-      while(getRouterWrapper()==null || getRouterWrapper().getTunnelControl()==null) {
-        try { Thread.sleep(100); } catch (InterruptedException e) {}
-      }
-      var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
-      tunnelList.addChangeListener(tunnels->{
-        tunnelTableList.clear();
-        tunnels.stream().filter(Tunnel::getEnabled).forEach(tunnelTableList::add);
-      });
-    }).start();
-
+    listenForTunnelChanges();
 
     var bandwidthUpdateThread = new Thread(()->{
       while(!Gui.instance.isStopping()) {
@@ -291,6 +284,20 @@ public class Controller {
     });
     bandwidthUpdateThread.start();
 
+  }
+
+  private void listenForTunnelChanges() {
+    new Thread(()->{
+      while(getRouterWrapper()==null || getRouterWrapper().getTunnelControl()==null) {
+        try { Thread.sleep(100); } catch (InterruptedException e) {}
+      }
+      var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
+      tunnelList.addChangeListener(tunnels->{
+        tunnelTableList.clear();
+        tunnels.stream().filter(Tunnel::getEnabled).forEach(tunnelTableList::add);
+      });
+      getRouterWrapper().getTunnelControl().getTunnelList().fireChangeEvent();
+    }).start();
   }
 
   public RouterWrapper getRouterWrapper() {

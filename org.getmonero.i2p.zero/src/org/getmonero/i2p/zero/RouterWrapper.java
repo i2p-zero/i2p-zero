@@ -98,14 +98,15 @@ public class RouterWrapper {
 
   }
 
-  public void stop(boolean fastStop) {
+  public void stop(boolean fastStopAndShutDown) {
     if(!started) return;
     started = false;
-    tunnelControl.stop(fastStop);
+    tunnelControl.stop(fastStopAndShutDown);
+    tunnelControl =  null;
     System.out.println("I2P router will shut down gracefully");
     router.shutdownGracefully();
 
-    if(fastStop) {
+    if(fastStopAndShutDown) {
       // don't wait more than 2 seconds for shutdown. If tunnels are still opening, they can pause for up to 20 seconds, which is too long
       new Thread(() -> {
         try { Thread.sleep(2000); } catch (InterruptedException e) {}
