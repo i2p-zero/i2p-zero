@@ -12,6 +12,7 @@ import net.i2p.sam.SAMBridge;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -335,7 +336,12 @@ public class TunnelControl implements Runnable {
         contentDirFile.mkdirs();
         logsDirFile.mkdirs();
 
-        server = new Server();
+        int maxThreads = 100;
+        int minThreads = 1;
+        int idleTimeout = 120;
+        QueuedThreadPool threadPool = new QueuedThreadPool(maxThreads, minThreads, idleTimeout);
+
+        server = new Server(threadPool);
         server.setStopAtShutdown(true);
 
         HttpConfiguration httpConfig = new HttpConfiguration();
