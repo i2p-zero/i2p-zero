@@ -87,6 +87,8 @@ public class RouterWrapper {
             }
           }
 
+          updateBandwidthLimitKBps(loadBandwidthLimitKBps());
+
           tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
 
