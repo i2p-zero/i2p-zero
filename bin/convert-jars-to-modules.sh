@@ -38,7 +38,7 @@ if [ $(uname -s) = Darwin ]; then
 else
   sed -i '$ d' "$basedir/target/module-info/combined/module-info.java"
   for i in $modulesToRemove; do
-    sed "/$i/d" "$basedir/target/module-info/combined/module-info.java"
+    sed -i "/$i/d" "$basedir/target/module-info/combined/module-info.java"
   done
 fi
 echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/module-info/combined/module-info.java"
