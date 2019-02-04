@@ -8,6 +8,8 @@ import net.i2p.router.RouterContext;
 import net.i2p.router.networkdb.kademlia.FloodfillNetworkDatabaseFacade;
 import net.i2p.router.transport.FIFOBandwidthRefiller;
 import net.i2p.router.transport.TransportUtil;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -123,12 +125,28 @@ public class RouterWrapper {
       try { Thread.sleep(2000); } catch(InterruptedException e) {}
       if(lastTriggerTimestamp==triggerTime) {
         // nothing happened after we were triggered, so proceed
-        updateBandwidthLimitKBPerSec(n);
+        updateBandwidthLimitKBps(n);
       }
     }).start();
   }
 
-  public void updateBandwidthLimitKBPerSec(int n) {
+
+  public static final int defaultBandwidthKBps = (int)(0.5*1024)/8; // 0.5 MBit/s
+  public int loadBandwidthLimitKBps() {
+    try {
+      File configFile = new File(i2PConfigDir, "config.json");
+      if (configFile.exists()) {
+        JSONObject root = (JSONObject) new JSONParser().parse(Files.readString(configFile.toPath()));
+        return ((Long) root.get("bandwidthLimitKBps")).intValue();
+      } else return defaultBandwidthKBps;
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+
+  public void updateBandwidthLimitKBps(int n) {
     routerProperties.put("i2np.inboundKBytesPerSecond", n);
     routerProperties.put("i2np.outboundKBytesPerSecond", n);
 
@@ -161,6 +179,19 @@ public class RouterWrapper {
     // this has to be after the save
     router.getContext().bandwidthLimiter().reinitialize();
     if(!saved) throw new RuntimeException("Error saving the new bandwidth limit");
+
+    try {
+      File configFile = new File(i2PConfigDir, "config.json");
+      JSONObject root = new JSONObject();;
+      if (configFile.exists()) {
+        root = (JSONObject) new JSONParser().parse(Files.readString(configFile.toPath()));
+      }
+      root.put("bandwidthLimitKBps", n);
+      Files.writeString(configFile.toPath(), root.toJSONString());
+    }
+    catch (Exception e) {
+      throw new RuntimeException(e);
+    }
 
   }
 

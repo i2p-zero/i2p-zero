@@ -258,6 +258,8 @@ public class Controller {
 
     startRouter();
 
+    bandwidthSlider.setValue(getRouterWrapper().loadBandwidthLimitKBps()*8d/1024d);
+
     listenForTunnelChanges();
 
     var bandwidthUpdateThread = new Thread(()->{
