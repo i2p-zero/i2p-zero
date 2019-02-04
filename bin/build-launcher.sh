@@ -10,18 +10,18 @@ source "$basedir/bin/java-config.sh"
 
 
 echo "*** Compiling CLI"
-$JAVA_HOME/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')
 
 echo "*** Packaging CLI as a modular jar"
-$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/classes/org.getmonero.i2p.zero .
+"$JAVA_HOME"/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/classes/org.getmonero.i2p.zero .
 
 echo "*** Compiling GUI"
-$JAVA_HOME/bin/javac --module-path target/org.getmonero.i2p.zero.jar:target/modules/combined.jar:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib -d target/classes/org.getmonero.i2p.zero.gui $(find org.getmonero.i2p.zero.gui/src -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path target/org.getmonero.i2p.zero.jar:target/modules/combined.jar:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib -d target/classes/org.getmonero.i2p.zero.gui $(find org.getmonero.i2p.zero.gui/src -name '*.java')
 
 cp -r org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/*.{css,png,fxml,ttf} target/classes/org.getmonero.i2p.zero.gui/org/getmonero/i2p/zero/gui/
 
 echo "*** Packaging GUI as a modular jar"
-$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/classes/org.getmonero.i2p.zero.gui .
+"$JAVA_HOME"/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/classes/org.getmonero.i2p.zero.gui .
 
 
 rm -fr "$basedir/dist"

@@ -25,13 +25,13 @@ JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERS
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-sdk.zip
 
-JAVAFX_JMODS_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_linux-x64_bin-jmods.zip
-JAVAFX_JMODS_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_osx-x64_bin-jmods.zip
-JAVAFX_JMODS_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/11.0.2/openjfx-11.0.2_windows-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-jmods.zip
 
-JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX=openjfx-11.0.2_linux-x64_bin-jmods.zip
-JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC=openjfx-11.0.2_osx-x64_bin-jmods.zip
-JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN=openjfx-11.0.2_windows-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX=openjfx-${JAVAFX_VERSION}_linux-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC=openjfx-${JAVAFX_VERSION}_osx-x64_bin-jmods.zip
+JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN=openjfx-${JAVAFX_VERSION}_windows-x64_bin-jmods.zip
 
 OS=`uname -s`
 if [ $OS = "Darwin" ]; then
