@@ -78,7 +78,7 @@ public class AddTunnelController {
       }
     });
 
-    TextField[] allTextFields = new TextField[] {clientDestAddrField, clientPortField, serverHostField, serverPortField, serverKeyField, serverAddrField, socksPortField};
+    TextField[] allTextFields = new TextField[] {clientDestAddrField, clientPortField, serverHostField, serverPortField, serverKeyField, serverAddrField, socksPortField, httpProxyPortField};
     for(TextField f : allTextFields) {
       f.textProperty().addListener((observable, oldValue, newValue) -> updateAddButtonState());
     }
