@@ -315,8 +315,6 @@ public class Controller {
     var params = Gui.instance.getParameters().getNamed();
 
     Properties routerProperties = new Properties();
-    routerProperties.put("i2np.inboundKBytesPerSecond", getBandwidthLimitKBPerSec());
-    routerProperties.put("i2np.outboundKBytesPerSecond", getBandwidthLimitKBPerSec());
     routerProperties.put("router.sharePercentage", 80);
     params.entrySet().stream().forEach(e->routerProperties.put(e.getKey(), e.getValue()));
     routerWrapper = new RouterWrapper(routerProperties);

@@ -16,12 +16,9 @@ public class Main {
         "Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).");
 
     Properties p = new Properties();
-    // bandwidth limits in K bytes per second
-    p.put("i2np.inboundKBytesPerSecond","50");
-    p.put("i2np.outboundKBytesPerSecond","50");
     p.put("router.sharePercentage","80");
 
-    // allow default properties to be overridden via command line args, e.g. --i2p.dir.base=/usr/share/i2p
+    // allow default properties to be added via command line args, e.g. --i2p.dir.base=/usr/share/i2p
     for(var arg : args) {
       if(arg.startsWith("--")) {
         String[] s = arg.split("=");

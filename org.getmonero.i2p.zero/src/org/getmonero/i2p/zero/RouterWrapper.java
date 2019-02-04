@@ -28,11 +28,15 @@ public class RouterWrapper {
   private File i2PConfigDir;
   private File i2PBaseDir;
 
-  public RouterWrapper(Properties p) {
-    this.routerProperties = p;
+  public RouterWrapper(Properties routerProperties) {
+    this.routerProperties = routerProperties;
 
-    p.put("i2p.dir.base", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "base");
-    p.put("i2p.dir.config", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "config");
+    int bandwidthLimitKBps = loadBandwidthLimitKBps();
+    routerProperties.put("i2np.inboundKBytesPerSecond", bandwidthLimitKBps);
+    routerProperties.put("i2np.outboundKBytesPerSecond", bandwidthLimitKBps);
+
+    routerProperties.put("i2p.dir.base", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "base");
+    routerProperties.put("i2p.dir.config", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "config");
 
     i2PConfigDir = new File(routerProperties.getProperty("i2p.dir.config"));
     if(!i2PConfigDir.exists()) i2PConfigDir.mkdirs();
@@ -86,8 +90,6 @@ public class RouterWrapper {
               System.out.println("Waiting for I2P router to start...");
             }
           }
-
-          updateBandwidthLimitKBps(loadBandwidthLimitKBps());
 
           tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
