@@ -15,27 +15,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.getmonero.i2p.zero.RouterWrapper;
-import static org.getmonero.i2p.zero.TunnelControl.Tunnel;
+import org.getmonero.i2p.zero.TunnelControl;
 
+import static org.getmonero.i2p.zero.TunnelControl.*;
+
+import java.io.File;
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 public class Controller {
 
   private RouterWrapper routerWrapper;
 
-  @FXML
-  private BorderPane rootBorderPane;
+  @FXML private BorderPane rootBorderPane;
   @FXML private Slider bandwidthSlider;
   @FXML private Label maxBandwidthLabel;
   @FXML private ImageView masterToggle;
   @FXML private AnchorPane bandwidthDisabledOverlay;
   @FXML private Tab bandwidthTab;
   @FXML private Tab tunnelsTab;
+  @FXML private Tab eepSiteTab;
   @FXML private Tab helpTab;
   @FXML private Label statusLabel;
   @FXML private Button tunnelAddButton;
@@ -54,16 +59,31 @@ public class Controller {
   @FXML private Label bandwidthOut5m;
   @FXML private Label bandwidthOutAll;
   @FXML private Label totalTransferredOut;
+  @FXML private CheckBox eepSiteEnableCheckbox;
+  @FXML private TextField eepSiteAddrField;
+  @FXML private TextField eepSiteSecretKeyField;
+  @FXML private Button eepSiteGenButton;
+  @FXML private TextField eepSiteContentDirField;
+  @FXML private Button eepSiteContentDirChooseButton;
+  @FXML private TextField eepSiteLogsDirField;
+  @FXML private Button eepSiteLogsDirChooseButton;
+  @FXML private CheckBox eepSiteEnableLogsCheckbox;
+  @FXML private CheckBox eepSiteAllowDirBrowsingCheckbox;
+  @FXML private TextField eepSiteLocalPortField;
+
 
   DecimalFormat format2dp = new DecimalFormat("0.00");
   private boolean masterState = true;
   private final ObservableList<Tunnel> tunnelTableList = FXCollections.observableArrayList();
-
+  private boolean eepSiteTabInitialized = false;
+  
   private Stage getStage() {
     return (Stage) rootBorderPane.getScene().getWindow();
   }
 
   @FXML private void initialize() {
+
+    DirectoryChooser directoryChooser = new DirectoryChooser();
 
     typeCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("type"));
     stateCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("state"));
@@ -115,12 +135,99 @@ public class Controller {
         stage.setHeight(370);
       }
       else if(tunnelsTab.isSelected()) {
-        stage.setWidth(900);
+        stage.setWidth(830);
+      }
+      else if(eepSiteTab.isSelected()) {
+        stage.setWidth(830);
+        stage.setHeight(500);
+
+        if(!eepSiteTabInitialized) {
+          EepSiteTunnel eepSiteTunnel = getEepSiteTunnel();
+          eepSiteSecretKeyField.setText(eepSiteTunnel.keyPair.toString());
+          eepSiteAddrField.setText("http://" + eepSiteTunnel.keyPair.b32Dest);
+          eepSiteContentDirField.setText(eepSiteTunnel.contentDir);
+          eepSiteLogsDirField.setText(eepSiteTunnel.logsDir);
+          eepSiteEnableCheckbox.setSelected(eepSiteTunnel.enabled);
+          eepSiteEnableLogsCheckbox.setSelected(eepSiteTunnel.enableLogs);
+          eepSiteAllowDirBrowsingCheckbox.setSelected(eepSiteTunnel.allowDirectoryBrowsing);
+          eepSiteLocalPortField.setText(eepSiteTunnel.port + "");
+          eepSiteTabInitialized = true;
+
+          // modifying eepSiteSecretKeyField/eepSiteLocalPortField will require the eepsite tunnel to be destroyed
+          // and later recreated whenever the user is finished editing settings and ticks the enabled box again
+          eepSiteSecretKeyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            eepSiteAddrField.setText("");
+            String key = newValue;
+            if(key!=null && !key.isEmpty()) {
+              try {
+                eepSiteAddrField.setText("http://" + new TunnelControl.KeyPair(key).b32Dest);
+              }
+              catch (Exception e2) {
+                // ignore exception. user may be part way through entering string
+              }
+              eepSiteEnableCheckbox.setSelected(false);
+            }
+          });
+          eepSiteGenButton.setOnAction(ev->{
+            getEepSiteTunnel().keyPair = KeyPair.gen();
+            eepSiteSecretKeyField.setText(getEepSiteTunnel().keyPair.toString());
+          });
+          eepSiteLocalPortField.textProperty().addListener((ov, oldValue, newValue)->{
+            eepSiteEnableCheckbox.setSelected(false);
+            getEepSiteTunnel().port = Integer.parseInt(newValue);
+            save();
+            eepSiteEnableCheckbox.setSelected(false);
+          });
+
+          eepSiteEnableCheckbox.selectedProperty().addListener((ov, oldValue, newValue)->{
+            getEepSiteTunnel().enabled = newValue;
+            if(oldValue!=newValue) {
+              save();
+              getRouterWrapper().getTunnelControl().getTunnelList().fireChangeEvent();
+              if(getEepSiteTunnel().enabled) {
+                getEepSiteTunnel().start();
+              }
+              else {
+                getEepSiteTunnel().destroy();
+              }
+            }
+          });
+
+
+          // changing eepSiteContentDirChooseButton/eepSiteLogsDirChooseButton/eepSiteEnableLogsCheckbox/eepSiteAllowDirBrowsingCheckbox only requires a jetty restart
+          eepSiteContentDirChooseButton.setOnAction(ev->{
+            File selectedDirectory = directoryChooser.showDialog(getStage());
+            if (selectedDirectory!=null) {
+              eepSiteContentDirField.setText(selectedDirectory.getAbsolutePath());
+              getEepSiteTunnel().contentDir = selectedDirectory.getAbsolutePath();
+              save();
+              if(getEepSiteTunnel().enabled) restartJetty();
+            }
+          });
+          eepSiteLogsDirChooseButton.setOnAction(ev->{
+            File selectedDirectory = directoryChooser.showDialog(getStage());
+            if (selectedDirectory!=null) {
+              eepSiteLogsDirField.setText(selectedDirectory.getAbsolutePath());
+              getEepSiteTunnel().logsDir = selectedDirectory.getAbsolutePath();
+              save();
+              if(getEepSiteTunnel().enabled) restartJetty();
+            }
+          });
+          eepSiteEnableLogsCheckbox.selectedProperty().addListener((ov, oldValue, newValue)->{
+            getEepSiteTunnel().enableLogs = newValue;
+            save();
+            if(getEepSiteTunnel().enabled) restartJetty();
+          });
+          eepSiteAllowDirBrowsingCheckbox.selectedProperty().addListener((ov, oldValue, newValue)->{
+            getEepSiteTunnel().allowDirectoryBrowsing = newValue;
+            save();
+            if(getEepSiteTunnel().enabled) restartJetty();
+          });
+
+        }
       }
     };
-    bandwidthTab.setOnSelectionChanged(tabSelectionEventHandler);
-    tunnelsTab.setOnSelectionChanged(tabSelectionEventHandler);
-    helpTab.setOnSelectionChanged(tabSelectionEventHandler);
+    Stream.of(bandwidthTab, tunnelsTab, eepSiteTab, helpTab).forEach(tab->tab.setOnSelectionChanged(tabSelectionEventHandler));
 
     bandwidthSlider.valueProperty().addListener((observableValue, oldValue, newValue)-> {
       maxBandwidthLabel.setText(String.format("%.1f", newValue.floatValue()) + " Mbps");
@@ -155,7 +262,7 @@ public class Controller {
       var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
       tunnelList.addChangeListener(tunnels->{
         tunnelTableList.clear();
-        tunnelTableList.addAll(tunnels);
+        tunnels.stream().filter(Tunnel::getEnabled).forEach(tunnelTableList::add);
       });
     }).start();
 
@@ -184,8 +291,6 @@ public class Controller {
     });
     bandwidthUpdateThread.start();
 
-    Runtime.getRuntime().addShutdownHook(new Thread(()->bandwidthUpdateThread.interrupt()));
-
   }
 
   public RouterWrapper getRouterWrapper() {
@@ -208,6 +313,19 @@ public class Controller {
     routerWrapper = new RouterWrapper(routerProperties);
     routerWrapper.start();
 
+  }
+
+  private void restartJetty() {
+    Optional<Tunnel> eepSiteTunnelOptional = getRouterWrapper().getTunnelControl().getTunnelList().getTunnelsCopyStream().filter(t->t.getType().equals("eepsite")).findFirst();
+    EepSiteTunnel eepSiteTunnel = (EepSiteTunnel) eepSiteTunnelOptional.get();
+    eepSiteTunnel.stopJetty();
+    new Thread(()->eepSiteTunnel.startJetty()).start();
+  }
+  private void save() {
+    getRouterWrapper().getTunnelControl().getTunnelList().save();
+  }
+  private EepSiteTunnel getEepSiteTunnel() {
+    return getRouterWrapper().getTunnelControl().getEepSiteTunnel();
   }
 
 

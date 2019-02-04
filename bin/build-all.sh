@@ -6,6 +6,8 @@ else
     basedir=$(dirname $(dirname $(readlink -fm $0)))
 fi
 
+rm -fr "$basedir/target" "$basedir/dist"
+
 # retrieve the I2P Java sources, OpenJDK and the Ant build tool
 "$basedir"/bin/import-packages.sh
 

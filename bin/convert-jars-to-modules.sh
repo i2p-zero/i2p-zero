@@ -8,20 +8,37 @@ fi
 
 source "$basedir/bin/java-config.sh"
 
+cp "$basedir"/import/jetty-lib/*.jar "$basedir/import/lib/"
+
+rm -fr "$basedir/target/lib-combined"
+rm -fr "$basedir/target/lib-combined-tmp"
+mkdir -p "$basedir/target/lib-combined"
+mkdir -p "$basedir/target/lib-combined-tmp"
+
 jarPaths=`find "$basedir/import/lib" -name '*.jar'`
+combinedJarPath="$basedir/target/lib-combined/combined.jar"
+for jarPath in $jarPaths; do unzip -quo $jarPath -d "$basedir/target/lib-combined-tmp"; done
+jar cf "$combinedJarPath" -C "$basedir/target/lib-combined-tmp" .
 
+rm -fr "$basedir/target/module-info"
+mkdir -p "$basedir/target/module-info"
+rm -fr "$basedir/target/modules"
 mkdir -p "$basedir/target/modules"
-rm -f "$basedir/target/modules"/*
 
-for jarPath in $jarPaths; do
-  moduleName=$(basename "${jarPath%.*}")
-  echo "*** Determining dependencies for $moduleName"
-  "$JAVA_HOME"/bin/jdeps --module-path "$basedir/import/lib" --add-modules=ALL-MODULE-PATH --generate-module-info "$basedir/target/module-info" "$jarPath"
-done
-for jarPath in $jarPaths; do
-  moduleName=$(basename "${jarPath%.*}")
-  echo "*** Creating new modular jar for $moduleName"
-  "$JAVA_HOME"/bin/javac --module-path "$basedir/import/lib" --patch-module $moduleName=$jarPath $basedir/target/module-info/$moduleName/module-info.java
-  cp $jarPath "$basedir/target/modules/"
-  "$JAVA_HOME"/bin/jar uf "$basedir/target/modules/${moduleName}.jar" -C "$basedir/target/module-info/$moduleName" module-info.class
-done
+echo "*** Determining dependencies for $combinedJarPath"
+"$JAVA_HOME"/bin/jdeps --add-modules=ALL-MODULE-PATH --generate-module-info "$basedir/target/module-info" "$combinedJarPath"
+
+if [ $(uname -s) = Darwin ]; then
+  sed -i '' -e '$ d' "$basedir/target/module-info/combined/module-info.java"
+else
+  sed -i '$ d' "$basedir/target/module-info/combined/module-info.java"
+fi
+echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/module-info/combined/module-info.java"
+
+
+echo "*** Creating new combined modular jar"
+"$JAVA_HOME"/bin/javac --module-path "$combinedJarPath/combined" --patch-module combined=$combinedJarPath $basedir/target/module-info/combined/module-info.java
+cp $combinedJarPath "$basedir/target/modules/"
+"$JAVA_HOME"/bin/jar uf "$basedir/target/modules/combined.jar" -C "$basedir/target/module-info/combined" module-info.class
+
+

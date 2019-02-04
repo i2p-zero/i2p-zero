@@ -8,21 +8,23 @@ fi
 
 source "$basedir/bin/java-config.sh"
 
-rm -fr target/org.getmonero.i2p.zero/classes
-rm -fr target/org.getmonero.i2p.zero.gui/classes
 
-# compile the Main class that starts the I2P router and SAM listener
-echo "*** Compiling Main class"
-$JAVA_HOME/bin/javac --module-path import/lib -d target/org.getmonero.i2p.zero/classes $(find org.getmonero.i2p.zero/src -name '*.java')
-$JAVA_HOME/bin/javac --module-path import/lib:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib:target/org.getmonero.i2p.zero/classes -d target/org.getmonero.i2p.zero.gui/classes $(find org.getmonero.i2p.zero.gui/src -name '*.java')
-cp -r org.getmonero.i2p.zero.gui/src/* target/org.getmonero.i2p.zero.gui/classes
-find target -type f -name '*.java' -delete
+echo "*** Compiling CLI"
+$JAVA_HOME/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')
 
-# package as a modular jar
-echo "*** Packaging as a modular jar"
-$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/org.getmonero.i2p.zero/classes .
-$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/org.getmonero.i2p.zero.gui/classes .
+echo "*** Packaging CLI as a modular jar"
+$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/classes/org.getmonero.i2p.zero .
 
+echo "*** Compiling GUI"
+$JAVA_HOME/bin/javac --module-path target/org.getmonero.i2p.zero.jar:target/modules/combined.jar:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib -d target/classes/org.getmonero.i2p.zero.gui $(find org.getmonero.i2p.zero.gui/src -name '*.java')
+
+cp -r org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/*.{css,png,fxml,ttf} target/classes/org.getmonero.i2p.zero.gui/org/getmonero/i2p/zero/gui/
+
+echo "*** Packaging GUI as a modular jar"
+$JAVA_HOME/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/classes/org.getmonero.i2p.zero.gui .
+
+
+                                         hh
 rm -fr "$basedir/dist"
 for i in linux mac win linux-gui mac-gui win-gui; do mkdir -p "$basedir/dist/$i"; done
 
@@ -39,8 +41,8 @@ for i in linux mac win; do
         JAVA_HOME_VARIANT=${JAVA_HOME_WIN} ;;
   esac
   echo "Using JAVA_HOME_VARIANT: $JAVA_HOME_VARIANT"
-  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":target/modules:target/org.getmonero.i2p.zero.jar --add-modules org.getmonero.i2p.zero --output dist/$i/router --compress 2 --no-header-files --no-man-pages
-  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --compress 2 --no-header-files --no-man-pages
+  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":target/modules:target/org.getmonero.i2p.zero.jar --add-modules combined,org.getmonero.i2p.zero --output dist/$i/router --compress 2 --no-header-files --no-man-pages
+  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules combined,org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --compress 2 --no-header-files --no-man-pages
 done
 
 for i in linux mac linux-gui mac-gui; do

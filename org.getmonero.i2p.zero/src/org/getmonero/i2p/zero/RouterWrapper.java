@@ -94,8 +94,6 @@ public class RouterWrapper {
         }
       }).start();
 
-      Runtime.getRuntime().addShutdownHook(new Thread(()->stop()));
-
     }).start();
 
   }
@@ -106,6 +104,12 @@ public class RouterWrapper {
     tunnelControl.stop();
     System.out.println("I2P router will shut down gracefully");
     router.shutdownGracefully();
+
+    // don't wait more than 2 seconds for shutdown. If tunnels are still opening, they can pause for up to 20 seconds, which is too long
+    new Thread(()->{
+      try { Thread.sleep(2000); } catch (InterruptedException e) {}
+      System.exit(0);
+    }).start();
   }
 
   long lastTriggerTimestamp = 0;

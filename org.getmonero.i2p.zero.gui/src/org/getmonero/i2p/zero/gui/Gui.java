@@ -7,8 +7,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.getmonero.i2p.zero.TunnelControl;
 
 import javax.imageio.ImageIO;
 
@@ -21,6 +23,15 @@ public class Gui extends Application {
 
   @Override
   public void start(Stage primaryStage) throws Exception{
+
+    if(TunnelControl.isPortInUse()) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText(null);
+      alert.setContentText("I2P-zero is already running");
+      alert.showAndWait();
+      System.exit(1);
+    }
 
     instance = this;
     String osName = System.getProperty("os.name");
@@ -36,6 +47,8 @@ public class Gui extends Application {
     controller = loader.getController();
 
     primaryStage.setTitle("I2P-zero");
+    primaryStage.setWidth(360);
+    primaryStage.setHeight(340);
     primaryStage.setMinWidth(360);
     primaryStage.setMinHeight(370);
     Scene scene = new Scene(root);

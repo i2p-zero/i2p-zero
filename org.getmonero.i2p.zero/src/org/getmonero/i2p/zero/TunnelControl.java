@@ -9,6 +9,9 @@ import net.i2p.data.Base64;
 import net.i2p.data.Destination;
 import net.i2p.i2ptunnel.I2PTunnel;
 import net.i2p.sam.SAMBridge;
+import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -33,6 +37,8 @@ public class TunnelControl implements Runnable {
   private File tunnelControlConfigDir;
   private File tunnelControlTempDir;
   private TunnelList tunnelList;
+
+  private static final int TUNNEL_CONTROL_LISTENING_PORT = 30000;
 
   public static class TunnelList {
     private File tunnelControlConfigDir;
@@ -48,7 +54,7 @@ public class TunnelControl implements Runnable {
     public void addChangeListener(ChangeListener<List<Tunnel>> listener) {
       changeListeners.add(listener);
     }
-    private void fireChangeEvent() {
+    public void fireChangeEvent() {
       for(var listener : changeListeners) listener.onChange(tunnels);
     }
 
@@ -79,11 +85,17 @@ public class TunnelControl implements Runnable {
               case "server":
                 tunnels.add(new ServerTunnel((String) obj.get("host"), Integer.parseInt((String) obj.get("port")), new KeyPair((String) obj.get("keypair")), tunnelControlTempDir));
                 break;
+              case "eepsite":
+                tunnels.add(new EepSiteTunnel((Boolean) obj.get("enabled"), new KeyPair((String) obj.get("keypair")), (String) obj.get("contentDir"), (String) obj.get("logsDir"), (Boolean) obj.get("allowDirectoryBrowsing"), (Boolean) obj.get("enableLogs"), Integer.parseInt((String) obj.get("port")), tunnelControlTempDir));
+                break;
               case "client":
                 tunnels.add(new ClientTunnel((String) obj.get("dest"), Integer.parseInt((String) obj.get("port"))));
                 break;
               case "socks":
                 tunnels.add(new SocksTunnel(Integer.parseInt((String) obj.get("port"))));
+                break;
+              case "http":
+                tunnels.add(new HttpClientTunnel(Integer.parseInt((String) obj.get("port"))));
                 break;
             }
           });
@@ -106,10 +118,19 @@ public class TunnelControl implements Runnable {
           tunnelsArray.add(entry);
           switch (t.getType()) {
             case "server":
+            case "eepsite":
               entry.put("host", t.getHost());
               entry.put("port", t.getPort());
               entry.put("dest", t.getI2P());
               if(includeKeyPairs) entry.put("keypair", ((ServerTunnel) t).keyPair.toString());
+              if(t.getType().equals("eepsite")) {
+                EepSiteTunnel eepSiteTunnel = (EepSiteTunnel) t;
+                entry.put("enabled", eepSiteTunnel.enabled);
+                entry.put("contentDir", eepSiteTunnel.contentDir);
+                entry.put("logsDir", eepSiteTunnel.logsDir);
+                entry.put("allowDirectoryBrowsing", eepSiteTunnel.allowDirectoryBrowsing);
+                entry.put("enableLogs", eepSiteTunnel.enableLogs);
+              }
               break;
 
             case "client":
@@ -118,6 +139,7 @@ public class TunnelControl implements Runnable {
               break;
 
             case "socks":
+            case "http":
               entry.put("port", t.getPort());
               break;
           }
@@ -150,100 +172,237 @@ public class TunnelControl implements Runnable {
     tunnelList = new TunnelList(tunnelControlConfigDir, tunnelControlTempDir);
   }
 
-  public interface Tunnel {
-    public String getType();
-    public String getHost();
-    public String getPort();
-    public String getI2P();
-    public String getState();
-    public void destroy();
+  public static abstract class Tunnel {
+    public volatile I2PTunnel tunnel;
+    public boolean enabled = true;
+    public abstract String getType();
+    public abstract String getHost();
+    public abstract String getPort();
+    public abstract String getI2P();
+    public abstract Tunnel start();
+    public String getState() {
+      return tunnel==null ? "opening" : "open";
+    }
+    public boolean getEnabled() { return enabled; }
+    public void destroy() {
+      new Thread(()->{
+        // subsequent line commented out, because the tunnels will sleep for 20 seconds at a time, which is too long
+        // while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
+        if(tunnel!=null) tunnel.runClose(new String[]{"forced", "all"}, tunnel);
+      }).start();
+    }
   }
 
-  public static class ClientTunnel implements Tunnel {
+  public static class ClientTunnel extends Tunnel {
     public String dest;
     public int port;
-    public I2PTunnel tunnel;
+
     public ClientTunnel(String dest, int port) {
       this.dest = dest;
       this.port = port;
+    }
+
+    @Override
+    public Tunnel start() {
       new Thread(()->{
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "client " + port + " " + dest});
       }).start();
-    }
-    public void destroy() {
-      new Thread(()->{
-        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
-        tunnel.runClose(new String[]{"forced", "all"}, tunnel);
-      }).start();
+      return this;
     }
 
     @Override public String getType() { return "client"; }
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
-    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
+
   }
-  public static class ServerTunnel implements Tunnel {
+  public static class HttpClientTunnel extends Tunnel {
+    public int port;
+    public HttpClientTunnel(int port) {
+      this.port = port;
+    }
+
+    @Override
+    public Tunnel start() {
+      new Thread(()->{
+        tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "httpclient " + port});
+      }).start();
+      return this;
+    }
+
+    @Override public String getType() { return "http"; }
+    @Override public String getHost() { return "localhost"; }
+    @Override public String getPort() { return port+""; }
+    @Override public String getI2P() { return "n/a"; }
+  }
+  public static class ServerTunnel<T extends ServerTunnel> extends Tunnel {
     public String dest;
     public String host;
     public int port;
-    public volatile I2PTunnel tunnel;
     public KeyPair keyPair;
+    private File tunnelControlTempDir;
     public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir) {
       try {
         this.host = host;
         this.port = port;
         this.keyPair = keyPair;
         this.dest = keyPair.b32Dest;
-
-        String uuid = new BigInteger(128, new Random()).toString(16);
-        String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey." + uuid + ".dat";
-
-        Files.write(Path.of(seckeyPath), Base64.decode(keyPair.seckey));
-        new File(seckeyPath).deleteOnExit(); // clean up temporary file that was only required because new I2PTunnel() requires it to be written to disk
-
-        // listen using the I2P server keypair, and forward incoming connections to a destination and port
-        new Thread(() -> {
-          tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server " + host + " " + port + " " + seckeyPath});
-        }).start();
+        this.tunnelControlTempDir = tunnelControlTempDir;
       }
       catch (Exception e) {
         throw new RuntimeException(e);
       }
     }
-    public void destroy() {
-      new Thread(()->{
-        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
-        tunnel.runClose(new String[]{"forced", "all"}, tunnel);
+
+    @Override
+    public Tunnel start() {
+      new Thread(() -> {
+        try {
+          String uuid = new BigInteger(128, new Random()).toString(16);
+          String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey." + uuid + ".dat";
+
+          Files.write(Path.of(seckeyPath), Base64.decode(keyPair.seckey));
+          new File(seckeyPath).deleteOnExit(); // clean up temporary file that was only required because new I2PTunnel() requires it to be written to disk
+
+          // listen using the I2P server keypair, and forward incoming connections to a destination and port
+          tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "server " + host + " " + port + " " + seckeyPath});
+        }
+        catch(Exception e) {
+          throw new RuntimeException(e);
+        }
       }).start();
+      return this;
     }
+
     @Override public String getType() { return "server"; }
     @Override public String getHost() { return host; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return dest; }
-    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
 
   }
-  public static class SocksTunnel implements Tunnel {
+
+  public static class EepSiteTunnel extends ServerTunnel {
+    public Server server;
+    public String contentDir;
+    public String logsDir;
+    public Boolean allowDirectoryBrowsing;
+    public Boolean enableLogs;
+    public EepSiteTunnel(boolean enabled, KeyPair keyPair, String contentDirStr, String logsDirStr, boolean allowDirectoryBrowsing, boolean enableLogs, int port, File tunnelControlTempDir) {
+      super("localhost", port, keyPair, tunnelControlTempDir);
+
+      this.enabled = enabled;
+      this.contentDir = contentDirStr;
+      this.logsDir = logsDirStr;
+      this.allowDirectoryBrowsing = allowDirectoryBrowsing;
+      this.enableLogs = enableLogs;
+      this.port = port;
+      this.keyPair = keyPair;
+    }
+
+    @Override
+    public void destroy() {
+      try {
+        server.stop();
+        super.destroy();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+
+    }
+
+    public void stopJetty() {
+      if(server==null) return;
+      try {
+        server.stop();
+        server = null;
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    public void startJetty() {
+      try {
+
+        File contentDirFile = new File(contentDir);
+        File logsDirFile = new File(logsDir);
+
+        contentDirFile.mkdirs();
+        logsDirFile.mkdirs();
+
+        server = new Server();
+        server.setStopAtShutdown(true);
+
+        HttpConfiguration httpConfig = new HttpConfiguration();
+        httpConfig.setSendServerVersion(false);
+        httpConfig.setSendDateHeader(false);
+        httpConfig.setSendXPoweredBy(false);
+        httpConfig.setSendServerVersion(false);
+
+        HandlerList handlers = new HandlerList();
+        ResourceHandler resourceHandler = new ResourceHandler();
+        resourceHandler.setDirectoriesListed(allowDirectoryBrowsing);
+        resourceHandler.setWelcomeFiles(new String[]{"index.html"});
+        resourceHandler.setResourceBase(contentDirFile.getAbsolutePath());
+        handlers.addHandler(resourceHandler);
+        server.setHandler(handlers);
+
+        if(enableLogs) {
+          NCSARequestLog requestLog = new NCSARequestLog(logsDirFile.getAbsolutePath() + File.separator + "eepsite-yyyy_mm_dd.request.log");
+          requestLog.setAppend(true);
+          requestLog.setExtended(false);
+          requestLog.setLogTimeZone("UTC");
+          requestLog.setLogLatency(true);
+          requestLog.setRetainDays(0);
+          server.setRequestLog(requestLog);
+        }
+
+        ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
+        http.setPort(port);
+        http.setIdleTimeout(TUNNEL_CONTROL_LISTENING_PORT);
+        http.setHost("localhost");
+        server.addConnector(http);
+
+        server.start();
+        server.join();
+      }
+      catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    @Override
+    public Tunnel start() {
+      if(!enabled) return this;
+      new Thread(()->startJetty()).start();
+      return super.start();
+    }
+
+
+    @Override public String getType() { return "eepsite"; }
+
+  }
+
+  public static class SocksTunnel extends Tunnel {
     public int port;
     public I2PTunnel tunnel;
     public SocksTunnel(int port) {
       this.port = port;
+    }
+
+    @Override
+    public Tunnel start() {
       new Thread(()->{
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
       }).start();
+      return this;
     }
-    public void destroy() {
-      new Thread(()->{
-        while(tunnel==null) { try { Thread.sleep(100); } catch (InterruptedException e) {} } // wait for tunnel to be established before closing it
-        tunnel.runClose(new String[]{"forced", "all"}, tunnel);
-      }).start();
-    }
+
     @Override public String getType() { return "socks"; }
     @Override public String getHost() { return "localhost"; }
     @Override public String getPort() { return port+""; }
     @Override public String getI2P() { return "n/a"; }
-    @Override public String getState() { return tunnel==null ? "opening" : "open"; }
   }
 
   public TunnelList getTunnelList() {
@@ -278,14 +437,19 @@ public class TunnelControl implements Runnable {
         throw new RuntimeException(e);
       }
     }
-    public static KeyPair gen() throws Exception {
-      ByteArrayOutputStream seckey = new ByteArrayOutputStream();
-      ByteArrayOutputStream pubkey = new ByteArrayOutputStream();
-      I2PClient client = I2PClientFactory.createClient();
-      Destination d = client.createDestination(seckey);
-      d.writeBytes(pubkey);
-      String b32Dest = d.toBase32();
-      return new KeyPair(Base64.encode(seckey.toByteArray()), Base64.encode(pubkey.toByteArray()), b32Dest);
+    public static KeyPair gen() {
+      try {
+        ByteArrayOutputStream seckey = new ByteArrayOutputStream();
+        ByteArrayOutputStream pubkey = new ByteArrayOutputStream();
+        I2PClient client = I2PClientFactory.createClient();
+        Destination d = client.createDestination(seckey);
+        d.writeBytes(pubkey);
+        String b32Dest = d.toBase32();
+        return new KeyPair(Base64.encode(seckey.toByteArray()), Base64.encode(pubkey.toByteArray()), b32Dest);
+      }
+      catch (Exception e){
+        throw new RuntimeException(e);
+      }
     }
     public static KeyPair read(String path) throws Exception {
       return new KeyPair(Files.readString(Paths.get(path)));
@@ -300,6 +464,7 @@ public class TunnelControl implements Runnable {
   public void run() {
 
     tunnelList.load();
+    for(var t : tunnelList.tunnels) if(t.getEnabled()) t.start();
 
     try {
       controlServerSocket = new ServerSocket(30000, 0, InetAddress.getLoopbackAddress());
@@ -334,6 +499,7 @@ public class TunnelControl implements Runnable {
                 keyPair = KeyPair.gen();
               }
               var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
+              tunnel.start();
               tunnelList.addTunnel(tunnel);
               out.println(tunnel.dest);
               break;
@@ -352,7 +518,7 @@ public class TunnelControl implements Runnable {
             case "server.state": {
               String dest = args[1];
               tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("server") && ((ServerTunnel) t).dest.equals(dest)).forEach(t -> {
-                out.println(((ServerTunnel) t).tunnel==null ? "opening" : "open");
+                out.println((t.getState()));
               });
               break;
             }
@@ -361,6 +527,7 @@ public class TunnelControl implements Runnable {
               String destPubKey = args[1];
               int port = Integer.parseInt(args[2]);
               var clientTunnel = new ClientTunnel(destPubKey, port);
+              clientTunnel.start();
               tunnelList.addTunnel(clientTunnel);
               out.println(clientTunnel.port);
               break;
@@ -379,14 +546,14 @@ public class TunnelControl implements Runnable {
             case "client.state": {
               int port = Integer.parseInt(args[1]);
               tunnelList.getTunnelsCopyStream().filter(t->t.getType().equals("client") && ((ClientTunnel) t).port == port).forEach(t->{
-                out.println(((ClientTunnel) t).tunnel==null ? "opening" : "open");
+                out.println((t.getState()));
               });
               break;
             }
 
             case "socks.create": {
               int port = Integer.parseInt(args[1]);
-              tunnelList.addTunnel(new SocksTunnel(port));
+              tunnelList.addTunnel(new SocksTunnel(port).start());
               out.println("OK");
               break;
             }
@@ -403,7 +570,31 @@ public class TunnelControl implements Runnable {
             case "socks.state": {
               int port = Integer.parseInt(args[1]);
               tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("socks") && ((SocksTunnel) t).port == port).forEach(t -> {
-                out.println(((SocksTunnel) t).tunnel==null ? "opening" : "open");
+                out.println((t.getState()));
+              });
+              break;
+            }
+
+            case "http.create": {
+              int port = Integer.parseInt(args[1]);
+              tunnelList.addTunnel(new HttpClientTunnel(port).start());
+              out.println("OK");
+              break;
+            }
+
+            case "http.destroy": {
+              int port = Integer.parseInt(args[1]);
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("http") && ((SocksTunnel) t).port == port).forEach(t -> {
+                t.destroy();
+                tunnelList.removeTunnel(t);
+              });
+              out.println("OK");
+              break;
+            }
+            case "http.state": {
+              int port = Integer.parseInt(args[1]);
+              tunnelList.getTunnelsCopyStream().filter(t -> t.getType().equals("http") && ((HttpClientTunnel) t).port == port).forEach(t -> {
+                out.println((t.getState()));
               });
               break;
             }
@@ -460,6 +651,7 @@ public class TunnelControl implements Runnable {
   public void stop() {
     stopping = true;
     try {
+      getTunnelList().tunnels.forEach(TunnelControl.Tunnel::destroy);
       controlServerSocket.close();
     }
     catch (Exception e) {
@@ -467,9 +659,29 @@ public class TunnelControl implements Runnable {
     }
   }
 
+  public EepSiteTunnel getEepSiteTunnel() {
+    Optional<Tunnel> eepSiteTunnelOptional = getTunnelList().getTunnelsCopyStream().filter(t->t.getType().equals("eepsite")).findFirst();
+    if(eepSiteTunnelOptional.isPresent()) return (EepSiteTunnel) eepSiteTunnelOptional.get();
+    else {
+      EepSiteTunnel eepSiteTunnel = new EepSiteTunnel(false, KeyPair.gen(),
+      System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "eepsite" + File.separator + "content",
+      System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "eepsite" + File.separator + "logs",
+      true, true, 8080, getTunnelControlTempDir());
+      getTunnelList().addTunnel(eepSiteTunnel);
+      return eepSiteTunnel;
+    }
+  }
+
   public File getTunnelControlTempDir() {
     return tunnelControlTempDir;
   }
 
+  public static boolean isPortInUse() {
+    try (var socket = new ServerSocket(TUNNEL_CONTROL_LISTENING_PORT, 0, InetAddress.getLoopbackAddress())) {
+      return false;
+    } catch (IOException e) {
+      return true;
+    }
+  }
 
 }

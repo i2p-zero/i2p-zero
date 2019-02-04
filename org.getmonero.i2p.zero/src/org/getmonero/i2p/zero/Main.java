@@ -7,6 +7,11 @@ public class Main {
 
   public static void main(String[] args) {
 
+    if(TunnelControl.isPortInUse()) {
+      System.out.println("I2P-zero already running");
+      System.exit(1);
+    }
+
     System.out.println("I2P router launched.\n" +
         "Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).");
 
@@ -29,7 +34,10 @@ public class Main {
     System.out.println("Options set: "
         + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
-    new RouterWrapper(p).start();
+    RouterWrapper routerWrapper = new RouterWrapper(p);
+    routerWrapper.start();
+
+    Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop()));
 
   }
 

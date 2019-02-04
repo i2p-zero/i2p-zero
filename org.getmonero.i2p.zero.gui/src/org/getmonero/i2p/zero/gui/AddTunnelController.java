@@ -12,12 +12,14 @@ public class AddTunnelController {
 
   @FXML Pane clientTunnelConfigPane;
   @FXML Pane serverTunnelConfigPane;
+  @FXML Pane httpProxyConfigPane;
   @FXML Pane socksProxyConfigPane;
   @FXML Button addButton;
   @FXML Button cancelButton;
   @FXML ToggleGroup tunnelType;
   @FXML RadioButton clientTunnelRadioButton;
   @FXML RadioButton serverTunnelRadioButton;
+  @FXML RadioButton httpProxyRadioButton;
   @FXML RadioButton socksProxyRadioButton;
   @FXML TextField clientDestAddrField;
   @FXML TextField clientPortField;
@@ -26,6 +28,7 @@ public class AddTunnelController {
   @FXML TextField serverKeyField;
   @FXML TextField serverAddrField;
   @FXML TextField socksPortField;
+  @FXML TextField httpProxyPortField;
 
 
   private void updateAddButtonState() {
@@ -38,6 +41,9 @@ public class AddTunnelController {
     else if(tunnelType.getSelectedToggle().equals(socksProxyRadioButton)) {
       addButton.setDisable(Stream.of(socksPortField).anyMatch(f->f.getText().isBlank()));
     }
+    else if(tunnelType.getSelectedToggle().equals(httpProxyRadioButton)) {
+      addButton.setDisable(Stream.of(httpProxyPortField).anyMatch(f->f.getText().isBlank()));
+    }
   }
 
   @FXML
@@ -45,6 +51,7 @@ public class AddTunnelController {
 
     serverTunnelConfigPane.setVisible(false);
     socksProxyConfigPane.setVisible(false);
+    httpProxyConfigPane.setVisible(false);
 
     addButton.setOnAction(ev->{
       try {
@@ -52,13 +59,16 @@ public class AddTunnelController {
         var tunnelControl = controller.getRouterWrapper().getTunnelControl();
         var tunnelList = tunnelControl.getTunnelList();
         if (tunnelType.getSelectedToggle().equals(clientTunnelRadioButton)) {
-          Tunnel t = new TunnelControl.ClientTunnel(clientDestAddrField.getText(), Integer.parseInt(clientPortField.getText()));
+          Tunnel t = new TunnelControl.ClientTunnel(clientDestAddrField.getText(), Integer.parseInt(clientPortField.getText())).start();
           tunnelList.addTunnel(t);
         } else if (tunnelType.getSelectedToggle().equals(serverTunnelRadioButton)) {
-          Tunnel t = new TunnelControl.ServerTunnel(serverHostField.getText(), Integer.parseInt(serverPortField.getText()), new TunnelControl.KeyPair(serverKeyField.getText()), tunnelControl.getTunnelControlTempDir());
+          Tunnel t = new TunnelControl.ServerTunnel(serverHostField.getText(), Integer.parseInt(serverPortField.getText()), new TunnelControl.KeyPair(serverKeyField.getText()), tunnelControl.getTunnelControlTempDir()).start();
           tunnelList.addTunnel(t);
         } else if (tunnelType.getSelectedToggle().equals(socksProxyRadioButton)) {
-          Tunnel t = new TunnelControl.SocksTunnel(Integer.parseInt(socksPortField.getText()));
+          Tunnel t = new TunnelControl.SocksTunnel(Integer.parseInt(socksPortField.getText())).start();
+          tunnelList.addTunnel(t);
+        } else if (tunnelType.getSelectedToggle().equals(httpProxyRadioButton)) {
+          Tunnel t = new TunnelControl.HttpClientTunnel(Integer.parseInt(httpProxyPortField.getText())).start();
           tunnelList.addTunnel(t);
         }
         clientTunnelConfigPane.getScene().getWindow().hide();
@@ -80,17 +90,18 @@ public class AddTunnelController {
 
     tunnelType.selectedToggleProperty().addListener((ov, oldToggle, newToggle)-> {
       try {
-        var tunnelControl = Gui.instance.getController().getRouterWrapper().getTunnelControl();
         clientTunnelConfigPane.setVisible(false);
         serverTunnelConfigPane.setVisible(false);
+        httpProxyConfigPane.setVisible(false);
         socksProxyConfigPane.setVisible(false);
         if (newToggle.equals(clientTunnelRadioButton)) clientTunnelConfigPane.setVisible(true);
         if (newToggle.equals(serverTunnelRadioButton)) {
           var keyPair = TunnelControl.KeyPair.gen();
-          serverKeyField.setText(keyPair.seckey + "," + keyPair.pubkey);
+          serverKeyField.setText(keyPair.toString());
           serverAddrField.setText(keyPair.b32Dest);
           serverTunnelConfigPane.setVisible(true);
         }
+        if (newToggle.equals(httpProxyRadioButton)) httpProxyConfigPane.setVisible(true);
         if (newToggle.equals(socksProxyRadioButton)) socksProxyConfigPane.setVisible(true);
         updateAddButtonState();
       }
@@ -106,13 +117,11 @@ public class AddTunnelController {
       String key = newValue;
       if(key!=null && !key.isEmpty()) {
         try {
-          TunnelControl.KeyPair keyPair = new TunnelControl.KeyPair(key);
-          serverAddrField.setText(keyPair.b32Dest);
+          serverAddrField.setText(new TunnelControl.KeyPair(key).b32Dest);
         }
         catch (Exception e) {
           // ignore exception. user may be part way through entering string
         }
-
       }
     });
 

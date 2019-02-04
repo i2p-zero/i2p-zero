@@ -83,18 +83,13 @@ I2P router launched.
 Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).
 ```
 
-## Check that the I2P router is running and that it is listening for SAM connections
-
-`fuser 7656/tcp`
-
-
 ## Tunnel control
 
 Note that it may take a short while for new tunnels to be set up.
 
 Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create and destroy tunnels:
 
-#### Get the router reachability status. Returns a string such as "Testing", "Tirewalled", "Running", "Error"
+#### Get the router reachability status. Returns a string such as "Testing", "Firewalled", "Running", "Error"
 
 `tunnel-control.sh router.reachability`
 
@@ -113,6 +108,7 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh server.state <base 32 I2P address>`
 `tunnel-control.sh client.state <local port>`
+`tunnel-control.sh http.state <local port>`
 `tunnel-control.sh socks.state <local port>`
 
 
@@ -129,6 +125,14 @@ specified host and port. Note that the base 32 I2P destination address determini
 #### Close the tunnel listening for connections on the specified port. Returns "OK".
 
 `tunnel-control.sh client.destroy <local port>`
+
+#### Create an http proxy (for accessing .i2p web sites), listening on the specified port
+
+`tunnel-control.sh http.create <local port>`
+
+#### Destroy the http proxy listening on the specified port
+
+`tunnel-control.sh http.destroy <local port>`
 
 #### Create a socks tunnel, listening on the specified port
 
