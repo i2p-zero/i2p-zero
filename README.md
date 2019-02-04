@@ -13,7 +13,7 @@ The launchers will include the I2P router, a SAM listener, simple tunnel and soc
 <br/>
 <img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="549">
 <br/>
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot3.png" align="center" width="942" height="570">
+<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot3.png" align="center" width="880" height="540">
 
 ## Footprint
 
