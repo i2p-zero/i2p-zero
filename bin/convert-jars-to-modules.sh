@@ -30,8 +30,14 @@ echo "*** Determining dependencies for $combinedJarPath"
 
 if [ $(uname -s) = Darwin ]; then
   sed -i '' -e '$ d' "$basedir/target/module-info/combined/module-info.java"
+  sed -i '' '/java.desktop/d' "$basedir/target/module-info/combined/module-info.java"
+  sed -i '' '/java.management.rmi/d' "$basedir/target/module-info/combined/module-info.java"
+  sed -i '' '/java.rmi/d' "$basedir/target/module-info/combined/module-info.java"
 else
   sed -i '$ d' "$basedir/target/module-info/combined/module-info.java"
+  sed '/java.desktop/d' "$basedir/target/module-info/combined/module-info.java"
+  sed '/java.management.rmi/d' "$basedir/target/module-info/combined/module-info.java"
+  sed '/java.rmi/d' "$basedir/target/module-info/combined/module-info.java"
 fi
 echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/module-info/combined/module-info.java"
 

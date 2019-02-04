@@ -21,12 +21,12 @@ The zero-dependency distribution sizes are as follows:
 
 OS | Uncompressed size (MB) | xz Compressed size (MB)
 ------------ | ------------- | -------------
-Linux | 64.9 | 42.1
-Linux GUI | 73.5 | 49.0
-Mac | 53.9 | 37.1
-Mac GUI | 63.3 | 44.1
-Windows | 53.6 | 38.7
-Windows GUI | 61.8 | 45.3
+Linux | 49.1 | 30.7
+Mac | 40.0 | 25.3
+Windows | 39.9 | 27.8
+Linux GUI | 73.4 | 49.0
+Mac GUI | 62.2 | 44.1
+Windows GUI | 61.7 | 45.1
 
 ## Building the launchers
 
