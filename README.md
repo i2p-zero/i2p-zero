@@ -64,7 +64,7 @@ To run the MacOS router, double-click the app located at `dist/mac-gui/router/i2
 
 For Windows, double-click on `dist/windows-gui/router/bin/launch-gui.bat`
 
-Note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
+Until this <a href="https://github.com/AdoptOpenJDK/openjdk-build/issues/878">AdoptOpenJDK issue<a> is fixed, note that for the Windows GUI to run, you may need to install the latest <a href="https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads">Microsoft Visual C++ Redistributable</a>
 
 
 ## Running the command line version
