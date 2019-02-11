@@ -30,6 +30,8 @@ Windows GUI | 62.3 | 43.3
 
 ## Building the launchers
 
+All binary releases for Windows, Mac and Linux can be built from either Linux or Mac.
+
 From a freshly installed Ubuntu system, first ensure git is installed:
 
 `sudo apt install git`
