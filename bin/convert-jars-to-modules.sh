@@ -28,7 +28,7 @@ mkdir -p "$basedir/target/modules"
 echo "*** Determining dependencies for $combinedJarPath"
 "$JAVA_HOME"/bin/jdeps --add-modules=ALL-MODULE-PATH --generate-module-info "$basedir/target/module-info" "$combinedJarPath"
 
-modulesToRemove="java.desktop java.management java.rmi java.sql java.naming"
+modulesToRemove="java.desktop java.management java.rmi java.sql"
 
 if [ $(uname -s) = Darwin ]; then
   sed -i '' -e '$ d' "$basedir/target/module-info/combined/module-info.java"
