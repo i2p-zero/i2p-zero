@@ -48,15 +48,12 @@ for i in linux mac linux-gui mac-gui; do
   cp "$basedir/resources/launch.sh" "$basedir/dist/$i/router/bin/"
   cp "$basedir/resources/tunnel-control.sh" "$basedir/dist/$i/router/bin/"
 done
-for i in win win-gui; do
+for i in win; do
   cp "$basedir/resources/launch.bat" "$basedir/dist/$i/router/bin/"
 done
 
 for i in linux-gui mac-gui; do
   cp "$basedir/resources/launch-gui.sh" "$basedir/dist/$i/router/bin/"
-done
-for i in win-gui; do
-  cp "$basedir/resources/launch-gui.bat" "$basedir/dist/$i/router/bin/"
 done
 
 
@@ -74,17 +71,48 @@ for i in linux mac win; do
   done
 done
 
-# build map app structure
+# build mac gui app structure
 mv "$basedir/dist/mac-gui/router" "$basedir/dist/mac-gui/router-tmp"
 mkdir -p "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
 cp -R "$basedir/resources/i2p-zero.app" "$basedir/dist/mac-gui/router/"
 mv "$basedir/dist/mac-gui/router-tmp"/* "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
 rm -fr "$basedir/dist/mac-gui/router-tmp"
 
-# specify .desktop file so linux-gui can be launched via double-click
-cp "$basedir/resources/i2p-zero.desktop" "$basedir/dist/linux-gui/router/"
 
+# build linux gui app structure
+mv "$basedir/dist/linux-gui/router" "$basedir/dist/linux-gui/router-tmp"
+mkdir -p "$basedir/dist/linux-gui/router/app"
+mkdir -p "$basedir/dist/linux-gui/router/resources"
+
+mv "$basedir/dist/linux-gui/router-tmp" "$basedir/dist/linux-gui/runtime"
+
+cp "$basedir/import/javapackager/linux/jdk/packager/internal/resources/linux/papplauncher" "$basedir/dist/linux-gui/router/i2p-zero"
+cp "$basedir/import/javapackager/linux/jdk/packager/internal/resources/linux/libpackager.so" "$basedir/dist/linux-gui/router/"
+chmod +x "$basedir/dist/linux-gui/router/i2p-zero"
+
+cp "$basedir/resources/i2p-zero.linux.cfg" "$basedir/dist/linux-gui/router/app/i2p-zero.cfg"
+cp "$basedir/org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/icon.png" "$basedir/dist/linux-gui/router/resources/i2p-zero.png"
+
+
+# build win gui app structure
+mv "$basedir/dist/win-gui/router" "$basedir/dist/win-gui/router-tmp"
+mkdir -p "$basedir/dist/win-gui/router/app"
+
+mv "$basedir/dist/win-gui/router-tmp" "$basedir/dist/win-gui/runtime"
+
+cp "$basedir/resources/wrapper.exe" "$basedir/dist/win-gui/router/i2p-zero.exe"
+
+cp "$basedir/import/javapackager/win/jdk/packager/internal/resources/windows/packager.dll" "$basedir/dist/win-gui/router/"
+for i in msvcp140.dll vcruntime140.dll; do
+  cp "$basedir/dist/win-gui/runtime/bin/$i"  "$basedir/dist/win-gui/router/"
+done
+
+cp "$basedir/resources/i2p-zero.win.cfg" "$basedir/dist/win-gui/router/app/i2p-zero.cfg"
+
+
+# show distribution sizes
 du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
+
 
 echo "*** Done ***"
 os_name=`uname -s`

@@ -1,7 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Name=i2p-zero
-Exec=/bin/bash -c 'cd "$(dirname "$0")"; ./bin/launch-gui.sh' %k
-Terminal=false
-Type=Application
-Categories=Utility;

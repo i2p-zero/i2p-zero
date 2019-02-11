@@ -163,3 +163,18 @@ specified host and port. Note that the base 32 I2P destination address determini
 ## Watch the I2P log for messages
 
 `tail -f dist/linux/router/i2p.config/wrapper.log`
+
+
+## Note on bundled windows wrapper.exe executable
+
+There is a bundled resources/wrapper.exe file in the source tree. This allows the windows distributable to be built
+even on a non-windows platform.
+
+This file can be deterministically recreated by
+downloading javapackager from http://download2.gluonhq.com/jpackager/11/jdk.packager-windows.zip, unzipping it,
+unzipping the jar file within that, and obtaining the jdk/packager/internal/resources/windows/papplauncher.exe file.
+
+Then, on Windows, download Resource Hacker version 5.1.7 from http://www.angusj.com/resourcehacker/ and use it to add the
+resources/icons.ico file to the papplauncher.exe file. Finally, verify that the resulting file is identical to the bundled resources/wrapper.exe file.
+
+The sha256 checksum of the file should be `50c9286b9da7a91b8715de3cbcd141ec44eb199642562f43ce82351609115e06`
