@@ -3,4 +3,5 @@ target/
 .idea/
 *.swp
 dist/
+dist-zip/
 import/
