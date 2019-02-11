@@ -31,6 +31,10 @@ public class RouterWrapper {
   public RouterWrapper(Properties routerProperties) {
     this.routerProperties = routerProperties;
 
+    if(!routerProperties.contains("i2p.dir.base.template")) {
+      routerProperties.put("i2p.dir.base.template", new File(new File(System.getProperty("java.home")), "i2p.base").getAbsolutePath());
+    }
+
     int bandwidthLimitKBps = loadBandwidthLimitKBps();
     routerProperties.put("i2np.inboundKBytesPerSecond", bandwidthLimitKBps);
     routerProperties.put("i2np.outboundKBytesPerSecond", bandwidthLimitKBps);

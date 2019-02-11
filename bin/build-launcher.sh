@@ -84,7 +84,7 @@ mv "$basedir/dist/linux-gui/router" "$basedir/dist/linux-gui/router-tmp"
 mkdir -p "$basedir/dist/linux-gui/router/app"
 mkdir -p "$basedir/dist/linux-gui/router/resources"
 
-mv "$basedir/dist/linux-gui/router-tmp" "$basedir/dist/linux-gui/runtime"
+mv "$basedir/dist/linux-gui/router-tmp" "$basedir/dist/linux-gui/router/runtime"
 
 cp "$basedir/import/javapackager/linux/jdk/packager/internal/resources/linux/papplauncher" "$basedir/dist/linux-gui/router/i2p-zero"
 cp "$basedir/import/javapackager/linux/jdk/packager/internal/resources/linux/libpackager.so" "$basedir/dist/linux-gui/router/"
@@ -98,13 +98,13 @@ cp "$basedir/org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/icon.png"
 mv "$basedir/dist/win-gui/router" "$basedir/dist/win-gui/router-tmp"
 mkdir -p "$basedir/dist/win-gui/router/app"
 
-mv "$basedir/dist/win-gui/router-tmp" "$basedir/dist/win-gui/runtime"
+mv "$basedir/dist/win-gui/router-tmp" "$basedir/dist/win-gui/router/runtime"
 
 cp "$basedir/resources/wrapper.exe" "$basedir/dist/win-gui/router/i2p-zero.exe"
 
 cp "$basedir/import/javapackager/win/jdk/packager/internal/resources/windows/packager.dll" "$basedir/dist/win-gui/router/"
 for i in msvcp140.dll vcruntime140.dll; do
-  cp "$basedir/dist/win-gui/runtime/bin/$i"  "$basedir/dist/win-gui/router/"
+  cp "$basedir/dist/win-gui/router/runtime/bin/$i"  "$basedir/dist/win-gui/router/"
 done
 
 cp "$basedir/resources/i2p-zero.win.cfg" "$basedir/dist/win-gui/router/app/i2p-zero.cfg"
@@ -123,9 +123,9 @@ if [ $os_name = Darwin ]; then
 elif [ $os_name = Linux ]; then
     os_name=linux
     echo "To run from the command line, type: ./dist/$os_name/router/bin/launch.sh"
-    echo "To run the GUI, type: dist/$os_name-gui/router/bin/launch-gui.sh"
+    echo "To run the GUI, double-click: dist/$os_name-gui/router/i2p-zero"
 else
     os_name=win
     echo "To run from the command line, type: ./dist/$os_name/router/bin/launch.bat"
-    echo "To run the GUI, double-click: dist/$os_name-gui/router/bin/launch-gui.bat"
+    echo "To run the GUI, double-click: dist/$os_name-gui/router/i2p-zero.exe"
 fi

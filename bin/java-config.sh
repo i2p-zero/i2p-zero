@@ -36,8 +36,8 @@ JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN=openjfx-${JAVAFX_VERSION}_windows-x64_bin-jmo
 JPACKAGER_DOWNLOAD_URL_LINUX=http://download2.gluonhq.com/jpackager/11/jdk.packager-linux.zip
 JPACKAGER_DOWNLOAD_URL_WIN=http://download2.gluonhq.com/jpackager/11/jdk.packager-windows.zip
 
-JPACKAGER_DOWNLOAD_FILENAME_LINUX=http://download2.gluonhq.com/jpackager/11/jdk.packager-linux.zip
-JPACKAGER_DOWNLOAD_FILENAME_WIN=http://download2.gluonhq.com/jpackager/11/jdk.packager-windows.zip
+JPACKAGER_DOWNLOAD_FILENAME_LINUX=jdk.packager-linux.zip
+JPACKAGER_DOWNLOAD_FILENAME_WIN=jdk.packager-windows.zip
 
 
 OS=`uname -s`
