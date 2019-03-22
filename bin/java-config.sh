@@ -8,19 +8,19 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK11U-jdk_x64_linux_hotspot_11.0.1_13.tar.gz
-JDK_DOWNLOAD_FILENAME_MAC=OpenJDK11U-jdk_x64_mac_hotspot_11.0.1_13.tar.gz
-JDK_DOWNLOAD_FILENAME_WIN=openjdk-11.0.2_windows-x64_bin.zip
+JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
+JDK_DOWNLOAD_FILENAME_MAC=OpenJDK12U-jdk_x64_mac_hotspot_12_33.tar.gz
+JDK_DOWNLOAD_FILENAME_WIN=OpenJDK12U-jdk_x64_windows_hotspot_12_33.zip
 
-JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.1%2B13/OpenJDK11U-jdk_x64_linux_hotspot_11.0.1_13.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.1%2B13/OpenJDK11U-jdk_x64_mac_hotspot_11.0.1_13.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://download.java.net/java/GA/jdk11/9/GPL/openjdk-11.0.2_windows-x64_bin.zip
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_mac_hotspot_12_33.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_windows_hotspot_12_33.zip
 
-JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-11.0.1+13
-JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-11.0.1+13/Contents/Home
-JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-11.0.2
+JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-12+33
+JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-12+33/Contents/Home
+JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-12+33
 
-JAVAFX_VERSION=11.0.2
+JAVAFX_VERSION=12
 JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-sdk.zip

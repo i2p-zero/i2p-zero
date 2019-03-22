@@ -110,6 +110,11 @@ done
 cp "$basedir/resources/i2p-zero.win.cfg" "$basedir/dist/win-gui/router/app/i2p-zero.cfg"
 
 
+# linux-gui launcher: fix location of libjli.so due to slight incompatibility with javapackager11 when used with jdk12 hotspot VM
+mkdir "$basedir/dist/linux-gui/router/runtime/lib/jli"
+cp "$basedir/dist/linux-gui/router/runtime/lib/libjli.so" "$basedir/dist/linux-gui/router/runtime/lib/jli/"
+
+
 # show distribution sizes
 du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
 
