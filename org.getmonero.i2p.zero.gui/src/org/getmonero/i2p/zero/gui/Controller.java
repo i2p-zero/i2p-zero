@@ -4,26 +4,37 @@ import javafx.application.Platform;
 import javafx.beans.binding.DoubleBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.getmonero.i2p.zero.RouterWrapper;
 import org.getmonero.i2p.zero.TunnelControl;
+import org.getmonero.i2p.zero.UpdateCheck;
 
 import static org.getmonero.i2p.zero.TunnelControl.*;
 
+import java.awt.*;
 import java.io.File;
+import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.Properties;
@@ -70,6 +81,7 @@ public class Controller {
   @FXML private CheckBox eepSiteEnableLogsCheckbox;
   @FXML private CheckBox eepSiteAllowDirBrowsingCheckbox;
   @FXML private TextField eepSiteLocalPortField;
+  @FXML private TextArea helpTextArea;
 
 
   DecimalFormat format2dp = new DecimalFormat("0.00");
@@ -83,6 +95,8 @@ public class Controller {
   }
 
   @FXML private void initialize() {
+
+    helpTextArea.setText("You are running I2P-zero version " + UpdateCheck.currentVersion + "\n\n" + helpTextArea.getText());
 
     DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -157,27 +171,31 @@ public class Controller {
           // modifying eepSiteSecretKeyField/eepSiteLocalPortField will require the eepsite tunnel to be destroyed
           // and later recreated whenever the user is finished editing settings and ticks the enabled box again
           eepSiteSecretKeyField.textProperty().addListener((observable, oldValue, newValue) -> {
+            eepSiteEnableCheckbox.setSelected(false);
             eepSiteAddrField.setText("");
             String key = newValue;
             if(key!=null && !key.isEmpty()) {
               try {
-                eepSiteAddrField.setText("http://" + new TunnelControl.KeyPair(key).b32Dest);
+                KeyPair keyPair =  new TunnelControl.KeyPair(key);
+                eepSiteAddrField.setText("http://" + keyPair.b32Dest);
+                getEepSiteTunnel().dest = keyPair.b32Dest;
+                getEepSiteTunnel().keyPair = keyPair;
+                save();
               }
               catch (Exception e2) {
                 // ignore exception. user may be part way through entering string
               }
-              eepSiteEnableCheckbox.setSelected(false);
             }
           });
           eepSiteGenButton.setOnAction(ev->{
             getEepSiteTunnel().keyPair = KeyPair.gen();
+            save();
             eepSiteSecretKeyField.setText(getEepSiteTunnel().keyPair.toString());
           });
           eepSiteLocalPortField.textProperty().addListener((ov, oldValue, newValue)->{
             eepSiteEnableCheckbox.setSelected(false);
             getEepSiteTunnel().port = Integer.parseInt(newValue);
             save();
-            eepSiteEnableCheckbox.setSelected(false);
           });
 
           eepSiteEnableCheckbox.selectedProperty().addListener((ov, oldValue, newValue)->{
@@ -317,7 +335,35 @@ public class Controller {
     Properties routerProperties = new Properties();
     routerProperties.put("router.sharePercentage", 80);
     params.entrySet().stream().forEach(e->routerProperties.put(e.getKey(), e.getValue()));
-    routerWrapper = new RouterWrapper(routerProperties);
+    routerWrapper = new RouterWrapper(routerProperties, ()-> {
+      Platform.runLater(()->{
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Update available");
+        alert.setHeaderText(null);
+
+        FlowPane fp = new FlowPane();
+        String updateUrl = "https://github.com/i2p-zero/i2p-zero";
+
+        var link = new Hyperlink(updateUrl);
+        TextFlow textFlow = new TextFlow(
+          new Text("A new version of I2P-zero is available at"),
+          link,
+          new Text("\nPlease keep your software up-to-date, as it will enhance your privacy and keep you safe from vulnerabilities")
+        );
+        textFlow.setPrefWidth(300);
+        link.setOnAction((ActionEvent event) -> {
+          try {
+            Desktop.getDesktop().browse(new URI(updateUrl));
+          }
+          catch (Exception e) {
+            e.printStackTrace();
+          }
+        });
+        fp.getChildren().addAll(textFlow);
+        alert.getDialogPane().contentProperty().set(fp);
+        alert.show();
+      });
+    });
     routerWrapper.start();
 
   }

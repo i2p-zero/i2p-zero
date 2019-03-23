@@ -1,11 +1,17 @@
 package org.getmonero.i2p.zero;
 
+import java.io.PrintStream;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 public class Main {
 
+  public static PrintStream consoleOut = null;
+
   public static void main(String[] args) {
+
+    // since i2p redirects system output, keep a reference to the console out
+    consoleOut = System.out;
 
     if(TunnelControl.isPortInUse()) {
       System.out.println("I2P-zero already running");
@@ -31,7 +37,9 @@ public class Main {
     System.out.println("Options set: "
         + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
-    RouterWrapper routerWrapper = new RouterWrapper(p);
+    RouterWrapper routerWrapper = new RouterWrapper(p, ()->{
+      Main.consoleOut.println("**** A new version of I2P-zero is available at https://github.com/i2p-zero/i2p-zero - Please keep your software up-to-date, as it will enhance your privacy and keep you safe from vulnerabilities");
+    });
     routerWrapper.start();
 
     Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop(true)));

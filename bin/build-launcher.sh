@@ -11,6 +11,7 @@ source "$basedir/bin/java-config.sh"
 
 echo "*** Compiling CLI"
 "$JAVA_HOME"/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')
+cp org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION target/classes/org.getmonero.i2p.zero/org/getmonero/i2p/zero/
 
 echo "*** Packaging CLI as a modular jar"
 "$JAVA_HOME"/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/classes/org.getmonero.i2p.zero .

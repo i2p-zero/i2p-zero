@@ -27,9 +27,11 @@ public class RouterWrapper {
   private TunnelControl tunnelControl;
   private File i2PConfigDir;
   private File i2PBaseDir;
+  private Runnable updateAvailableCallback;
 
-  public RouterWrapper(Properties routerProperties) {
+  public RouterWrapper(Properties routerProperties, Runnable updateAvailableCallback) {
     this.routerProperties = routerProperties;
+    this.updateAvailableCallback = updateAvailableCallback;
 
     if(!routerProperties.contains("i2p.dir.base.template")) {
       routerProperties.put("i2p.dir.base.template", new File(new File(System.getProperty("java.home")), "i2p.base").getAbsolutePath());
@@ -95,8 +97,12 @@ public class RouterWrapper {
             }
           }
 
+          System.out.println("I2P router now running");
+
           tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();
+
+          UpdateCheck.scheduleUpdateCheck(i2PConfigDir, router, updateAvailableCallback);
 
         }
         catch (Exception e) {
