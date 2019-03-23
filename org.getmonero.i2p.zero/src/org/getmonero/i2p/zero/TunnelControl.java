@@ -628,6 +628,11 @@ public class TunnelControl implements Runnable {
               break;
             }
 
+            case "router.externalPort": {
+              out.println(routerWrapper.routerExternalPort);
+              break;
+            }
+
             case "sam.create": {
               String[] samArgs = new String[]{"sam.keys", "127.0.0.1", "7656", "i2cp.tcp.host=127.0.0.1", "i2cp.tcp.port=7654"};
               I2PAppContext context = routerWrapper.getRouter().getContext();

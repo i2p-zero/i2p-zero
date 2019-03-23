@@ -159,6 +159,10 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh sam.create`
 
+#### Get the external port randomly assigned to this router when first run, which the firewall should allow incoming UDP and TCP connections on. Returns the port number.
+
+`tunnel-control.sh router.externalPort`
+
 
 ## Watch the I2P log for messages
 

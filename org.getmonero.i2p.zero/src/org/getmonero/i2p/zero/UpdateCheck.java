@@ -10,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -18,39 +20,56 @@ public class UpdateCheck {
 
   public static final String currentVersion = new Scanner(RouterWrapper.class.getResourceAsStream("VERSION")).useDelimiter("\\n").next();
 
+  private static boolean isNewerVersionAvailable(String currentVersion, String versionAvailable) {
+    int currentMajor = Integer.parseInt(currentVersion.split(".")[0]);
+    int currentMinor = Integer.parseInt(currentVersion.split(".")[1]);
+    int availableMajor = Integer.parseInt(versionAvailable.split(".")[0]);
+    int availableMinor = Integer.parseInt(versionAvailable.split(".")[1]);
+    if(availableMajor>currentMajor) return true;
+    if(availableMajor<currentMajor) return false;
+    if(availableMinor>currentMinor) return true;
+    return false;
+  }
+
   public static void scheduleUpdateCheck(File i2PConfigDir, Router router, Runnable updateAvailableCallback) {
 
-    File updateAvailableFile = new File(i2PConfigDir, "updateAvailable");
-    if(updateAvailableFile.exists()) {
-      updateAvailableCallback.run();
-    }
-    else {
+    try {
+      File versionAvailableFile = new File(i2PConfigDir, "versionAvailable");
+      if(!versionAvailableFile.exists()) {
+        Files.write(versionAvailableFile.toPath(), currentVersion.getBytes(), StandardOpenOption.CREATE);
+      }
 
-      // schedule next check randomly in the next 48 hrs. On average, this call pattern will result in a check every 24 hrs.
-      CompletableFuture.delayedExecutor((long) (Math.random()*3600*24*2), TimeUnit.SECONDS).execute(() -> {
-        if(lookupUpdateAvailable(router)) {
-          try {
-            // create an empty file to indicate an update is available, so in future we don't have to keep querying the server
-            updateAvailableFile.createNewFile();
+      String versionAvailable = Files.readString(versionAvailableFile.toPath());
+      if(isNewerVersionAvailable(currentVersion, versionAvailable)) {
+        updateAvailableCallback.run();
+      }
+      else {
+
+        // schedule next check randomly in the next 48 hrs. On average, this call pattern will result in a check every 24 hrs.
+        CompletableFuture.delayedExecutor((long) (Math.random()*3600*24*2), TimeUnit.SECONDS).execute(() -> {
+          String versionAvailableLookup = lookupVersionAvailable(router);
+          if(versionAvailableLookup!=null) {
+            try {
+              // create an empty file to indicate an update is available, so in future we don't have to keep querying the server
+              Files.write(versionAvailableFile.toPath(), versionAvailableLookup.getBytes(), StandardOpenOption.CREATE);
+            } catch (Exception e) {
+              e.printStackTrace();
+            }
           }
-          catch (Exception e) {
-            e.printStackTrace();
-          }
-          updateAvailableCallback.run();
-        }
-        else {
-          // only check again if no update available yet
           scheduleUpdateCheck(i2PConfigDir, router, updateAvailableCallback);
-        }
-      });
+        });
 
+      }
+    }
+    catch (Exception e) {
+      e.printStackTrace();
     }
 
   }
 
-  public static boolean lookupUpdateAvailable(Router router) {
+  public static String lookupVersionAvailable(Router router) {
     try {
-      String versionAvailable = null;
+      String sanitizedVersionAvailable = null;
       String host = "77ypf3rahyjegncradypnyotvn6fhq7sobhwe2gs5a2hdiwehwjq.b32.i2p";
       Destination dest = router.getContext().namingService().lookup(host, null, null);
       I2PSocketManager mgr = I2PSocketManagerFactory.createManager();
@@ -66,15 +85,21 @@ public class UpdateCheck {
         while ((line = br.readLine()) != null) {
           if (line.equals("")) break;
         }
-        versionAvailable = br.readLine();
+        String rawVersionAvailable = br.readLine();
+        // sanitize, just in case the update notification server is compromised
+        if(rawVersionAvailable.length()>10) return null;
+        String allowedChars = "0123456789.";
+        sanitizedVersionAvailable = "";
+        for(var i=0; i<rawVersionAvailable.length(); i++) {
+          if(allowedChars.indexOf(rawVersionAvailable.charAt(i))>0) sanitizedVersionAvailable += rawVersionAvailable.charAt(i);
+        }
       }
       br.close();
-      if(versionAvailable==null) return false;
-      else return Float.parseFloat(currentVersion)<Float.parseFloat(versionAvailable);
+      return sanitizedVersionAvailable;
     }
     catch (Exception e) {
       e.printStackTrace();
-      return false;
+      return null;
     }
   }
 

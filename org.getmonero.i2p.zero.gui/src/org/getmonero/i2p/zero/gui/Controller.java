@@ -96,8 +96,6 @@ public class Controller {
 
   @FXML private void initialize() {
 
-    helpTextArea.setText("You are running I2P-zero version " + UpdateCheck.currentVersion + "\n\n" + helpTextArea.getText());
-
     DirectoryChooser directoryChooser = new DirectoryChooser();
 
     typeCol.setCellValueFactory(new PropertyValueFactory<Tunnel,String>("type"));
@@ -260,7 +258,7 @@ public class Controller {
       if(masterState) {
         masterToggle.setImage(new Image("org/getmonero/i2p/zero/gui/toggle-on.png"));
         statusLabel.setVisible(true);
-        routerWrapper.start();
+        routerWrapper.start(()->{});
         listenForTunnelChanges();
         tunnelAddButton.setDisable(false);
       }
@@ -364,7 +362,11 @@ public class Controller {
         alert.show();
       });
     });
-    routerWrapper.start();
+    routerWrapper.start(()->{
+      helpTextArea.setText("You are running I2P-zero version " + UpdateCheck.currentVersion + "\n\n"
+        + "For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others.\n\n"
+        + helpTextArea.getText());
+    });
 
   }
 

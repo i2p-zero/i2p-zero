@@ -29,6 +29,8 @@ public class RouterWrapper {
   private File i2PBaseDir;
   private Runnable updateAvailableCallback;
 
+  public int routerExternalPort;
+
   public RouterWrapper(Properties routerProperties, Runnable updateAvailableCallback) {
     this.routerProperties = routerProperties;
     this.updateAvailableCallback = updateAvailableCallback;
@@ -72,7 +74,7 @@ public class RouterWrapper {
     return started;
   }
 
-  public void start() {
+  public void start(Runnable routerIsAliveCallback) {
 
     new Thread(()-> {
       if(started) return;
@@ -98,6 +100,10 @@ public class RouterWrapper {
           }
 
           System.out.println("I2P router now running");
+
+          File routerConfigFile = new File(i2PBaseDir, "router.config");
+          routerExternalPort = Integer.parseInt(Files.lines(routerConfigFile.toPath()).filter(s->s.startsWith("i2np.udp.port=")).findFirst().get().split("=")[1]);
+          new Thread(routerIsAliveCallback).start();
 
           tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
           new Thread(tunnelControl).start();

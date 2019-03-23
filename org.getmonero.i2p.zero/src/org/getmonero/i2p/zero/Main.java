@@ -40,7 +40,8 @@ public class Main {
     RouterWrapper routerWrapper = new RouterWrapper(p, ()->{
       Main.consoleOut.println("**** A new version of I2P-zero is available at https://github.com/i2p-zero/i2p-zero - Please keep your software up-to-date, as it will enhance your privacy and keep you safe from vulnerabilities");
     });
-    routerWrapper.start();
+
+    routerWrapper.start(()->Main.consoleOut.println("For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others."));
 
     Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop(true)));
 
