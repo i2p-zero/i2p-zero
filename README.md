@@ -7,6 +7,10 @@
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows.
 The launchers will include the I2P router, a SAM listener, simple tunnel and socks tunnel functionality and a minimal JVM.
 
+## Downloads
+
+Download the latest binary releases for Mac/Windows/Linux here: https://github.com/i2p-zero/i2p-zero/releases
+
 ## GUI Screenshots
 
 <img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot1.png" align="center" width="472" height="440">
@@ -44,7 +48,7 @@ Note that the current version of this script uses jdk-12. If this version of Jav
 download, then update the references in java-config.sh to the later version. To locate a recent
 JDK download URL, see https://jdk.java.net/12/
 
-Also note that JDKs for Linux, MacOS and Windows will be downloaded, which will total several hundred megabytes.
+Also note that JDKs for Linux, MacOS and Windows will be downloaded, which will total several hundred megabytes. You may need to ensure your system has zip, unzip and bzip2 installed to run the build script.
 
 Run the `bin/build-all.sh` script, which will in turn call the following scripts:
 

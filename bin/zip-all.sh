@@ -21,7 +21,7 @@ for i in linux linux-gui mac mac-gui win win-gui; do cp -r ${i} "$basedir"/dist-
 cd "$basedir/dist-zip-staging"
 
 for i in win win-gui; do zip -r9 "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip i2p-zero-${i}.v${VERSION}; done
-for i in linux linux-gui mac mac-gui; do tar -jcvf "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.tar.bz2 i2p-zero-${i}.v${VERSION}; done
+for i in linux linux-gui mac mac-gui; do tar --{owner,group}=nobody -jcvf "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.tar.bz2 i2p-zero-${i}.v${VERSION}; done
 cd ..
 
 du -sh  "$basedir/dist-zip/"*.zip
