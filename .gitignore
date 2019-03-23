@@ -4,4 +4,5 @@ target/
 *.swp
 dist/
 dist-zip/
+dist-zip-staging/
 import/
