@@ -94,7 +94,7 @@ public class UpdateCheck {
         String allowedChars = "0123456789.";
         sanitizedVersionAvailable = "";
         for(var i=0; i<rawVersionAvailable.length(); i++) {
-          if(allowedChars.indexOf(rawVersionAvailable.charAt(i))>0) sanitizedVersionAvailable += rawVersionAvailable.charAt(i);
+          if(allowedChars.indexOf(rawVersionAvailable.charAt(i))>=0) sanitizedVersionAvailable += rawVersionAvailable.charAt(i);
         }
       }
       br.close();
