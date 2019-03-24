@@ -61,13 +61,22 @@ public class RouterWrapper {
     return router;
   }
 
-  public void copyFolderRecursively(Path src, Path dest)  {
+  public static void copyFolderRecursively(Path src, Path dest) {
     try {
-      Files.walk(src).forEach(source -> {
-        try { Files.copy(source, dest.resolve(src.relativize(source)), StandardCopyOption.REPLACE_EXISTING); } catch (Exception e) { throw new RuntimeException(e); }
+      Files.walk(src).forEach(s -> {
+        try {
+          Path d = dest.resolve(src.relativize(s));
+          if(Files.isDirectory(s)) {
+            if(!Files.exists(d)) Files.createDirectory(d);
+            return;
+          }
+          Files.copy(s, d);
+        } catch(Exception e) {
+          e.printStackTrace();
+        }
       });
-    } catch (Exception e) {
-      throw new RuntimeException(e);
+    } catch(Exception ex) {
+      ex.printStackTrace();
     }
   }
 
