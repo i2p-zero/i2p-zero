@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.Properties;
 
 public class RouterWrapper {
@@ -89,9 +90,20 @@ public class RouterWrapper {
 
       new Thread(()->{
         try {
+
           while(true) {
             if(router.isAlive()) {
-              break;
+              try {
+                File routerConfigFile = new File(i2PBaseDir, "router.config");
+                if(!routerConfigFile.exists()) continue;
+                Optional<String> portString = Files.lines(routerConfigFile.toPath()).filter(s -> s.startsWith("i2np.udp.port=")).findFirst();
+                if(portString.isEmpty()) continue;
+                routerExternalPort = Integer.parseInt(portString.get().split("=")[1]);
+                break;
+              }
+              catch (Exception e) {
+                e.printStackTrace();
+              }
             }
             else {
               Thread.sleep(1000);
@@ -101,8 +113,6 @@ public class RouterWrapper {
 
           System.out.println("I2P router now running");
 
-          File routerConfigFile = new File(i2PBaseDir, "router.config");
-          routerExternalPort = Integer.parseInt(Files.lines(routerConfigFile.toPath()).filter(s->s.startsWith("i2np.udp.port=")).findFirst().get().split("=")[1]);
           new Thread(routerIsAliveCallback).start();
 
           tunnelControl = new TunnelControl(this, i2PConfigDir, new File(i2PConfigDir, "tunnelTemp"));
