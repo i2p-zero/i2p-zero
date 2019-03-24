@@ -21,16 +21,18 @@ public class UpdateCheck {
   public static final String currentVersion = new Scanner(RouterWrapper.class.getResourceAsStream("VERSION")).useDelimiter("\\n").next();
 
   private static boolean isNewerVersionAvailable(String currentVersion, String versionAvailable) {
-    int currentMajor = Integer.parseInt(currentVersion.split(".")[0]);
-    int currentMinor = Integer.parseInt(currentVersion.split(".")[1]);
-    int availableMajor = Integer.parseInt(versionAvailable.split(".")[0]);
-    int availableMinor = Integer.parseInt(versionAvailable.split(".")[1]);
+    if(versionAvailable==null || versionAvailable.trim().equals("")) return false;
+    int currentMajor = Integer.parseInt(currentVersion.split("\\.")[0]);
+    int currentMinor = Integer.parseInt(currentVersion.split("\\.")[1]);
+    int availableMajor = Integer.parseInt(versionAvailable.split("\\.")[0]);
+    int availableMinor = Integer.parseInt(versionAvailable.split("\\.")[1]);
     if(availableMajor>currentMajor) return true;
     if(availableMajor<currentMajor) return false;
     if(availableMinor>currentMinor) return true;
     return false;
   }
 
+  private static boolean callbackTriggered = false;
   public static void scheduleUpdateCheck(File i2PConfigDir, Router router, Runnable updateAvailableCallback) {
 
     try {
@@ -41,25 +43,26 @@ public class UpdateCheck {
 
       String versionAvailable = Files.readString(versionAvailableFile.toPath());
       if(isNewerVersionAvailable(currentVersion, versionAvailable)) {
-        updateAvailableCallback.run();
+        if(!callbackTriggered) {
+          callbackTriggered = true;
+          updateAvailableCallback.run();
+        }
       }
-      else {
 
-        // schedule next check randomly in the next 48 hrs. On average, this call pattern will result in a check every 24 hrs.
-        CompletableFuture.delayedExecutor((long) (Math.random()*3600*24*2), TimeUnit.SECONDS).execute(() -> {
-          String versionAvailableLookup = lookupVersionAvailable(router);
-          if(versionAvailableLookup!=null) {
-            try {
-              // create an empty file to indicate an update is available, so in future we don't have to keep querying the server
-              Files.write(versionAvailableFile.toPath(), versionAvailableLookup.getBytes(), StandardOpenOption.CREATE);
-            } catch (Exception e) {
-              e.printStackTrace();
-            }
+      // schedule next check randomly in the next 48 hrs. On average, this call pattern will result in a check every 24 hrs.
+      CompletableFuture.delayedExecutor((long) (Math.random()*3600*24*2), TimeUnit.SECONDS).execute(() -> {
+        String versionAvailableLookup = lookupVersionAvailable(router);
+        if(versionAvailableLookup!=null) {
+          try {
+            // write it to a file, so when i2p-zero is next stared, the notification will be immediate
+            Files.write(versionAvailableFile.toPath(), versionAvailableLookup.getBytes(), StandardOpenOption.CREATE);
+          } catch (Exception e) {
+            e.printStackTrace();
           }
-          scheduleUpdateCheck(i2PConfigDir, router, updateAvailableCallback);
-        });
+        }
+        scheduleUpdateCheck(i2PConfigDir, router, updateAvailableCallback);
+      });
 
-      }
     }
     catch (Exception e) {
       e.printStackTrace();
