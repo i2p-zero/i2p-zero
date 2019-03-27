@@ -175,6 +175,10 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh router.getBandwidthStats`
 
+or, for pleasant viewing on the command line:
+
+`tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort`
+
 
 ## Watch the I2P log for messages
 
