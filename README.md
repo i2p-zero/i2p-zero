@@ -181,7 +181,7 @@ example response:
 
 or, for pleasant viewing on the command line, automatically updating every 2 seconds:
 
-watch "tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort"
+`watch "tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort"`
 
 
 ## Watch the I2P log for messages
