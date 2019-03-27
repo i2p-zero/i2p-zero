@@ -171,13 +171,17 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh router.getBandwidthLimitKBps`
 
-#### Get bandwidth statistics. Returns a comma separated list of statistics, such as: 1sRateInKBps=12.34,1sRateOutKBps=12.34,5mRateInKBps=12.34,5mRateOutKBps=12.34,avgRateInKBps=12.34,avgRateOutKBps=12.34,totalInMB=12.34,totalOutMB=12.34
+#### Get bandwidth statistics. Returns a comma separated list of statistics
 
 `tunnel-control.sh router.getBandwidthStats`
 
-or, for pleasant viewing on the command line:
+example response:
 
-`tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort`
+`1sRateInKBps=12.34,1sRateOutKBps=12.34,5mRateInKBps=12.34,5mRateOutKBps=12.34,avgRateInKBps=12.34,avgRateOutKBps=12.34,totalInMB=12.34,totalOutMB=12.34`
+
+or, for pleasant viewing on the command line, automatically updating every 2 seconds:
+
+watch "tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort"
 
 
 ## Watch the I2P log for messages
