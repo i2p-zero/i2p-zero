@@ -183,6 +183,9 @@ public class RouterWrapper {
     }
   }
 
+  public int getBandwidthLimitKBps() {
+    return Integer.parseInt(routerProperties.get("i2np.inboundKBytesPerSecond").toString());
+  }
 
   public void updateBandwidthLimitKBps(int n) {
     routerProperties.put("i2np.inboundKBytesPerSecond", n);

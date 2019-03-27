@@ -24,10 +24,8 @@ import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TunnelControl implements Runnable {
@@ -630,6 +628,32 @@ public class TunnelControl implements Runnable {
 
             case "router.externalPort": {
               out.println(routerWrapper.routerExternalPort);
+              break;
+            }
+
+            case "router.setBandwidthLimitKBps": {
+              int n = Integer.parseInt(args[1]);
+              routerWrapper.updateBandwidthLimitKBps(n);
+              out.println("OK");
+              break;
+            }
+
+            case "router.getBandwidthLimitKBps": {
+              out.println(routerWrapper.getBandwidthLimitKBps());
+              break;
+            }
+
+            case "router.getBandwidthStats": {
+              Map<String, Double> stats = new HashMap<>();
+              stats.put("1sRateInKBps", routerWrapper.get1sRateInKBps());
+              stats.put("1sRateOutKBps", routerWrapper.get1sRateOutKBps());
+              stats.put("5mRateInKBps", routerWrapper.get5mRateInKBps());
+              stats.put("5mRateOutKBps", routerWrapper.get5mRateOutKBps());
+              stats.put("avgRateInKBps", routerWrapper.getAvgRateInKBps());
+              stats.put("avgRateOutKBps", routerWrapper.getAvgRateOutKBps());
+              stats.put("totalInMB", routerWrapper.getTotalInMB());
+              stats.put("totalOutMB", routerWrapper.getTotalOutMB());
+              out.println(stats.entrySet().stream().map(e->e.getKey()+"="+e.getValue()).collect(Collectors.joining(",")));
               break;
             }
 
