@@ -30,5 +30,5 @@ fi
 
 cd ..
 
-du -sh  "$basedir/dist-zip/"*.zip
-du -sh  "$basedir/dist-zip/"*.tar.bz2
+du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
+du -sk dist-zip/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'

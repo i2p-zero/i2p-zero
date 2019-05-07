@@ -17,7 +17,7 @@ fi
 
 cd "$basedir/import/i2p.i2p"
 git fetch
-git checkout tags/i2p-0.9.39
+git checkout tags/i2p-0.9.40
 cd ..
 
 if [ ! -d "$basedir/import/jdks" ]; then
