@@ -23,14 +23,14 @@ Download the latest binary releases for Mac/Windows/Linux here: https://github.c
 
 The zero-dependency distribution sizes are as follows:
 
-OS | Uncompressed size (MB) | xz Compressed size (MB)
+OS | Uncompressed size (MB) | bz2 Compressed size (MB)
 ------------ | ------------- | -------------
-Linux | 49.1 | 29.8
-Mac | 39.0 | 24.6
-Windows | 39.5 | 26.0
-Linux GUI | 73.7 | 48.0
-Mac GUI | 61.1 | 43.1
-Windows GUI | 62.3 | 43.3
+Linux | 50.5 | 32.0
+Mac | 39.2 | 26.0
+Windows | 40.2 | 29.0
+Linux GUI | 75.9 | 51.9
+Mac GUI | 61.5 | 45.0
+Windows GUI | 62.6 | 47.4
 
 ## Building the launchers
 
