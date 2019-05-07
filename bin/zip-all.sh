@@ -42,10 +42,10 @@ getDirSizeMB () {
 
 print3ColsJustified "OS" "Uncompressed size (MB)" "Compressed size (MB)"
 print3ColsJustified "------------------------" "------------------------" "------------------------"
-print3ColsJustified "Mac" "`getDirSizeMB dist/mac`" "`getDirSizeMB dist-zip/i2p-zero-mac.v${VERSION}.tar.bz2`"
-print3ColsJustified "Windows" "`getDirSizeMB dist/win`" "`getDirSizeMB dist-zip/i2p-zero-win.v${VERSION}.zip`"
-print3ColsJustified "Linux" "`getDirSizeMB dist/linux`" "`getDirSizeMB dist-zip/i2p-zero-linux.v${VERSION}.tar.bz2`"
-print3ColsJustified "Mac GUI" "`getDirSizeMB dist/mac-gui`" "`getDirSizeMB dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`"
-print3ColsJustified "Windows GUI" "`getDirSizeMB dist/win-gui`" "`getDirSizeMB dist-zip/i2p-zero-win-gui.v${VERSION}.zip`"
-print3ColsJustified "Linux GUI" "`getDirSizeMB dist/linux-gui`" "`getDirSizeMB dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`"
+print3ColsJustified "Mac" "`getDirSizeMB $basedir/dist/mac`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-mac.v${VERSION}.tar.bz2`"
+print3ColsJustified "Windows" "`getDirSizeMB $basedir/dist/win`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`"
+print3ColsJustified "Linux" "`getDirSizeMB $basedir/dist/linux`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-linux.v${VERSION}.tar.bz2`"
+print3ColsJustified "Mac GUI" "`getDirSizeMB $basedir/dist/mac-gui`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`"
+print3ColsJustified "Windows GUI" "`getDirSizeMB $basedir/dist/win-gui`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`"
+print3ColsJustified "Linux GUI" "`getDirSizeMB $basedir/dist/linux-gui`" "`getDirSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`"
 
