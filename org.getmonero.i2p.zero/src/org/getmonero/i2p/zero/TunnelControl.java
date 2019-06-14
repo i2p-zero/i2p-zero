@@ -532,9 +532,9 @@ public class TunnelControl implements Runnable {
             }
 
             case "client.create": {
-              String destPubKey = args[1];
+              String dest = args[1];
               int port = Integer.parseInt(args[2]);
-              var clientTunnel = new ClientTunnel(destPubKey, port);
+              var clientTunnel = new ClientTunnel(dest, port);
               clientTunnel.start();
               tunnelList.addTunnel(clientTunnel);
               out.println(clientTunnel.port);

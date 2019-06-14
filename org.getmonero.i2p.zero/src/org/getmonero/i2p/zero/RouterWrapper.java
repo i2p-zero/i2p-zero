@@ -100,7 +100,7 @@ public class RouterWrapper {
         try {
 
           while(true) {
-            if(router.isAlive()) {
+            if(router.isAlive()) {                  
               try {
                 File routerConfigFile = new File(i2PBaseDir, "router.config");
                 if(!(routerConfigFile.exists() && routerConfigFile.canRead())) {

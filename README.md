@@ -125,7 +125,7 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 #### Create a tunnel that listens for connections on localhost on the specified port and forwards connections over I2P to the specified destination public key.
 
-`tunnel-control.sh client.create <local port> <I2P destination public key>`
+`tunnel-control.sh client.create <I2P destination> <local port>`
 
 
 #### Close the tunnel listening for connections on the specified port. Returns "OK".
