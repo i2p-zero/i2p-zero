@@ -6,7 +6,7 @@ else
     basedir=$(dirname $(dirname $(readlink -fm $0)))
 fi
 
-source "$basedir/bin/util.sh"
+source "$basedir/bin/java-config.sh"
 
 VERSION=$(head -n 1 "$basedir/org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION")
 

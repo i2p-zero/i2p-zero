@@ -36,30 +36,26 @@ public final class NormalizeZip {
 
   public static void main(String[] args) throws Exception {
     if(args.length!=2) {
-      System.out.println("Arguments: timestampSource zip");
+      System.out.println("Arguments: timestamp zip");
       System.exit(1);
     }
-    File timestampSourceFile = Path.of(args[0]).toFile();
+    long timestamp = Long.parseLong(args[0]);
     File sourceZipFile = Path.of(args[1]).toFile();
     File destZipFile = Path.of(args[1]+".tmp").toFile();
 
-    if(!timestampSourceFile.exists()) {
-      System.out.println("Timestamp source file does not exist");
-      System.exit(1);
-    }
     if(!sourceZipFile.exists()) {
       System.out.println("Source zip file does not exist");
       System.exit(1);
     }
 
-    System.out.println("Normalizing zip " + sourceZipFile.getCanonicalPath() + " to timestamp: " + new Date(timestampSourceFile.lastModified()));
+    System.out.println("Normalizing zip " + sourceZipFile.getCanonicalPath() + " to timestamp: " + new Date(timestamp));
 
-    NormalizeZip nz = new NormalizeZip(timestampSourceFile.lastModified(), true).addFileStripper("META-INF/MANIFEST.MF", new ManifestStripper());
+    NormalizeZip nz = new NormalizeZip(timestamp, true).addFileStripper("META-INF/MANIFEST.MF", new ManifestStripper());
     nz.strip(sourceZipFile, destZipFile);
     if(!sourceZipFile.delete()) System.out.println("Cannot delete source file");
     if(!destZipFile.renameTo(sourceZipFile)) System.out.println("Cannot rename temporary zip file");
     destZipFile = sourceZipFile;
-    if(!destZipFile.setLastModified(timestampSourceFile.lastModified())) System.out.println("Cannot update zip last modified date");
+    if(!destZipFile.setLastModified(timestamp)) System.out.println("Cannot update zip last modified date");
   }
 
   /**

@@ -7,7 +7,6 @@ else
 fi
 
 source "$basedir/bin/java-config.sh"
-source "$basedir/bin/util.sh"
 
 cp "$basedir"/import/jetty-lib/*.jar "$basedir/import/lib/"
 

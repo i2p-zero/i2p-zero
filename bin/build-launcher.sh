@@ -7,7 +7,6 @@ else
 fi
 
 source "$basedir/bin/java-config.sh"
-source "$basedir/bin/util.sh"
 
 echo "*** Compiling CLI"
 "$JAVA_HOME"/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')

@@ -46,3 +46,19 @@ if [ $OS = "Darwin" ]; then
 else
   export JAVA_HOME=$JAVA_HOME_LINUX
 fi
+
+# get the SHA-256 hash of the specified file
+getHash () {
+  if [ $(uname -s) = Darwin ]; then
+    h=`shasum -a 256 $1 | awk '{print $1}'`
+  else
+    h=`sha256sum $1 | awk '{print $1}'`
+  fi
+  echo $h
+}
+
+# normalizes the specified jar or zip for reproducible build. Enforces consistent zip file order and sets all timestamps to midnight on Jan 1 2019
+normalizeZip () {
+  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.18/commons-compress-1.18.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
+  -m org.getmonero.util.normalizeZip 1546300800000 "$1"
+}

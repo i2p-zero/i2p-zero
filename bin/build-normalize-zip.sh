@@ -7,7 +7,6 @@ else
 fi
 
 source "$basedir/bin/java-config.sh"
-source "$basedir/bin/util.sh"
 
 echo "*** Compiling Zip normalizer utility"
 "$JAVA_HOME"/bin/javac --module-path import/commons-compress-1.18/commons-compress-1.18.jar -d target/classes/org.getmonero.util.normalizeZip $(find org.getmonero.util.normalizeZip/src -name '*.java')
