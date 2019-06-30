@@ -11,6 +11,9 @@ rm -fr "$basedir/target" "$basedir/dist"
 # retrieve the I2P Java sources, OpenJDK and the Ant build tool
 "$basedir"/bin/import-packages.sh
 
+# build tool that normalizes zip/jar files for reproducible builds
+"$basedir"/bin/build-normalize-zip.sh
+
 # build the i2p project retrieved from the I2P repository
 "$basedir"/bin/build-original-i2p.sh
 

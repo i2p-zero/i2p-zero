@@ -37,6 +37,11 @@ if [ ! -d "$basedir/import/apache-ant-1.10.5" ]; then
   tar zxvf apache-ant-1.10.5-bin.tar.gz
 fi
 
+if [ ! -d "$basedir/import/commons-compress-1.18" ]; then
+  wget https://www.mirrorservice.org/sites/ftp.apache.org//commons/compress/binaries/commons-compress-1.18-bin.tar.gz
+  tar zxvf commons-compress-1.18-bin.tar.gz
+fi
+
 if [ ! -d "$basedir/import/jetty-lib" ]; then
   mkdir -p jetty-lib
   wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-server/9.4.14.v20181114/jetty-server-9.4.14.v20181114.jar
