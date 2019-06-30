@@ -12,6 +12,6 @@ getHash () {
 
 # normalizes the specified jar or zip for reproducible build. Enforces consistent zip file order and sets all timestamps to the last modified date of the VERSION file
 normalizeZip () {
-  java --module-path "$basedir/import/commons-compress-1.18/commons-compress-1.18.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
+  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.18/commons-compress-1.18.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
   -m org.getmonero.util.normalizeZip "$basedir/org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION" "$1"
 }
