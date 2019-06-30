@@ -26,18 +26,10 @@ find "$basedir"/dist-zip-staging -exec touch -t $versionDate {} \;
 
 cd "$basedir/dist-zip-staging"
 
-for i in win win-gui; do
+for i in linux linux-gui mac mac-gui win win-gui; do
   zip -r9 "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip i2p-zero-${i}.v${VERSION}
   normalizeZip "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip
 done
-
-
-
-if [ $(uname -s) = Darwin ]; then
-    for i in linux linux-gui mac mac-gui; do tar -jcvf "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.tar.bz2 i2p-zero-${i}.v${VERSION}; done
-else
-    for i in linux linux-gui mac mac-gui; do tar --{owner,group}=nobody -jcvf "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.tar.bz2 i2p-zero-${i}.v${VERSION}; done
-fi
 
 cd ..
 
@@ -55,9 +47,9 @@ getFileSizeMB () {
 
 print4ColsJustified "OS" "Uncompressed size (MB)" "Compressed size (MB)" "Reproducible build SHA-256"
 print4ColsJustified "------------------------" "------------------------" "------------------------" "----------------------------------------------------------------"
-print4ColsJustified "Mac" "`getFileSizeMB $basedir/dist/mac`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-mac.v${VERSION}.tar.bz2`"
+print4ColsJustified "Mac" "`getFileSizeMB $basedir/dist/mac`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`"
 print4ColsJustified "Windows" "`getFileSizeMB $basedir/dist/win`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`"
-print4ColsJustified "Linux" "`getFileSizeMB $basedir/dist/linux`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-linux.v${VERSION}.tar.bz2`"
-print4ColsJustified "Mac GUI" "`getFileSizeMB $basedir/dist/mac-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`"
+print4ColsJustified "Linux" "`getFileSizeMB $basedir/dist/linux`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`"
+print4ColsJustified "Mac GUI" "`getFileSizeMB $basedir/dist/mac-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`"
 print4ColsJustified "Windows GUI" "`getFileSizeMB $basedir/dist/win-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`"
-print4ColsJustified "Linux GUI" "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`"
+print4ColsJustified "Linux GUI" "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`"
