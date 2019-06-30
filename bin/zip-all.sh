@@ -26,7 +26,12 @@ find "$basedir"/dist-zip-staging -exec touch -t $versionDate {} \;
 
 cd "$basedir/dist-zip-staging"
 
-for i in win win-gui; do zip -r9 "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip i2p-zero-${i}.v${VERSION}; done
+for i in win win-gui; do
+  zip -r9 "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip i2p-zero-${i}.v${VERSION}
+  normalizeZip "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.zip
+done
+
+
 
 if [ $(uname -s) = Darwin ]; then
     for i in linux linux-gui mac mac-gui; do tar -jcvf "$basedir"/dist-zip/i2p-zero-${i}.v${VERSION}.tar.bz2 i2p-zero-${i}.v${VERSION}; done
@@ -56,7 +61,3 @@ print4ColsJustified "Linux" "`getFileSizeMB $basedir/dist/linux`" "`getFileSizeM
 print4ColsJustified "Mac GUI" "`getFileSizeMB $basedir/dist/mac-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.tar.bz2`"
 print4ColsJustified "Windows GUI" "`getFileSizeMB $basedir/dist/win-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`"
 print4ColsJustified "Linux GUI" "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`" "`getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.tar.bz2`"
-
-
-echo ""
-echo "Note: Reproducible builds are a work in progress, since jlink is not reliably deterministic as of JDK12, particularly when building Windows distributables."
