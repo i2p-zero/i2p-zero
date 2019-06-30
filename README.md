@@ -51,7 +51,7 @@ JDK download URL, see https://jdk.java.net/12/
 
 Also note that JDKs for Linux, MacOS and Windows will be downloaded, which will total several hundred megabytes. You may need to ensure your system has zip, unzip and bzip2 installed to run the build script.
 
-Run the `bin/build-all.sh` script, which will in turn call the following scripts:
+Run the `bin/build-all-and-zip.sh` script, which will in turn call the following scripts:
 
 1. `bin/import-packages.sh` to retrieve the I2P Java sources, OpenJDK and the Ant build tool
 
@@ -59,6 +59,8 @@ Run the `bin/build-all.sh` script, which will in turn call the following scripts
 
 3. `bin/build-launcher.sh` to convert the I2P JARs to modules, compile the Java source code in this project, and then use
 the jlink tool to build zero-dependency platform-specific launchers.
+
+4. `bin/zip-all.sh` to produce the distribution zip files and display their SHA-256 hashes. Note that reproducible builds are currently a work in progress, and that only builds on Linux will show the same hashes as the official releases.
 
 ## Running the GUI
 
