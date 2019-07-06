@@ -45,14 +45,14 @@ getFileSizeMB () {
   echo $s
 }
 
-print4ColsJustified "OS" "Uncompressed size (MB)" "Compressed size (MB)" "Reproducible build SHA-256"
-print4ColsJustified "------------------------" "------------------------" "------------------------" "----------------------------------------------------------------"
-print4ColsJustified "Mac" "`getFileSizeMB $basedir/dist/mac`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`"
-print4ColsJustified "Windows" "`getFileSizeMB $basedir/dist/win`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`"
-print4ColsJustified "Linux" "`getFileSizeMB $basedir/dist/linux`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`"
-print4ColsJustified "Mac GUI" "`getFileSizeMB $basedir/dist/mac-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`"
-print4ColsJustified "Windows GUI" "`getFileSizeMB $basedir/dist/win-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`"
-print4ColsJustified "Linux GUI" "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`" "`getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`"
+print4ColsJustified "OS" "Uncompressed size (MB)" "Compressed size (MB)" "v$VERSION Reproducible build SHA-256"
+print4ColsJustified "------------------------" "------------------------" "------------------------" "------------------------------------------------------------------"
+print4ColsJustified "Mac" "`getFileSizeMB $basedir/dist/mac`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-mac.v${VERSION}.zip`\`"
+print4ColsJustified "Windows" "`getFileSizeMB $basedir/dist/win`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-win.v${VERSION}.zip`\`"
+print4ColsJustified "Linux" "`getFileSizeMB $basedir/dist/linux`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-linux.v${VERSION}.zip`\`"
+print4ColsJustified "Mac GUI" "`getFileSizeMB $basedir/dist/mac-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-mac-gui.v${VERSION}.zip`\`"
+print4ColsJustified "Windows GUI" "`getFileSizeMB $basedir/dist/win-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-win-gui.v${VERSION}.zip`\`"
+print4ColsJustified "Linux GUI" "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`\`"
 
 echo ""
 echo "Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built on Linux (Ubuntu)."
