@@ -25,12 +25,12 @@ The zero-dependency distribution sizes are as follows:
 
 OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.8 Reproducible build SHA-256
 ------------ | ----------------------- | --------------------- | ----------------------------------------------------------------
-Mac          | 39.2                    | 26.2                  | b4c009b85d75c9572db9cf88013ccbea5bb25624897213b4da6df2a926246f3c
-Windows      | 40.2                    | 29.0                  | c820b7813ec7b3e70bec4b4e29328f43aa2330aaf42ba955ec3e6802546c894d
-Linux        | 50.6                    | 32.6                  | ba699d74f410b9dea460bd7561bae4de8a735f723345dd01d2cadac7be4eedec
-Mac GUI      | 61.5                    | 45.1                  | 79296cdb58d9ac0aa49fd0325b210b88c7733ed86aec74f9678e2108fb816cb1
-Windows GUI  | 62.6                    | 47.4                  | e7e2d2f0c7c51463045471df9ac7871179e4e43b8084610e9e5f0f661c6eef17
-Linux GUI    | 75.9                    | 52.7                  | 2f6aa803a9908972e7c9fea97fa591c9fa365a37b9e84b482af75a96ddb9bcc7
+Mac          | 39.2                    | 26.2                  | `b4c009b85d75c9572db9cf88013ccbea5bb25624897213b4da6df2a926246f3c`
+Windows      | 40.2                    | 29.0                  | `c820b7813ec7b3e70bec4b4e29328f43aa2330aaf42ba955ec3e6802546c894d`
+Linux        | 50.6                    | 32.6                  | `ba699d74f410b9dea460bd7561bae4de8a735f723345dd01d2cadac7be4eedec`
+Mac GUI      | 61.5                    | 45.1                  | `79296cdb58d9ac0aa49fd0325b210b88c7733ed86aec74f9678e2108fb816cb1`
+Windows GUI  | 62.6                    | 47.4                  | `e7e2d2f0c7c51463045471df9ac7871179e4e43b8084610e9e5f0f661c6eef17`
+Linux GUI    | 75.9                    | 52.7                  | `2f6aa803a9908972e7c9fea97fa591c9fa365a37b9e84b482af75a96ddb9bcc7`
 
 Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built on Linux (Ubuntu).
 
