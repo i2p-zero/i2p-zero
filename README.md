@@ -188,6 +188,14 @@ or, for pleasant viewing on the command line, automatically updating every 2 sec
 
 `watch "tunnel-control.sh router.getBandwidthStats | tr ',' '\n' | sort"`
 
+#### Get the I2P-zero version
+
+`tunnel-control.sh version`
+
+example response:
+
+`i2p-zero 1.8`
+
 
 ## Watch the I2P log for messages
 

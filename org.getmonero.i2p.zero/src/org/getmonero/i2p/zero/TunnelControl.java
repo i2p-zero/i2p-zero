@@ -37,7 +37,7 @@ public class TunnelControl implements Runnable {
   private File tunnelControlTempDir;
   private TunnelList tunnelList;
 
-  private static final int TUNNEL_CONTROL_LISTENING_PORT = 30000;
+  private static final int TUNNEL_CONTROL_LISTENING_PORT = 31337;
 
   public static class TunnelList {
     private File tunnelControlConfigDir;
@@ -475,7 +475,7 @@ public class TunnelControl implements Runnable {
     for(var t : tunnelList.tunnels) if(t.getEnabled()) t.start();
 
     try {
-      controlServerSocket = new ServerSocket(30000, 0, InetAddress.getLoopbackAddress());
+      controlServerSocket = new ServerSocket(31337, 0, InetAddress.getLoopbackAddress());
       while (!stopping) {
         try (var socket = controlServerSocket.accept()) {
           var out = new PrintWriter(socket.getOutputStream(), true);
@@ -618,6 +618,11 @@ public class TunnelControl implements Runnable {
 
             case "all.list": {
               out.println(tunnelList.getJSON(false, true));
+              break;
+            }
+
+            case "version": {
+              out.println("i2p-zero " + UpdateCheck.currentVersion);
               break;
             }
 
