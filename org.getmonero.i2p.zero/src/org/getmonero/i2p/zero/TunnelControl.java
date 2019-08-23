@@ -394,7 +394,6 @@ public class TunnelControl implements Runnable {
 
   public static class SocksTunnel extends Tunnel {
     public int port;
-    public I2PTunnel tunnel;
     public SocksTunnel(int port) {
       this.port = port;
     }
