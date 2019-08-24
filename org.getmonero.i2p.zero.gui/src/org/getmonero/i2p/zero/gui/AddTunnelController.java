@@ -59,16 +59,16 @@ public class AddTunnelController {
         var tunnelControl = controller.getRouterWrapper().getTunnelControl();
         var tunnelList = tunnelControl.getTunnelList();
         if (tunnelType.getSelectedToggle().equals(clientTunnelRadioButton)) {
-          Tunnel t = new TunnelControl.ClientTunnel(clientDestAddrField.getText(), Integer.parseInt(clientPortField.getText())).start();
+          Tunnel t = new TunnelControl.ClientTunnel(clientDestAddrField.getText(), Integer.parseInt(clientPortField.getText()), controller.getRouterWrapper()).start();
           tunnelList.addTunnel(t);
         } else if (tunnelType.getSelectedToggle().equals(serverTunnelRadioButton)) {
-          Tunnel t = new TunnelControl.ServerTunnel(serverHostField.getText(), Integer.parseInt(serverPortField.getText()), new TunnelControl.KeyPair(serverKeyField.getText()), tunnelControl.getTunnelControlTempDir()).start();
+          Tunnel t = new TunnelControl.ServerTunnel(serverHostField.getText(), Integer.parseInt(serverPortField.getText()), new TunnelControl.KeyPair(serverKeyField.getText()), tunnelControl.getTunnelControlTempDir(), controller.getRouterWrapper()).start();
           tunnelList.addTunnel(t);
         } else if (tunnelType.getSelectedToggle().equals(socksProxyRadioButton)) {
-          Tunnel t = new TunnelControl.SocksTunnel(Integer.parseInt(socksPortField.getText())).start();
+          Tunnel t = new TunnelControl.SocksTunnel(Integer.parseInt(socksPortField.getText()), controller.getRouterWrapper()).start();
           tunnelList.addTunnel(t);
         } else if (tunnelType.getSelectedToggle().equals(httpProxyRadioButton)) {
-          Tunnel t = new TunnelControl.HttpClientTunnel(Integer.parseInt(httpProxyPortField.getText())).start();
+          Tunnel t = new TunnelControl.HttpClientTunnel(Integer.parseInt(httpProxyPortField.getText()), controller.getRouterWrapper()).start();
           tunnelList.addTunnel(t);
         }
         clientTunnelConfigPane.getScene().getWindow().hide();

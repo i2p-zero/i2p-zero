@@ -42,10 +42,12 @@ public class TunnelControl implements Runnable {
   public static class TunnelList {
     private File tunnelControlConfigDir;
     private File tunnelControlTempDir;
+    private RouterWrapper routerWrapper;
     private List<Tunnel> tunnels = new ArrayList<>();
     private List<ChangeListener<List<Tunnel>>> changeListeners = new ArrayList<>();
 
-    public TunnelList(File tunnelControlConfigDir, File tunnelControlTempDir) {
+    public TunnelList(File tunnelControlConfigDir, File tunnelControlTempDir, RouterWrapper routerWrapper) {
+      this.routerWrapper = routerWrapper;
       this.tunnelControlConfigDir = tunnelControlConfigDir;
       this.tunnelControlTempDir = tunnelControlTempDir;
     }
@@ -82,19 +84,19 @@ public class TunnelControl implements Runnable {
             String type = (String) obj.get("type");
             switch (type) {
               case "server":
-                tunnels.add(new ServerTunnel((String) obj.get("host"), Integer.parseInt((String) obj.get("port")), new KeyPair((String) obj.get("keypair")), tunnelControlTempDir));
+                tunnels.add(new ServerTunnel((String) obj.get("host"), Integer.parseInt((String) obj.get("port")), new KeyPair((String) obj.get("keypair")), tunnelControlTempDir, routerWrapper));
                 break;
               case "eepsite":
-                tunnels.add(new EepSiteTunnel((Boolean) obj.get("enabled"), new KeyPair((String) obj.get("keypair")), (String) obj.get("contentDir"), (String) obj.get("logsDir"), (Boolean) obj.get("allowDirectoryBrowsing"), (Boolean) obj.get("enableLogs"), Integer.parseInt((String) obj.get("port")), tunnelControlTempDir));
+                tunnels.add(new EepSiteTunnel((Boolean) obj.get("enabled"), new KeyPair((String) obj.get("keypair")), (String) obj.get("contentDir"), (String) obj.get("logsDir"), (Boolean) obj.get("allowDirectoryBrowsing"), (Boolean) obj.get("enableLogs"), Integer.parseInt((String) obj.get("port")), tunnelControlTempDir, routerWrapper));
                 break;
               case "client":
-                tunnels.add(new ClientTunnel((String) obj.get("dest"), Integer.parseInt((String) obj.get("port"))));
+                tunnels.add(new ClientTunnel((String) obj.get("dest"), Integer.parseInt((String) obj.get("port")), routerWrapper));
                 break;
               case "socks":
-                tunnels.add(new SocksTunnel(Integer.parseInt((String) obj.get("port"))));
+                tunnels.add(new SocksTunnel(Integer.parseInt((String) obj.get("port")), routerWrapper));
                 break;
               case "http":
-                tunnels.add(new HttpClientTunnel(Integer.parseInt((String) obj.get("port"))));
+                tunnels.add(new HttpClientTunnel(Integer.parseInt((String) obj.get("port")), routerWrapper));
                 break;
             }
           });
@@ -168,10 +170,11 @@ public class TunnelControl implements Runnable {
     this.tunnelControlTempDir = tunnelControlTempDir;
     Runtime.getRuntime().addShutdownHook(new Thread(()->this.tunnelControlTempDir.delete()));
 
-    tunnelList = new TunnelList(tunnelControlConfigDir, tunnelControlTempDir);
+    tunnelList = new TunnelList(tunnelControlConfigDir, tunnelControlTempDir, routerWrapper);
   }
 
   public static abstract class Tunnel {
+    RouterWrapper routerWrapper;
     public volatile I2PTunnel tunnel;
     public boolean enabled = true;
     public abstract String getType();
@@ -179,6 +182,11 @@ public class TunnelControl implements Runnable {
     public abstract String getPort();
     public abstract String getI2P();
     public abstract Tunnel start();
+
+    protected Tunnel(RouterWrapper routerWrapper) {
+      this.routerWrapper = routerWrapper;
+    }
+
     public String getState() {
       return tunnel==null ? "opening" : "open";
     }
@@ -194,13 +202,17 @@ public class TunnelControl implements Runnable {
         }
       }).start();
     }
+    public void waitForRouterRunning() {
+      while(!routerWrapper.isRouterRunning()) { try { Thread.sleep(100); } catch (InterruptedException e) {} }
+    }
   }
 
   public static class ClientTunnel extends Tunnel {
     public String dest;
     public int port;
 
-    public ClientTunnel(String dest, int port) {
+    public ClientTunnel(String dest, int port, RouterWrapper routerWrapper) {
+      super(routerWrapper);
       this.dest = dest;
       this.port = port;
     }
@@ -208,6 +220,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(()->{
+        waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "client " + port + " " + dest});
       }).start();
       return this;
@@ -221,13 +234,15 @@ public class TunnelControl implements Runnable {
   }
   public static class HttpClientTunnel extends Tunnel {
     public int port;
-    public HttpClientTunnel(int port) {
+    public HttpClientTunnel(int port, RouterWrapper routerWrapper) {
+      super(routerWrapper);
       this.port = port;
     }
 
     @Override
     public Tunnel start() {
       new Thread(()->{
+        waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "httpclient " + port});
       }).start();
       return this;
@@ -244,7 +259,8 @@ public class TunnelControl implements Runnable {
     public int port;
     public KeyPair keyPair;
     private File tunnelControlTempDir;
-    public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir) {
+    public ServerTunnel(String host, int port, KeyPair keyPair, File tunnelControlTempDir, RouterWrapper routerWrapper) {
+      super(routerWrapper);
       try {
         this.host = host;
         this.port = port;
@@ -260,6 +276,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(() -> {
+        waitForRouterRunning();
         try {
           String uuid = new BigInteger(128, new Random()).toString(16);
           String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey." + uuid + ".dat";
@@ -290,8 +307,8 @@ public class TunnelControl implements Runnable {
     public String logsDir;
     public Boolean allowDirectoryBrowsing;
     public Boolean enableLogs;
-    public EepSiteTunnel(boolean enabled, KeyPair keyPair, String contentDirStr, String logsDirStr, boolean allowDirectoryBrowsing, boolean enableLogs, int port, File tunnelControlTempDir) {
-      super("localhost", port, keyPair, tunnelControlTempDir);
+    public EepSiteTunnel(boolean enabled, KeyPair keyPair, String contentDirStr, String logsDirStr, boolean allowDirectoryBrowsing, boolean enableLogs, int port, File tunnelControlTempDir, RouterWrapper routerWrapper) {
+      super("localhost", port, keyPair, tunnelControlTempDir, routerWrapper);
 
       this.enabled = enabled;
       this.contentDir = contentDirStr;
@@ -394,13 +411,15 @@ public class TunnelControl implements Runnable {
 
   public static class SocksTunnel extends Tunnel {
     public int port;
-    public SocksTunnel(int port) {
+    public SocksTunnel(int port, RouterWrapper routerWrapper) {
+      super(routerWrapper);
       this.port = port;
     }
 
     @Override
     public Tunnel start() {
       new Thread(()->{
+        waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
       }).start();
       return this;
@@ -505,7 +524,7 @@ public class TunnelControl implements Runnable {
               else {
                 keyPair = KeyPair.gen();
               }
-              var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir());
+              var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir(), routerWrapper);
               tunnel.start();
               tunnelList.addTunnel(tunnel);
               out.println(tunnel.dest);
@@ -533,7 +552,7 @@ public class TunnelControl implements Runnable {
             case "client.create": {
               String dest = args[1];
               int port = Integer.parseInt(args[2]);
-              var clientTunnel = new ClientTunnel(dest, port);
+              var clientTunnel = new ClientTunnel(dest, port, routerWrapper);
               clientTunnel.start();
               tunnelList.addTunnel(clientTunnel);
               out.println(clientTunnel.port);
@@ -560,7 +579,7 @@ public class TunnelControl implements Runnable {
 
             case "socks.create": {
               int port = Integer.parseInt(args[1]);
-              tunnelList.addTunnel(new SocksTunnel(port).start());
+              tunnelList.addTunnel(new SocksTunnel(port, routerWrapper).start());
               out.println("OK");
               break;
             }
@@ -584,7 +603,7 @@ public class TunnelControl implements Runnable {
 
             case "http.create": {
               int port = Integer.parseInt(args[1]);
-              tunnelList.addTunnel(new HttpClientTunnel(port).start());
+              tunnelList.addTunnel(new HttpClientTunnel(port, routerWrapper).start());
               out.println("OK");
               break;
             }
@@ -627,6 +646,11 @@ public class TunnelControl implements Runnable {
 
             case "router.reachability": {
               out.println(routerWrapper.getReachability().getMessage());
+              break;
+            }
+
+            case "router.isRunning": {
+              out.println(routerWrapper.isRouterRunning());
               break;
             }
 
@@ -709,7 +733,7 @@ public class TunnelControl implements Runnable {
       EepSiteTunnel eepSiteTunnel = new EepSiteTunnel(false, KeyPair.gen(),
       System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "eepsite" + File.separator + "content",
       System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "eepsite" + File.separator + "logs",
-      true, true, 8080, getTunnelControlTempDir());
+      true, true, 8080, getTunnelControlTempDir(), routerWrapper);
       getTunnelList().addTunnel(eepSiteTunnel);
       return eepSiteTunnel;
     }

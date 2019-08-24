@@ -328,6 +328,15 @@ public class RouterWrapper {
   final static String PROP_I2NP_NTCP_HOSTNAME = "i2np.ntcp.hostname";
   final static String PROP_I2NP_NTCP_PORT = "i2np.ntcp.port";
 
+  public boolean isRouterRunning() {
+    if(router==null) return false;
+    return router.isRunning();
+  }
+
+  public RouterContext getRouterContext() {
+    return router.getContext();
+  }
+
   public NetworkStateMessage getReachability() {
     try {
       RouterContext _context = router.getContext();
