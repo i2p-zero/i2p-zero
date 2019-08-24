@@ -107,7 +107,7 @@ Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create a
 
 `tunnel-control.sh router.reachability`
 
-#### Find out if the router is running. Returns "true" or "false"
+#### Find out if the router is running (where "running" means it has warmed up and is allowing I2P connections to be created). Returns "true" or "false"
 
 `tunnel-control.sh router.isRunning`
 
