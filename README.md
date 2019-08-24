@@ -6,7 +6,7 @@
 
 Note that I2P-zero is not a re-implementation of I2P. It uses the exact I2P source code from the official I2P GitHub repository.
 
-I2P-zero is a build script that produces a zero-dependency installation of the official I2P release, and includes simplified front end interface.
+I2P-zero is a build script that produces a zero-dependency installation of the official I2P release, and includes a simplified front end interface.
 
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows.
 The launchers will include the I2P router, a SAM listener, simple tunnel and socks tunnel functionality and a minimal JVM.
