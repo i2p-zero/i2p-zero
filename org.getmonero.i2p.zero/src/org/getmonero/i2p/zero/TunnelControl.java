@@ -121,7 +121,7 @@ public class TunnelControl implements Runnable {
             case "server":
             case "eepsite":
               entry.put("host", t.getHost());
-              entry.put("port", t.getPort());
+              entry.put("port", t.getPort()+"");
               entry.put("dest", t.getI2P());
               if(includeKeyPairs) entry.put("keypair", ((ServerTunnel) t).keyPair.toString());
               if(t.getType().equals("eepsite")) {
@@ -136,12 +136,12 @@ public class TunnelControl implements Runnable {
 
             case "client":
               entry.put("dest", t.getI2P());
-              entry.put("port", t.getPort());
+              entry.put("port", t.getPort()+"");
               break;
 
             case "socks":
             case "http":
-              entry.put("port", t.getPort());
+              entry.put("port", t.getPort()+"");
               break;
           }
         }
@@ -487,7 +487,7 @@ public class TunnelControl implements Runnable {
   }
   
   public boolean isPortAlreadyAssigned(int port) {
-    return tunnelList.tunnels.stream().anyMatch(t->!(t instanceof ServerTunnel) && t.getPort()!=port);
+    return tunnelList.tunnels.stream().anyMatch(t->!(t instanceof ServerTunnel) && t.getPort()==port);
   }
 
   @Override
