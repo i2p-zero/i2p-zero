@@ -4,6 +4,10 @@
 
 ##
 
+Note that I2P-zero is not a re-implementation of I2P. It uses the exact I2P source code from the official I2P GitHub repository.
+
+I2P-zero is a build script that produces a zero-dependency installation of the official I2P release, and includes simplified front end interface.
+
 This project will run under Linux, and build native launchers for Linux, MacOS and Windows.
 The launchers will include the I2P router, a SAM listener, simple tunnel and socks tunnel functionality and a minimal JVM.
 
@@ -102,6 +106,10 @@ Call the `dist/linux/router/bin/tunnel-control.sh` script as follows to create a
 #### Get the router reachability status. Returns a string such as "Testing", "Firewalled", "Running", "Error"
 
 `tunnel-control.sh router.reachability`
+
+#### Find out if the router is running. Returns a true or false
+
+`tunnel-control.sh router.isRunning`
 
 #### Listen for I2P connections and forward them to the specified host and port. Returns the I2P base 32 destination address for the server tunnel created.
 
