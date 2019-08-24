@@ -179,7 +179,7 @@ public class TunnelControl implements Runnable {
     public boolean enabled = true;
     public abstract String getType();
     public abstract String getHost();
-    public abstract String getPort();
+    public abstract int getPort();
     public abstract String getI2P();
     public abstract Tunnel start();
 
@@ -228,7 +228,7 @@ public class TunnelControl implements Runnable {
 
     @Override public String getType() { return "client"; }
     @Override public String getHost() { return "localhost"; }
-    @Override public String getPort() { return port+""; }
+    @Override public int getPort() { return port; }
     @Override public String getI2P() { return dest; }
 
   }
@@ -250,7 +250,7 @@ public class TunnelControl implements Runnable {
 
     @Override public String getType() { return "http"; }
     @Override public String getHost() { return "localhost"; }
-    @Override public String getPort() { return port+""; }
+    @Override public int getPort() { return port; }
     @Override public String getI2P() { return "n/a"; }
   }
   public static class ServerTunnel<T extends ServerTunnel> extends Tunnel {
@@ -296,7 +296,7 @@ public class TunnelControl implements Runnable {
 
     @Override public String getType() { return "server"; }
     @Override public String getHost() { return host; }
-    @Override public String getPort() { return port+""; }
+    @Override public int getPort() { return port; }
     @Override public String getI2P() { return dest; }
 
   }
@@ -427,7 +427,7 @@ public class TunnelControl implements Runnable {
 
     @Override public String getType() { return "socks"; }
     @Override public String getHost() { return "localhost"; }
-    @Override public String getPort() { return port+""; }
+    @Override public int getPort() { return port; }
     @Override public String getI2P() { return "n/a"; }
   }
 
@@ -484,6 +484,10 @@ public class TunnelControl implements Runnable {
       Files.writeString(Paths.get(path), toString());
     }
 
+  }
+  
+  public boolean isPortAlreadyAssigned(int port) {
+    return tunnelList.tunnels.stream().anyMatch(t->!(t instanceof ServerTunnel) && t.getPort()!=port);
   }
 
   @Override
@@ -552,10 +556,16 @@ public class TunnelControl implements Runnable {
             case "client.create": {
               String dest = args[1];
               int port = Integer.parseInt(args[2]);
-              var clientTunnel = new ClientTunnel(dest, port, routerWrapper);
-              clientTunnel.start();
-              tunnelList.addTunnel(clientTunnel);
-              out.println(clientTunnel.port);
+
+              if(isPortAlreadyAssigned(port)) {
+                out.println("ERROR - PORT ALREADY ASSIGNED");
+              }
+              else {
+                var clientTunnel = new ClientTunnel(dest, port, routerWrapper);
+                clientTunnel.start();
+                tunnelList.addTunnel(clientTunnel);
+                out.println(clientTunnel.port);
+              }
               break;
             }
 
@@ -579,8 +589,13 @@ public class TunnelControl implements Runnable {
 
             case "socks.create": {
               int port = Integer.parseInt(args[1]);
-              tunnelList.addTunnel(new SocksTunnel(port, routerWrapper).start());
-              out.println("OK");
+              if(isPortAlreadyAssigned(port)) {
+                out.println("ERROR - PORT ALREADY ASSIGNED");
+              }
+              else {
+                tunnelList.addTunnel(new SocksTunnel(port, routerWrapper).start());
+                out.println("OK");
+              }
               break;
             }
 
@@ -603,8 +618,15 @@ public class TunnelControl implements Runnable {
 
             case "http.create": {
               int port = Integer.parseInt(args[1]);
-              tunnelList.addTunnel(new HttpClientTunnel(port, routerWrapper).start());
-              out.println("OK");
+
+              if(isPortAlreadyAssigned(port)) {
+                out.println("ERROR - PORT ALREADY ASSIGNED");
+              }
+              else {
+                tunnelList.addTunnel(new HttpClientTunnel(port, routerWrapper).start());
+                out.println("OK");
+              }
+
               break;
             }
 
