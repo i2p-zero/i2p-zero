@@ -37,7 +37,7 @@ public class TunnelControl implements Runnable {
   private File tunnelControlTempDir;
   private TunnelList tunnelList;
 
-  private static final int TUNNEL_CONTROL_LISTENING_PORT = 31337;
+  private static final int TUNNEL_CONTROL_LISTENING_PORT = 8051;
 
   public static class TunnelList {
     private File tunnelControlConfigDir;
@@ -385,7 +385,7 @@ public class TunnelControl implements Runnable {
 
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(httpConfig));
         http.setPort(port);
-        http.setIdleTimeout(TUNNEL_CONTROL_LISTENING_PORT);
+        http.setIdleTimeout(60000);
         http.setHost("localhost");
         server.addConnector(http);
 
@@ -497,7 +497,7 @@ public class TunnelControl implements Runnable {
     for(var t : tunnelList.tunnels) if(t.getEnabled()) t.start();
 
     try {
-      controlServerSocket = new ServerSocket(31337, 0, InetAddress.getLoopbackAddress());
+      controlServerSocket = new ServerSocket(TUNNEL_CONTROL_LISTENING_PORT, 0, InetAddress.getLoopbackAddress());
       while (!stopping) {
         try (var socket = controlServerSocket.accept()) {
           var out = new PrintWriter(socket.getOutputStream(), true);
