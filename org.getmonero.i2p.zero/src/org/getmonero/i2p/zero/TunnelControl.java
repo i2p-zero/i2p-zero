@@ -202,9 +202,6 @@ public class TunnelControl implements Runnable {
         }
       }).start();
     }
-    public void waitForRouterRunning() {
-      while(!routerWrapper.isRouterRunning()) { try { Thread.sleep(100); } catch (InterruptedException e) {} }
-    }
   }
 
   public static class ClientTunnel extends Tunnel {
@@ -220,7 +217,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(()->{
-        waitForRouterRunning();
+        routerWrapper.waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "client " + port + " " + dest});
       }).start();
       return this;
@@ -242,7 +239,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(()->{
-        waitForRouterRunning();
+        routerWrapper.waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "config localhost 7654", "-e", "httpclient " + port});
       }).start();
       return this;
@@ -276,7 +273,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(() -> {
-        waitForRouterRunning();
+        routerWrapper.waitForRouterRunning();
         try {
           String uuid = new BigInteger(128, new Random()).toString(16);
           String seckeyPath = tunnelControlTempDir.getAbsolutePath() + File.separator + "seckey." + uuid + ".dat";
@@ -419,7 +416,7 @@ public class TunnelControl implements Runnable {
     @Override
     public Tunnel start() {
       new Thread(()->{
-        waitForRouterRunning();
+        routerWrapper.waitForRouterRunning();
         tunnel = new I2PTunnel(new String[]{"-die", "-nocli", "-e", "sockstunnel " + port});
       }).start();
       return this;

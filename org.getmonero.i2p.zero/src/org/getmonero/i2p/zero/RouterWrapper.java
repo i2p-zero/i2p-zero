@@ -332,6 +332,9 @@ public class RouterWrapper {
     if(router==null) return false;
     return router.isRunning();
   }
+  public void waitForRouterRunning() {
+    while(!isRouterRunning()) { try { Thread.sleep(100); } catch (InterruptedException e) {} }
+  }
 
   public RouterContext getRouterContext() {
     return router.getContext();

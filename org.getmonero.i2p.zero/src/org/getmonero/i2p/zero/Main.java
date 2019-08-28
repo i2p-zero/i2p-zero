@@ -18,7 +18,7 @@ public class Main {
       System.exit(1);
     }
 
-    System.out.println("I2P router launched.\n" +
+    System.out.println("I2P router launched. Note that it will take several minutes for I2P to warm up before it is ready.\n" +
         "Press Ctrl-C to gracefully shut down the router (or send the SIGINT signal to the process).");
 
     Properties p = new Properties();
@@ -38,12 +38,17 @@ public class Main {
         + p.entrySet().stream().map(e->"--"+e.getKey()+"="+e.getValue()).collect(Collectors.joining(" ")));
 
     RouterWrapper routerWrapper = new RouterWrapper(p, ()->{
-      Main.consoleOut.println("**** A new version of I2P-zero is available at https://github.com/i2p-zero/i2p-zero - Please keep your software up-to-date, as it will enhance your privacy and keep you safe from vulnerabilities");
+      consoleOut.println("**** A new version of I2P-zero is available at https://github.com/i2p-zero/i2p-zero - Please keep your software up-to-date, as it will enhance your privacy and keep you safe from vulnerabilities");
     });
 
-    routerWrapper.start(()->Main.consoleOut.println("For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others."));
+    routerWrapper.start(()->consoleOut.println("For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others."));
 
     Runtime.getRuntime().addShutdownHook(new Thread(()->routerWrapper.stop(true)));
+
+    new Thread(()->{
+      routerWrapper.waitForRouterRunning();
+      consoleOut.println("I2P router now ready to create tunnels");
+    }).start();
 
   }
 
