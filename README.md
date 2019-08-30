@@ -122,6 +122,10 @@ specified host and port. Note that the base 32 I2P destination address determini
 
 `tunnel-control.sh server.create <host> <port> <(optional) directory>`
 
+or, if you would like a vanity b32 address for your server tunnel that begins with a 3 character (alphanumeric) prefix, type:
+
+`tunnel-control.sh server.create.vanity <host> <port> <(optional) directory> <prefix>`
+
 #### Check the state of a tunnel. Returns "opening" or "open"
 
 `tunnel-control.sh server.state <base 32 I2P address>`
