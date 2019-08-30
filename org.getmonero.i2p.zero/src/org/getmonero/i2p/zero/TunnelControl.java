@@ -487,6 +487,48 @@ public class TunnelControl implements Runnable {
     return tunnelList.tunnels.stream().anyMatch(t->!(t instanceof ServerTunnel) && t.getPort()==port);
   }
 
+  static class KeyPairHolder {
+    public KeyPair keyPair = null;
+  }
+  public static KeyPair generateVanityKeypair(String vanityPrefix) {
+
+    if(vanityPrefix.length()>3) vanityPrefix = vanityPrefix.substring(0, 3);
+    vanityPrefix = vanityPrefix.toLowerCase();
+    for(int i=0; i<vanityPrefix.length(); i++) {
+      // reject vanityPrefix if not alphanumeric, since b32 addresses can only be alphanumeric
+      char c = vanityPrefix.charAt(i);
+      if(!(Character.isAlphabetic(c) || Character.isDigit(c))) {
+        vanityPrefix = "";
+        break;
+      }
+    }
+    String prefix = vanityPrefix;
+
+    List<Thread> threads = new ArrayList<>();
+    KeyPairHolder keyPairHolder = new KeyPairHolder();
+    for(int i=0; i<Runtime.getRuntime().availableProcessors()/2; i++) {
+      Thread t = new Thread(()->{
+        KeyPair keyPair;
+        while(keyPairHolder.keyPair==null) {
+          keyPair = KeyPair.gen();
+          if(keyPair.b32Dest.startsWith(prefix)) {
+            char c = keyPair.b32Dest.charAt(prefix.length());
+            // require that a digit follows the prefix, so that the prefix is more distinctive
+            if((c>='0' && c<='9')) {
+              keyPairHolder.keyPair = keyPair;
+            }
+          }
+        }
+      });
+      threads.add(t);
+      t.start();
+    }
+    while(threads.stream().anyMatch(Thread::isAlive)) {
+      try { Thread.sleep(50); } catch (InterruptedException e) {}
+    }
+    return keyPairHolder.keyPair;
+  }
+
   @Override
   public void run() {
 
@@ -502,7 +544,14 @@ public class TunnelControl implements Runnable {
 
           var args = in.readLine().split(" ");
 
+          String vanityPrefix = null;
+
           switch(args[0]) {
+
+            case "server.create.vanity" : {
+              if(args.length>=5) vanityPrefix = args[4];
+              else if(args.length==4) vanityPrefix = args[3];
+            }
 
             case "server.create": {
               String destHost = args[1];
@@ -515,6 +564,10 @@ public class TunnelControl implements Runnable {
                 if (!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length == 0) {
                   serverTunnelConfigDir.mkdir();
                   keyPair = KeyPair.gen();
+
+                  // generate vanity address for specified 3 character prefix
+                  if(vanityPrefix!=null) keyPair = generateVanityKeypair(vanityPrefix);
+
                   serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
                   keyPair.write(serverKeyFile.getPath());
                 } else {
