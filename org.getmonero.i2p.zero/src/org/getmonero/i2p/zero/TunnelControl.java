@@ -506,7 +506,7 @@ public class TunnelControl implements Runnable {
 
     List<Thread> threads = new ArrayList<>();
     KeyPairHolder keyPairHolder = new KeyPairHolder();
-    for(int i=0; i<Runtime.getRuntime().availableProcessors()/2; i++) {
+    for(int i=0; i<Runtime.getRuntime().availableProcessors(); i++) {
       Thread t = new Thread(()->{
         KeyPair keyPair;
         while(keyPairHolder.keyPair==null) {
