@@ -497,7 +497,7 @@ public class TunnelControl implements Runnable {
     for(int i=0; i<vanityPrefix.length(); i++) {
       // reject vanityPrefix if not alphanumeric, since b32 addresses can only be alphanumeric
       char c = vanityPrefix.charAt(i);
-      if(!(Character.isAlphabetic(c) || Character.isDigit(c))) {
+      if(!((c>='a' && c<='z') || (c>='0' && c<='9'))) {
         vanityPrefix = "";
         break;
       }
