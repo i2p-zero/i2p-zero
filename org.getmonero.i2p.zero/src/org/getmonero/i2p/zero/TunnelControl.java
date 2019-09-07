@@ -559,23 +559,18 @@ public class TunnelControl implements Runnable {
               if(args.length>=4 && !"none".equals(args[3])) serverTunnelConfigDir = new File(args[3]);
               File serverKeyFile;
               KeyPair keyPair;
+              // generate vanity address for specified 3 character prefix
+              keyPair = vanityPrefix==null ? KeyPair.gen() : generateVanityKeypair(vanityPrefix);
+
               if(serverTunnelConfigDir!=null) {
                 if (!serverTunnelConfigDir.exists() || serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys")).length == 0) {
                   serverTunnelConfigDir.mkdir();
-                  keyPair = KeyPair.gen();
-
-                  // generate vanity address for specified 3 character prefix
-                  if(vanityPrefix!=null) keyPair = generateVanityKeypair(vanityPrefix);
-
                   serverKeyFile = new File(serverTunnelConfigDir, keyPair.b32Dest + ".keys");
                   keyPair.write(serverKeyFile.getPath());
                 } else {
                   serverKeyFile = serverTunnelConfigDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".keys"))[0];
                   keyPair = KeyPair.read(serverKeyFile.getPath());
                 }
-              }
-              else {
-                keyPair = KeyPair.gen();
               }
               var tunnel = new ServerTunnel(destHost, destPort, keyPair, getTunnelControlTempDir(), routerWrapper);
               tunnel.start();
