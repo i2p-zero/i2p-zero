@@ -549,8 +549,7 @@ public class TunnelControl implements Runnable {
           switch(args[0]) {
 
             case "server.create.vanity" : {
-              if(args.length>=5) vanityPrefix = args[4];
-              else if(args.length==4) vanityPrefix = args[3];
+              vanityPrefix = args[4];
             }
 
             case "server.create": {
@@ -558,6 +557,7 @@ public class TunnelControl implements Runnable {
               int destPort = Integer.parseInt(args[2]);
               File serverTunnelConfigDir = null;
               if(args.length>=4) serverTunnelConfigDir = new File(args[3]);
+              if("none".equals(serverTunnelConfigDir)) serverTunnelConfigDir = null;
               File serverKeyFile;
               KeyPair keyPair;
               if(serverTunnelConfigDir!=null) {
