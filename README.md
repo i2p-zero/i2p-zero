@@ -29,12 +29,12 @@ The zero-dependency distribution sizes are as follows:
 
 OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.12 Reproducible build SHA-256
 ------------ | ----------------------- | --------------------- | ------------------------------------------------------------------
-Mac          | 39.5                    | 26.2                  | `ecf0c1665a725a13fef8158e1ad6a4bb9eb99341a9e5450f04f0626d42d83396`
-Windows      | 41.2                    | 29.1                  | `c84a2ba1998d1d806fc65c442699459119b82985fc5f85dec3d3e48e06f5e344`
-Linux        | 51.4                    | 32.8                  | `de07829dbb2cdea541d8dc96d28f8eb1b45d998314cd3ab1542529ffa06e7155`
-Mac GUI      | 62.4                    | 45.1                  | `fbf51aedbd552b221205b35fc6ed8a0c6a6ad287dde46e98ca3c699560fb6633`
-Windows GUI  | 63.4                    | 47.4                  | `8f793fa8bf43b3238272baa61995300e538c06658a1c0c7b2587cd4716e57ae6`
-Linux GUI    | 76.0                    | 52.9                  | `4f1706260b7999b1595a37760470adea058ba3e522b0f2cee3f5e18eb6028cfc`
+Mac          | 39.2                    | 26.2                  | `989f32326f492310d17c346680423e8f1d9e87f20890fa0a50cd82003af59d7e`
+Windows      | 40.2                    | 29.1                  | `aa16c23c6fe03f76c947010d23fcd832323e1a40e938e417ec9e184e38132134`
+Linux        | 50.8                    | 32.8                  | `00816c4008f0c6a7d2b40367a73df6025d377cd55a4aff4487b3cc7e9236f729`
+Mac GUI      | 61.5                    | 45.1                  | `64f21c35440a38ee3fbc2edcf861fbfcdf4490f9ce7344cb59dac422308e11b4`
+Windows GUI  | 62.6                    | 47.4                  | `3c505268fd26d8adec20989b319ff3fbd734d6aec073cbc6b2acfe59ac592b7f`
+Linux GUI    | 76.1                    | 52.9                  | `87fadcf0d5034b6a3b3dc8e16236d8b482f7ff5cb0f193266b7a7883a50667ce`
 
 Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built on Linux (Ubuntu).
 
