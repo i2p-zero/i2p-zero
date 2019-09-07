@@ -126,7 +126,7 @@ or, if you would like a vanity b32 address for your server tunnel that begins wi
 
 `tunnel-control.sh server.create.vanity <host> <port> <directory> <prefix>`
 
-(if you do not want to specify the directory parameter, specify `none` as the directory)
+If you do not want to specify the directory parameter above, specify `none` as the directory. Note that this command may take several minutes to complete.
 
 #### Check the state of a tunnel. Returns "opening" or "open"
 

@@ -556,8 +556,7 @@ public class TunnelControl implements Runnable {
               String destHost = args[1];
               int destPort = Integer.parseInt(args[2]);
               File serverTunnelConfigDir = null;
-              if(args.length>=4) serverTunnelConfigDir = new File(args[3]);
-              if("none".equals(serverTunnelConfigDir)) serverTunnelConfigDir = null;
+              if(args.length>=4 && !"none".equals(args[3])) serverTunnelConfigDir = new File(args[3]);
               File serverKeyFile;
               KeyPair keyPair;
               if(serverTunnelConfigDir!=null) {
