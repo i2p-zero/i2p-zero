@@ -13,7 +13,7 @@ cd "$basedir/import"
 # build the jars we're going to modularize
 cd "$basedir/import/i2p.i2p"
 export LG2=en
-"$basedir"/import/apache-ant-1.10.5/bin/ant buildRouter buildI2PTunnelJars buildSAM jbigi
+"$basedir"/import/apache-ant-1.10.7/bin/ant buildRouter buildI2PTunnelJars buildSAM jbigi
 cd ..
 
 

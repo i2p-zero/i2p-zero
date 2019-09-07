@@ -32,9 +32,9 @@ if [ ! -d "$basedir/import/jdks" ]; then
   unzip jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
 fi
 
-if [ ! -d "$basedir/import/apache-ant-1.10.5" ]; then
-  wget https://www-us.apache.org/dist/ant/binaries/apache-ant-1.10.5-bin.tar.gz
-  tar zxvf apache-ant-1.10.5-bin.tar.gz
+if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
+  wget https://www-us.apache.org/dist//ant/binaries/apache-ant-1.10.7-bin.tar.gz
+  tar zxvf apache-ant-1.10.7-bin.tar.gz
 fi
 
 if [ ! -d "$basedir/import/commons-compress-1.18" ]; then
