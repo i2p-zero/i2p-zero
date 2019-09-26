@@ -8,19 +8,19 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
-JDK_DOWNLOAD_FILENAME_MAC=OpenJDK12U-jdk_x64_mac_hotspot_12_33.tar.gz
-JDK_DOWNLOAD_FILENAME_WIN=OpenJDK12U-jdk_x64_windows_hotspot_12_33.zip
+JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK13U-jdk_x64_linux_hotspot_13_33.tar.gz
+JDK_DOWNLOAD_FILENAME_MAC=OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
+JDK_DOWNLOAD_FILENAME_WIN=OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
 
-JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_linux_hotspot_12_33.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_mac_hotspot_12_33.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk12-binaries/releases/download/jdk-12%2B33/OpenJDK12U-jdk_x64_windows_hotspot_12_33.zip
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_linux_hotspot_13_33.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
 
-JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-12+33
-JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-12+33/Contents/Home
-JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-12+33
+JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-13+33
+JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-13+33/Contents/Home
+JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-13+33
 
-JAVAFX_VERSION=12
+JAVAFX_VERSION=13
 JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-sdk.zip
@@ -59,6 +59,6 @@ getHash () {
 
 # normalizes the specified jar or zip for reproducible build. Enforces consistent zip file order and sets all timestamps to midnight on Jan 1 2019
 normalizeZip () {
-  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.18/commons-compress-1.18.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
+  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.19/commons-compress-1.19.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
   -m org.getmonero.util.normalizeZip 1546300800000 "$1"
 }

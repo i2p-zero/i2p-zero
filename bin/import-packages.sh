@@ -37,9 +37,9 @@ if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
   tar zxvf apache-ant-1.10.7-bin.tar.gz
 fi
 
-if [ ! -d "$basedir/import/commons-compress-1.18" ]; then
-  wget https://www.mirrorservice.org/sites/ftp.apache.org//commons/compress/binaries/commons-compress-1.18-bin.tar.gz
-  tar zxvf commons-compress-1.18-bin.tar.gz
+if [ ! -d "$basedir/import/commons-compress-1.19" ]; then
+  wget https://www.mirrorservice.org/sites/ftp.apache.org//commons/compress/binaries/commons-compress-1.19-bin.tar.gz
+  tar zxvf commons-compress-1.19-bin.tar.gz
 fi
 
 if [ ! -d "$basedir/import/jetty-lib" ]; then
