@@ -10,7 +10,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../import/commons-compress-1.18/commons-compress-1.18.jar!/" />
+          <root url="jar://$MODULE_DIR$/../import/commons-compress-1.19/commons-compress-1.19.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

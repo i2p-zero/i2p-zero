@@ -285,11 +285,11 @@ public class Controller {
             bandwidthIn1s.setText(format2dp.format(routerWrapper.get1sRateInKBps()) + " KBps");
             bandwidthIn5m.setText(format2dp.format(routerWrapper.get5mRateInKBps()) + " KBps");
             bandwidthInAll.setText(format2dp.format(routerWrapper.getAvgRateInKBps()) + " KBps");
-            totalTransferredIn.setText(format2dp.format(routerWrapper.getTotalInMB()) + " MB   ");
+            totalTransferredIn.setText(formatTransferAmount(routerWrapper.getTotalInMB())+"   ");
             bandwidthOut1s.setText(format2dp.format(routerWrapper.get1sRateOutKBps()) + " KBps");
             bandwidthOut5m.setText(format2dp.format(routerWrapper.get5mRateOutKBps()) + " KBps");
             bandwidthOutAll.setText(format2dp.format(routerWrapper.getAvgRateOutKBps()) + " KBps");
-            totalTransferredOut.setText(format2dp.format(routerWrapper.getTotalOutMB()) + " MB   ");
+            totalTransferredOut.setText(formatTransferAmount(routerWrapper.getTotalOutMB())+"   ");
 
             statusLabel.setText("Status: " + routerWrapper.getReachability().getMessage());
 
@@ -302,6 +302,14 @@ public class Controller {
     });
     bandwidthUpdateThread.start();
 
+  }
+
+  private String formatTransferAmount(double amt) {
+    String unit = "MB";
+    if(amt>=1000) { amt/= 1000d; unit = "GB"; }
+    if(amt>=1000) { amt/= 1000d; unit = "TB"; }
+    if(amt>=1000) { amt/= 1000d; unit = "PB"; }
+    return format2dp.format(amt) + " " + unit;
   }
 
   private void listenForTunnelChanges() {
