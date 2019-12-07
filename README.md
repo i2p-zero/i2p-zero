@@ -1,4 +1,4 @@
-<img src="https://github.com/knaccc/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
+<img src="https://github.com/i2p-zero/i2p-zero/blob/master/i2p-zero.png" align="left" width="336" height="124">
 
 ## Zero dependency, small footprint, cross-platform I2P Java Router with GUI, simple tunnel/socks controller and SAM interface
 
@@ -17,11 +17,11 @@ Download the latest binary releases for Mac/Windows/Linux here: https://github.c
 
 ## GUI Screenshots
 
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot1.png" align="center" width="472" height="440">
+<img src="https://github.com/i2p-zero/i2p-zero/blob/master/screenshot1.png" align="center" width="472" height="440">
 <br/>
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="549">
+<img src="https://github.com/i2p-zero/i2p-zero/blob/master/screenshot2.png" align="center" width="892" height="549">
 <br/>
-<img src="https://github.com/knaccc/i2p-zero/blob/master/screenshot3.png" align="center" width="880" height="540">
+<img src="https://github.com/i2p-zero/i2p-zero/blob/master/screenshot3.png" align="center" width="880" height="540">
 
 ## Footprint
 
@@ -49,7 +49,7 @@ From a freshly installed Ubuntu system, first ensure git is installed:
 
 Then, retrieve this project from git:
 
-`git clone https://github.com/knaccc/i2p-zero.git`
+`git clone https://github.com/i2p-zero/i2p-zero.git`
 
 Note that the current version of this script uses jdk-13. If this version of Java becomes no longer available for
 download, then update the references in java-config.sh to the later version. To locate a recent
