@@ -44,14 +44,14 @@ fi
 
 if [ ! -d "$basedir/import/jetty-lib" ]; then
   mkdir -p jetty-lib
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-server/9.4.14.v20181114/jetty-server-9.4.14.v20181114.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-util/9.4.14.v20181114/jetty-util-9.4.14.v20181114.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-http/9.4.14.v20181114/jetty-http-9.4.14.v20181114.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-io/9.4.14.v20181114/jetty-io-9.4.14.v20181114.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar
-  wget --directory-prefix=jetty-lib http://central.maven.org/maven2/org/eclipse/jetty/jetty-jmx/9.4.14.v20181114/jetty-jmx-9.4.14.v20181114.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-server/9.4.26.v20200117/jetty-server-9.4.26.v20200117.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/javax/servlet/javax.servlet-api/3.1.0/javax.servlet-api-3.1.0.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-util/9.4.26.v20200117/jetty-util-9.4.26.v20200117.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-http/9.4.26.v20200117/jetty-http-9.4.26.v20200117.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-io/9.4.26.v20200117/jetty-io-9.4.26.v20200117.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/slf4j/slf4j-simple/1.7.25/slf4j-simple-1.7.25.jar
+  wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-jmx/9.4.26.v20200117/jetty-jmx-9.4.26.v20200117.jar
 fi
 
 if [ ! -d "$basedir/import/javafx-sdks" ]; then

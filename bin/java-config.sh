@@ -8,13 +8,13 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK13U-jdk_x64_linux_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_FILENAME_MAC=OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_FILENAME_WIN=OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
+JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK13U-jdk_x64_linux_hotspot_13.0.2_8.tar.gz
+JDK_DOWNLOAD_FILENAME_MAC=OpenJDK13U-jdk_x64_mac_hotspot_13.0.2_8.tar.gz
+JDK_DOWNLOAD_FILENAME_WIN=OpenJDK13U-jdk_x86-32_windows_hotspot_13.0.2_8.zip
 
 JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8/OpenJDK13U-jdk_x64_linux_hotspot_13.0.2_8.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8/OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8/OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8/OpenJDK13U-jdk_x64_mac_hotspot_13.0.2_8.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13.0.2%2B8/OpenJDK13U-jdk_x86-32_windows_hotspot_13.0.2_8.zip
 
 JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-13.0.2+8
 JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-13.0.2+8/Contents/Home
