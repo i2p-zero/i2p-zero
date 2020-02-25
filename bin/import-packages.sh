@@ -37,9 +37,9 @@ if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
   tar zxvf apache-ant-1.10.7-bin.tar.gz
 fi
 
-if [ ! -d "$basedir/import/commons-compress-1.19" ]; then
-  wget https://www.mirrorservice.org/sites/ftp.apache.org//commons/compress/binaries/commons-compress-1.19-bin.tar.gz
-  tar zxvf commons-compress-1.19-bin.tar.gz
+if [ ! -d "$basedir/import/commons-compress-1.20" ]; then
+  mkdir -p commons-compress-1.20
+  wget --directory-prefix=commons-compress-1.20 https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar
 fi
 
 if [ ! -d "$basedir/import/jetty-lib" ]; then

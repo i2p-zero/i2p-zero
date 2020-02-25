@@ -59,6 +59,6 @@ getHash () {
 
 # normalizes the specified jar or zip for reproducible build. Enforces consistent zip file order and sets all timestamps to midnight on Jan 1 2019
 normalizeZip () {
-  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.19/commons-compress-1.19.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
+  $JAVA_HOME/bin/java --module-path "$basedir/import/commons-compress-1.20/commons-compress-1.20.jar":"$basedir/target/org.getmonero.util.normalizeZip.jar" \
   -m org.getmonero.util.normalizeZip 1546300800000 "$1"
 }
