@@ -33,7 +33,7 @@ if [ ! -d "$basedir/import/jdks" ]; then
 fi
 
 if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
-  wget https://www-us.apache.org/dist//ant/binaries/apache-ant-1.10.7-bin.tar.gz
+  wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.7-bin.tar.gz
   tar zxvf apache-ant-1.10.7-bin.tar.gz
 fi
 
