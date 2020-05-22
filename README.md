@@ -27,23 +27,60 @@ Download the latest binary releases for Mac/Windows/Linux here: https://github.c
 
 The zero-dependency distribution sizes are as follows:
 
-OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.16 Reproducible build SHA-256
+OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.17 Reproducible build SHA-256
 ------------ | ----------------------- | --------------------- | ------------------------------------------------------------------
-Mac          | 40.1                    | 26.7                  | `5a5afce35e31f4227882296bda327c24dff6196a1b6ee74fd716e123fa653e9d`
-Windows      | 47.7                    | 32.3                  | `ebddbac99ad8e232c8cfd5339cbfccf4963ac705016fe5a67b1bdd2b6d4233a9`
-Linux        | 51.8                    | 33.4                  | `64997e53ef27c84c3f3e871ef6b0b1f1feccf7aa7d60ccac5060f7694e9d2dfa`
-Mac GUI      | 63.0                    | 45.8                  | `c8e1a5c572ef7bff231df76b7c7be2a2ea300ced4b8dbefbd329afac75ccbcaf`
-Windows GUI  | 70.4                    | 50.8                  | `bc91c60075d0b10d0b443702176ad1997e6a571182b9ad6c2f68bdcdbbf432de`
-Linux GUI    | 77.9                    | 53.8                  | `e60e1bc257085988caa448b34d90eba803b7323f6f1e44cf4fba93b39c0eda96`
+Mac          | 37.8                    | 26.3                  | `e25c304c6f45291d03d3c303fd8d4a126ba910f9b67e205341150384b81de9cd`
+Windows      | 47.3                    | 32.2                  | `a3fa0c8b3ae2311ec8c4914d657adbf23a506256b91493d4609fc0e6f557a30b`
+Linux        | 61.4                    | 36.2                  | `298abd5bfe918581ed85f35ad9bc75261a9cdf16f576356525085dfa898a2fb6`
+Mac GUI      | 61.0                    | 45.7                  | `968af1268f2d21812a8dc8e9ba6abbb36eb472652da099228c82d81c8cbb0a86`
+Windows GUI  | 69.2                    | 50.4                  | `2296825e662dba491e428970aae87f4d9596971eb2ff9e51a52df471b354fc60`
+Linux GUI    | 86.5                    | 56.4                  | `2acbb171fa06197ecaeb1e2904e2b56b9a20adfc71d09521f6fa3545631e2b29`
 
-Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built on Linux (Ubuntu).
+Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built using Docker.
 
 
 ## Building the launchers
 
 All binary releases for Windows, Mac and Linux can be built from either Linux or Mac.
 
-From a freshly installed Ubuntu system, first ensure git is installed:
+Use the Docker build method for reproducible builds.
+
+### To build using Docker on Mac:
+
+First install docker from https://hub.docker.com/editions/community/docker-ce-desktop-mac
+
+````
+containerId=$(docker run -td --rm ubuntu)
+docker exec -ti $containerId bash -c  '\
+  apt-get update \
+  && apt-get -y install git wget zip unzip \
+  && git clone https://github.com/i2p-zero/i2p-zero.git \
+  && cd i2p-zero && bash bin/build-all-and-zip.sh'
+docker cp $containerId:/i2p-zero/dist-zip ./
+docker container stop $containerId
+````
+
+### To build using Docker on Ubuntu:
+
+````
+sudo apt -y install docker docker.io
+systemctl start docker
+
+containerId=$(sudo docker run -td --rm ubuntu)
+sudo docker exec -ti $containerId bash -c  '\
+  apt-get update \
+  && apt-get -y install git wget zip unzip \
+  && git clone https://github.com/i2p-zero/i2p-zero.git \
+  && cd i2p-zero && bash bin/build-all-and-zip.sh'
+sudo docker cp $containerId:/i2p-zero/dist-zip ./
+sudo docker container stop $containerId
+````
+
+This will result in a dist-zip directory being copied into the current directory. The dist-zip directory will contain the builds for all platforms.
+
+### To build without Docker on Ubuntu:
+
+To build without Docker on a freshly installed Ubuntu system, first ensure git is installed:
 
 `sudo apt install git`
 

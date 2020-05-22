@@ -45,10 +45,10 @@ echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/mo
 
 
 echo "*** Creating new combined modular jar"
-"$JAVA_HOME"/bin/javac --module-path "$combinedJarPath/combined" --patch-module combined=$combinedJarPath $basedir/target/module-info/combined/module-info.java
+"$JAVA_HOME"/bin/javac --module-path "$combinedJarPath/combined" --patch-module combined="$combinedJarPath" "$basedir/target/module-info/combined/module-info.java"
 cp $combinedJarPath "$basedir/target/modules/"
 "$JAVA_HOME"/bin/jar uf "$basedir/target/modules/combined.jar" -C "$basedir/target/module-info/combined" module-info.class
 
-normalizeZip target/modules/combined.jar
+normalizeZip "$basedir/target/modules/combined.jar"
 
 

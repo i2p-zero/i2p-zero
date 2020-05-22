@@ -55,4 +55,4 @@ print4ColsJustified "Windows GUI" "`getFileSizeMB $basedir/dist/win-gui`"   "`ge
 print4ColsJustified "Linux GUI"   "`getFileSizeMB $basedir/dist/linux-gui`" "`getFileSizeMB $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`" "\``getHash $basedir/dist-zip/i2p-zero-linux-gui.v${VERSION}.zip`\`"
 
 echo ""
-echo "Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built on Linux (Ubuntu)."
+echo "Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built using Docker."

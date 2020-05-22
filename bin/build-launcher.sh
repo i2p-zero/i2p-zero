@@ -9,21 +9,21 @@ fi
 source "$basedir/bin/java-config.sh"
 
 echo "*** Compiling CLI"
-"$JAVA_HOME"/bin/javac --module-path target/modules/combined.jar -d target/classes/org.getmonero.i2p.zero $(find org.getmonero.i2p.zero/src -name '*.java')
-cp org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION target/classes/org.getmonero.i2p.zero/org/getmonero/i2p/zero/
+"$JAVA_HOME"/bin/javac --module-path "$basedir/target/modules/combined.jar" -d "$basedir/target/classes/org.getmonero.i2p.zero" $(find "$basedir/org.getmonero.i2p.zero/src" -name '*.java')
+cp "$basedir/org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION" "$basedir/target/classes/org.getmonero.i2p.zero/org/getmonero/i2p/zero/"
 
 echo "*** Packaging CLI as a modular jar"
-"$JAVA_HOME"/bin/jar --create --file target/org.getmonero.i2p.zero.jar --main-class org.getmonero.i2p.zero.Main -C target/classes/org.getmonero.i2p.zero .
-normalizeZip target/org.getmonero.i2p.zero.jar
+"$JAVA_HOME"/bin/jar --create --file "$basedir/target/org.getmonero.i2p.zero.jar" --main-class org.getmonero.i2p.zero.Main -C "$basedir/target/classes/org.getmonero.i2p.zero" .
+normalizeZip "$basedir/target/org.getmonero.i2p.zero.jar"
 
 echo "*** Compiling GUI"
-"$JAVA_HOME"/bin/javac --module-path target/org.getmonero.i2p.zero.jar:target/modules/combined.jar:import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib -d target/classes/org.getmonero.i2p.zero.gui $(find org.getmonero.i2p.zero.gui/src -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path "$basedir/target/org.getmonero.i2p.zero.jar:$basedir/target/modules/combined.jar:$basedir/import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib" -d "$basedir/target/classes/org.getmonero.i2p.zero.gui" $(find "$basedir/org.getmonero.i2p.zero.gui/src" -name '*.java')
 
-cp -r org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/*.{css,png,fxml,ttf} target/classes/org.getmonero.i2p.zero.gui/org/getmonero/i2p/zero/gui/
+cp -r "$basedir/org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/"*.{css,png,fxml,ttf} "$basedir/target/classes/org.getmonero.i2p.zero.gui/org/getmonero/i2p/zero/gui/"
 
 echo "*** Packaging GUI as a modular jar"
-"$JAVA_HOME"/bin/jar --create --file target/org.getmonero.i2p.zero.gui.jar --main-class org.getmonero.i2p.zero.gui.Gui -C target/classes/org.getmonero.i2p.zero.gui .
-normalizeZip target/org.getmonero.i2p.zero.gui.jar
+"$JAVA_HOME"/bin/jar --create --file "$basedir/target/org.getmonero.i2p.zero.gui.jar" --main-class org.getmonero.i2p.zero.gui.Gui -C "$basedir/target/classes/org.getmonero.i2p.zero.gui" .
+normalizeZip "$basedir/target/org.getmonero.i2p.zero.gui.jar"
 
 rm -fr "$basedir/dist"
 for i in linux mac win linux-gui mac-gui win-gui; do mkdir -p "$basedir/dist/$i"; done
@@ -41,8 +41,8 @@ for i in linux mac win; do
         JAVA_HOME_VARIANT=${JAVA_HOME_WIN} ;;
   esac
   echo "Using JAVA_HOME_VARIANT: $JAVA_HOME_VARIANT"
-  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":target/modules:target/org.getmonero.i2p.zero.jar --add-modules combined,org.getmonero.i2p.zero --output dist/$i/router --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
-  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}:target/modules:target/org.getmonero.i2p.zero.jar:target/org.getmonero.i2p.zero.gui.jar --add-modules combined,org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output dist/$i-gui/router --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
+  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":"$basedir/target/modules":"$basedir/target/org.getmonero.i2p.zero.jar" --add-modules combined,org.getmonero.i2p.zero --output "$basedir/dist/$i/router" --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
+  "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":"$basedir/import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}":"$basedir/target/modules":"$basedir/target/org.getmonero.i2p.zero.jar":"$basedir/target/org.getmonero.i2p.zero.gui.jar" --add-modules combined,org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output "$basedir/dist/$i-gui/router" --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
 done
 
 for i in mac-gui; do
@@ -87,6 +87,8 @@ for i in linux linux-gui; do
   cp "$basedir/import/jpackage/linux/classes/jdk/incubator/jpackage/internal/resources/libapplauncher.so" "$basedir/dist/$i/router/lib/"
 done
 
+cp "$basedir/i2p-zero.png" "$basedir/dist/linux-gui/router/lib/"
+
 # build win and win-gui app structure
 for i in win win-gui; do
   mv "$basedir/dist/$i/router" "$basedir/dist/$i/router-tmp"
@@ -101,9 +103,10 @@ for i in linux mac; do
   cp "$basedir/resources/tunnel-control.sh" "$basedir/dist/$i/router/bin/"
 done
 
+cp "$basedir/resources/launch.sh" "$basedir/dist/mac/router/bin/"
 
 # show distribution sizes
-du -sk dist/* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
+du -sk "$basedir/dist/"* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
 
 
 echo "*** Done ***"

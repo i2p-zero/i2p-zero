@@ -8,13 +8,13 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-JDK_MAJOR_VERSION=14
 JDK_VERSION=14.0.1+7
+JDK_MAJOR_VERSION=`echo $JDK_VERSION | cut -f1 -d"."`
 JDK_VERSION_URL_ENC=`echo "$JDK_VERSION" | sed 's/+/%2B/g'`
 JDK_VERSION_URL_ENC2=`echo "$JDK_VERSION" | sed 's/+/_/g'`
-JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_linux_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_mac_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_windows_hotspot_${JDK_VERSION_URL_ENC2}.zip
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_linux_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_mac_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_windows_hotspot_${JDK_VERSION_URL_ENC2}.zip
 
 JDK_DOWNLOAD_FILENAME_LINUX="${JDK_DOWNLOAD_URL_LINUX##*/}"
 JDK_DOWNLOAD_FILENAME_MAC="${JDK_DOWNLOAD_URL_MAC##*/}"

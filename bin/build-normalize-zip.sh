@@ -9,9 +9,9 @@ fi
 source "$basedir/bin/java-config.sh"
 
 echo "*** Compiling Zip normalizer utility"
-"$JAVA_HOME"/bin/javac --module-path import/commons-compress-1.20/commons-compress-1.20.jar -d target/classes/org.getmonero.util.normalizeZip $(find org.getmonero.util.normalizeZip/src -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path "$basedir/import/commons-compress-1.20/commons-compress-1.20.jar" -d "$basedir/target/classes/org.getmonero.util.normalizeZip" $(find "$basedir/org.getmonero.util.normalizeZip/src" -name '*.java')
 
 echo "*** Packaging Zip normalizer as a modular jar"
-"$JAVA_HOME"/bin/jar --create --file target/org.getmonero.util.normalizeZip.jar --main-class org.getmonero.util.normalizeZip.NormalizeZip -C target/classes/org.getmonero.util.normalizeZip .
+"$JAVA_HOME"/bin/jar --create --file "$basedir/target/org.getmonero.util.normalizeZip.jar" --main-class org.getmonero.util.normalizeZip.NormalizeZip -C "$basedir/target/classes/org.getmonero.util.normalizeZip" .
 
 
