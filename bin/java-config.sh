@@ -8,19 +8,23 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
-JDK_DOWNLOAD_FILENAME_LINUX=OpenJDK13U-jdk_x64_linux_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_FILENAME_MAC=OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_FILENAME_WIN=OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
+JDK_MAJOR_VERSION=14
+JDK_VERSION=14.0.1+7
+JDK_VERSION_URL_ENC=`echo "$JDK_VERSION" | sed 's/+/%2B/g'`
+JDK_VERSION_URL_ENC2=`echo "$JDK_VERSION" | sed 's/+/_/g'`
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_linux_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_mac_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_windows_hotspot_${JDK_VERSION_URL_ENC2}.zip
 
-JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_linux_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_mac_hotspot_13_33.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk13-binaries/releases/download/jdk-13%2B33/OpenJDK13U-jdk_x64_windows_hotspot_13_33.zip
+JDK_DOWNLOAD_FILENAME_LINUX="${JDK_DOWNLOAD_URL_LINUX##*/}"
+JDK_DOWNLOAD_FILENAME_MAC="${JDK_DOWNLOAD_URL_MAC##*/}"
+JDK_DOWNLOAD_FILENAME_WIN="${JDK_DOWNLOAD_URL_WIN##*/}"
 
-JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-13+33
-JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-13+33/Contents/Home
-JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-13+33
+JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-$JDK_VERSION
+JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-$JDK_VERSION/Contents/Home
+JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-$JDK_VERSION
 
-JAVAFX_VERSION=13
+JAVAFX_VERSION=14
 JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-sdk.zip
@@ -32,12 +36,6 @@ JAVAFX_JMODS_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERS
 JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX=openjfx-${JAVAFX_VERSION}_linux-x64_bin-jmods.zip
 JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC=openjfx-${JAVAFX_VERSION}_osx-x64_bin-jmods.zip
 JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN=openjfx-${JAVAFX_VERSION}_windows-x64_bin-jmods.zip
-
-JPACKAGER_DOWNLOAD_URL_LINUX=http://download2.gluonhq.com/jpackager/11/jdk.packager-linux.zip
-JPACKAGER_DOWNLOAD_URL_WIN=http://download2.gluonhq.com/jpackager/11/jdk.packager-windows.zip
-
-JPACKAGER_DOWNLOAD_FILENAME_LINUX=jdk.packager-linux.zip
-JPACKAGER_DOWNLOAD_FILENAME_WIN=jdk.packager-windows.zip
 
 
 OS=`uname -s`

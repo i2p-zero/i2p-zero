@@ -79,16 +79,9 @@ if [ ! -d "$basedir/import/javafx-jmods" ]; then
   unzip javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
 fi
 
-if [ ! -d "$basedir/import/javapackager" ]; then
-  mkdir -p javapackager
-  mkdir -p javapackager/linux javapackager/win
-  wget --directory-prefix=javapackager/linux $JPACKAGER_DOWNLOAD_URL_LINUX
-  wget --directory-prefix=javapackager/win $JPACKAGER_DOWNLOAD_URL_WIN
-
-  unzip javapackager/linux/$JPACKAGER_DOWNLOAD_FILENAME_LINUX -d javapackager/linux/
-  unzip javapackager/win/$JPACKAGER_DOWNLOAD_FILENAME_WIN -d javapackager/win/
-
-  unzip javapackager/linux/jdk.packager.jar -d javapackager/linux/
-  unzip javapackager/win/jdk.packager.jar -d javapackager/win/
+if [ ! -d "$basedir/import/jpackage" ]; then
+  mkdir -p jpackage/linux jpackage/win
+  unzip $JAVA_HOME_LINUX/jmods/jdk.incubator.jpackage.jmod -d jpackage/linux/
+  unzip $JAVA_HOME_WIN/jmods/jdk.incubator.jpackage.jmod -d jpackage/win/
 fi
 
