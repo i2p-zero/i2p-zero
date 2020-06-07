@@ -12,7 +12,7 @@
 
 That's it! Do not replace the dsc****.b32.i2p address with yours, only replace the XXXXXXX.b32.i2p one. You are now running a mipseed, which will itself be seeded by dsc_'s mipseed.
 
-If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented by dsc_ here: https://gist.github.com/xmrdsc/2f2f0ce7a2d099f22e55ba9e4fe1bfba That gist file also contains more detailed information about how this setup works.
+If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented [here](monerod-with-i2p-zero.md).
 
 ## What this all about:
 Monero now has I2P support. Soon, the GUI will make it easy for anyone to enable I2P.
