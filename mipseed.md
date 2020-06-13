@@ -12,7 +12,7 @@
 
 That's it! You are now running a mipseed, which will itself be seeded by the manually added mipseeds specified with the --add-peer entries passed to monerod.
 
-If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented [here](monerod-with-i2p-zero.md).
+If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented [here](monerod-with-i2p-zero.md#setting-up-linux-services-so-that-monerod-and-i2p-zero-are-automatically-started).
 
 ## What this all about:
 Monero now has I2P support. Soon, the GUI will make it easy for anyone to enable I2P.
