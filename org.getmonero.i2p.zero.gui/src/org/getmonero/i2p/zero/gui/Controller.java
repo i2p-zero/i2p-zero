@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -95,6 +96,9 @@ public class Controller {
   }
 
   @FXML private void initialize() {
+
+    // set up copy-cell-to-clipboard functionality
+    tunnelsTableView.setOnKeyPressed(new TableKeyEventHandler());
 
     DirectoryChooser directoryChooser = new DirectoryChooser();
 
@@ -391,5 +395,30 @@ public class Controller {
     return getRouterWrapper().getTunnelControl().getEepSiteTunnel();
   }
 
+  public static class TableKeyEventHandler implements EventHandler<KeyEvent> {
+    KeyCodeCombination ctrlC = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_ANY);
+    KeyCodeCombination cmdD = new KeyCodeCombination(KeyCode.C, KeyCombination.META_ANY);
+    public void handle(final KeyEvent keyEvent) {
+      if (ctrlC.match(keyEvent) || cmdD.match(keyEvent)) {
+        if (keyEvent.getSource() instanceof TableView) {
+          copySelectionToClipboard((TableView<?>) keyEvent.getSource());
+          keyEvent.consume();
+        }
+      }
+    }
+  }
+
+  public static void copySelectionToClipboard(TableView<?> table) {
+    var cellPositions = table.getSelectionModel().getSelectedCells();
+    if(cellPositions.size()>0) {
+      var cellPosition = cellPositions.get(0);
+      var cell = table.getColumns().get(cellPosition.getColumn()).getCellData(cellPosition.getRow());
+      if(cell!=null) {
+        var clipboardContent = new ClipboardContent();
+        clipboardContent.putString(cell.toString());
+        Clipboard.getSystemClipboard().setContent(clipboardContent);
+      }
+    }
+  }
 
 }
