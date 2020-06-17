@@ -39,6 +39,7 @@ import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class Controller {
@@ -50,6 +51,7 @@ public class Controller {
   @FXML private Label maxBandwidthLabel;
   @FXML private ImageView masterToggle;
   @FXML private AnchorPane bandwidthDisabledOverlay;
+  @FXML private TabPane tabPane;
   @FXML private Tab bandwidthTab;
   @FXML private Tab tunnelsTab;
   @FXML private Tab eepSiteTab;
@@ -57,6 +59,7 @@ public class Controller {
   @FXML private Label statusLabel;
   @FXML private Button tunnelAddButton;
   @FXML private Button tunnelRemoveButton;
+  @FXML private Button tunnelEditButton;
   @FXML private TableView<Tunnel> tunnelsTableView;
   @FXML private TableColumn typeCol;
   @FXML private TableColumn stateCol;
@@ -115,10 +118,12 @@ public class Controller {
 
     tunnelsTableView.getSelectionModel().selectedItemProperty().addListener((observableValue, oldSelection, newSelection) -> {
       if (newSelection == null) {
-        tunnelRemoveButton.setDisable(true);
+        tunnelRemoveButton.setVisible(false);
+        tunnelEditButton.setVisible(false);
       }
       else {
-        tunnelRemoveButton.setDisable(false);
+        tunnelRemoveButton.setVisible(true);
+        tunnelEditButton.setVisible(true);
       }
     });
 
@@ -129,19 +134,42 @@ public class Controller {
       tunnelRemoveButton.setDisable(true);
     });
 
-    tunnelAddButton.setOnAction(event->{
+    record DialogRefs(Scene scene, Stage stage, AddTunnelController controller){};
+    Supplier<DialogRefs> showAddTunnelDialog = ()->{
       try {
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.WINDOW_MODAL);
         dialogStage.initOwner(getStage());
         dialogStage.setResizable(false);
         dialogStage.setTitle("New tunnel");
-        Scene dialogScene = new Scene(FXMLLoader.load(getClass().getResource("addTunnel.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("addTunnel.fxml"));
+        Scene dialogScene = new Scene(loader.load());
         dialogScene.getStylesheets().add("org/getmonero/i2p/zero/gui/gui.css");
         dialogStage.setScene(dialogScene);
-        dialogStage.show();
+        return new DialogRefs(dialogScene, dialogStage, loader.getController());
       } catch (Exception e) {
         throw new RuntimeException(e);
+      }
+    };
+
+    tunnelAddButton.setOnAction(event->{
+      DialogRefs dialogRefs = showAddTunnelDialog.get();
+      dialogRefs.stage.show();
+    });
+    tunnelEditButton.setOnAction(event->{
+      Tunnel existingTunnel = tunnelsTableView.getSelectionModel().getSelectedItem();
+      if(existingTunnel.getType().equals("eepsite")) {
+        tabPane.getSelectionModel().select(eepSiteTab);
+      }
+      else {
+        DialogRefs dialogRefs = showAddTunnelDialog.get();
+        dialogRefs.stage.setTitle("Edit tunnel");
+        dialogRefs.controller.setExistingTunnel(existingTunnel);
+        dialogRefs.controller.setExistingTunnelDestroyer(()->{
+          getRouterWrapper().getTunnelControl().getTunnelList().removeTunnel(existingTunnel);
+          existingTunnel.destroy(false);
+        });
+        dialogRefs.stage.show();
       }
     });
 

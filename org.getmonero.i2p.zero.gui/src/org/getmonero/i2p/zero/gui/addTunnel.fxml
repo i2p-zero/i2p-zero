@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="267.0" prefWidth="770.0" stylesheets="@gui.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.getmonero.i2p.zero.gui.AddTunnelController">
    <children>
-      <Label layoutX="18.0" layoutY="9.0" prefHeight="27.0" prefWidth="120.0" text="Add a tunnel">
+      <Label fx:id="tunnelAddEditLabel" layoutX="18.0" layoutY="9.0" prefHeight="27.0" prefWidth="120.0" text="Add a tunnel">
       </Label>
       <RadioButton fx:id="clientTunnelRadioButton" layoutX="19.0" layoutY="48.0" mnemonicParsing="false" selected="true" style="" text="Client tunnel - create a local port that forwards requests to a specified I2P destination address">
          <toggleGroup>
@@ -19,9 +19,9 @@
       </RadioButton>
        <RadioButton fx:id="serverTunnelRadioButton" layoutX="19.0" layoutY="73.0" mnemonicParsing="false" text="Server tunnel - create an I2P destination address that will forward requests to the specified host and port" toggleGroup="$tunnelType" />
       <RadioButton fx:id="httpProxyRadioButton" layoutX="19.0" layoutY="97.0" mnemonicParsing="false" text="HTTP proxy - create a proxy that your web browser can use to access I2P web sites" toggleGroup="$tunnelType" />
-      <Button fx:id="addButton" defaultButton="true" disable="true" layoutX="712.0" layoutY="221.0" mnemonicParsing="false" text="Add" />
-      <Button fx:id="cancelButton" cancelButton="true" layoutX="647.0" layoutY="221.0" mnemonicParsing="false" text="Cancel" />
-      <Pane fx:id="clientTunnelConfigPane" layoutX="40.0" layoutY="156.0" prefHeight="67.0" prefWidth="523.0" >
+      <Button fx:id="okButton" defaultButton="true" disable="true" layoutX="716.0" layoutY="221.0" mnemonicParsing="false" text="OK" />
+      <Button fx:id="cancelButton" cancelButton="true" layoutX="652.0" layoutY="221.0" mnemonicParsing="false" text="Cancel" />
+      <Pane fx:id="clientTunnelConfigPane" layoutX="40.0" layoutY="156.0" prefHeight="67.0" prefWidth="523.0">
          <children>
             <TextField fx:id="clientDestAddrField" layoutX="165.0" prefHeight="27.0" prefWidth="353.0" />
             <Label layoutX="1.0" layoutY="4.0" text="I2P destination address" />

@@ -250,7 +250,7 @@ public class TunnelControl implements Runnable {
     @Override public int getPort() { return port; }
     @Override public String getI2P() { return "n/a"; }
   }
-  public static class ServerTunnel<T extends ServerTunnel> extends Tunnel {
+  public static class ServerTunnel extends Tunnel {
     public String dest;
     public String host;
     public int port;

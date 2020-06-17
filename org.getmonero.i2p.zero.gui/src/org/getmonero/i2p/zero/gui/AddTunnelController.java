@@ -14,8 +14,9 @@ public class AddTunnelController {
   @FXML Pane serverTunnelConfigPane;
   @FXML Pane httpProxyConfigPane;
   @FXML Pane socksProxyConfigPane;
-  @FXML Button addButton;
+  @FXML Button okButton;
   @FXML Button cancelButton;
+  @FXML Label tunnelAddEditLabel;
   @FXML ToggleGroup tunnelType;
   @FXML RadioButton clientTunnelRadioButton;
   @FXML RadioButton serverTunnelRadioButton;
@@ -30,19 +31,55 @@ public class AddTunnelController {
   @FXML TextField socksPortField;
   @FXML TextField httpProxyPortField;
 
+  public AddTunnelController() {
+    super();
+  }
 
-  private void updateAddButtonState() {
+  Runnable existingTunnelDestroyer;
+  void setExistingTunnelDestroyer(Runnable r) {
+    existingTunnelDestroyer = r;
+  }
+
+  void setExistingTunnel(Tunnel t) {
+    switch(t.getType()) {
+      case "server":
+        serverTunnelRadioButton.fire();
+        TunnelControl.ServerTunnel serverTunnel = (TunnelControl.ServerTunnel) t;
+        serverHostField.setText(serverTunnel.host);
+        serverPortField.setText(serverTunnel.port + "");
+        serverKeyField.setText(serverTunnel.keyPair.toString());
+        break;
+      case "client":
+        clientTunnelRadioButton.fire();
+        TunnelControl.ClientTunnel clientTunnel = (TunnelControl.ClientTunnel) t;
+        clientDestAddrField.setText(clientTunnel.dest);
+        clientPortField.setText(clientTunnel.port + "");
+        break;
+      case "socks":
+        socksProxyRadioButton.fire();
+        TunnelControl.SocksTunnel socksTunnel = (TunnelControl.SocksTunnel) t;
+        socksPortField.setText(socksTunnel.port + "");
+        break;
+      case "http":
+        httpProxyRadioButton.fire();
+        TunnelControl.HttpClientTunnel httpClientTunnel = (TunnelControl.HttpClientTunnel) t;
+        socksPortField.setText(httpClientTunnel.port + "");
+        break;
+    }
+  }
+
+  private void updateOkButtonState() {
     if(tunnelType.getSelectedToggle().equals(clientTunnelRadioButton)) {
-      addButton.setDisable(Stream.of(clientDestAddrField, clientPortField).anyMatch(f->f.getText().isBlank()));
+      okButton.setDisable(Stream.of(clientDestAddrField, clientPortField).anyMatch(f->f.getText().isBlank()));
     }
     else if(tunnelType.getSelectedToggle().equals(serverTunnelRadioButton)) {
-      addButton.setDisable(Stream.of(serverHostField, serverPortField, serverKeyField, serverAddrField).anyMatch(f->f.getText().isBlank()));
+      okButton.setDisable(Stream.of(serverHostField, serverPortField, serverKeyField, serverAddrField).anyMatch(f->f.getText().isBlank()));
     }
     else if(tunnelType.getSelectedToggle().equals(socksProxyRadioButton)) {
-      addButton.setDisable(Stream.of(socksPortField).anyMatch(f->f.getText().isBlank()));
+      okButton.setDisable(Stream.of(socksPortField).anyMatch(f->f.getText().isBlank()));
     }
     else if(tunnelType.getSelectedToggle().equals(httpProxyRadioButton)) {
-      addButton.setDisable(Stream.of(httpProxyPortField).anyMatch(f->f.getText().isBlank()));
+      okButton.setDisable(Stream.of(httpProxyPortField).anyMatch(f->f.getText().isBlank()));
     }
   }
 
@@ -53,8 +90,9 @@ public class AddTunnelController {
     socksProxyConfigPane.setVisible(false);
     httpProxyConfigPane.setVisible(false);
 
-    addButton.setOnAction(ev->{
+    okButton.setOnAction(ev->{
       try {
+        if(existingTunnelDestroyer!=null) existingTunnelDestroyer.run();
         var controller = Gui.instance.getController();
         var tunnelControl = controller.getRouterWrapper().getTunnelControl();
         var tunnelList = tunnelControl.getTunnelList();
@@ -80,9 +118,8 @@ public class AddTunnelController {
 
     TextField[] allTextFields = new TextField[] {clientDestAddrField, clientPortField, serverHostField, serverPortField, serverKeyField, serverAddrField, socksPortField, httpProxyPortField};
     for(TextField f : allTextFields) {
-      f.textProperty().addListener((observable, oldValue, newValue) -> updateAddButtonState());
+      f.textProperty().addListener((observable, oldValue, newValue) -> updateOkButtonState());
     }
-
 
     cancelButton.setOnAction(e->{
       clientTunnelConfigPane.getScene().getWindow().hide();
@@ -103,7 +140,7 @@ public class AddTunnelController {
         }
         if (newToggle.equals(httpProxyRadioButton)) httpProxyConfigPane.setVisible(true);
         if (newToggle.equals(socksProxyRadioButton)) socksProxyConfigPane.setVisible(true);
-        updateAddButtonState();
+        updateOkButtonState();
       }
       catch (Exception e) {
         throw new RuntimeException(e);

@@ -20,7 +20,7 @@
 
 <BorderPane fx:id="rootBorderPane" minHeight="340.0" minWidth="360.0" prefHeight="500.0" prefWidth="900.0" stylesheets="@gui.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.getmonero.i2p.zero.gui.Controller">
    <center>
-      <TabPane>
+      <TabPane fx:id="tabPane">
          <tabs>
             <Tab fx:id="bandwidthTab" closable="false" text="Bandwidth">
                <content>
@@ -98,10 +98,11 @@
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="32.0" prefWidth="339.0" BorderPane.alignment="CENTER">
                                      <children>
       
-                                        <Button fx:id="tunnelAddButton" layoutX="301.0" layoutY="7.0" mnemonicParsing="false" text="Add">
+                                        <Button fx:id="tunnelAddButton" layoutX="296.0" layoutY="6.0" mnemonicParsing="false" text="Add">
                                         </Button>
-                                        <Button fx:id="tunnelRemoveButton" disable="true" layoutX="231.0" layoutY="7.0" mnemonicParsing="false" text="Remove">
+                                        <Button fx:id="tunnelRemoveButton" layoutX="226.0" layoutY="6.0" mnemonicParsing="false" text="Remove" visible="false">
                                         </Button>
+                                    <Button fx:id="tunnelEditButton" layoutX="182.0" layoutY="6.0" mnemonicParsing="false" text="Edit" visible="false" />
                                      </children>
                               </AnchorPane>
                            </right>
