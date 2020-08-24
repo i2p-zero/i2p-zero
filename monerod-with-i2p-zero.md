@@ -24,7 +24,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/<username>/i2p-zero-linux.v1.17/router/bin/i2p-zero
+ExecStart=/home/<username>/i2p-zero-linux.v1.18/router/bin/i2p-zero
 User=<username>
 Group=<usergroup>
 
