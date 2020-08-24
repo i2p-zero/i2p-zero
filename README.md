@@ -29,12 +29,12 @@ The zero-dependency distribution sizes are as follows:
 
 OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.18 Reproducible build SHA-256
 ------------ | ----------------------- | --------------------- | ------------------------------------------------------------------
-Mac          | 38.7                    | 26.4                  | `2f522910b283658604c1200820e8d55d9644e6ced315b83b0c70470717e2e413`
-Windows      | 48.0                    | 32.4                  | `7a10debc0674d2fdfc211cf478961cbaad35d03897d7d765a1ea4951d1eaac3d`
-Linux        | 61.6                    | 36.3                  | `96950ddca5898a756459a62889e54637f74ead9c5732297ae3adbf68405fa543`
-Mac GUI      | 61.4                    | 45.8                  | `8c1f2b27151351604e6a47275c5e69c1db8c898b57039f41fe4b747421dacc19`
-Windows GUI  | 70.5                    | 50.6                  | `5374e4dc015142774ba2fc7ae15f0647e0120b36c716dee218975b76f3a198f6`
-Linux GUI    | 86.9                    | 56.5                  | `7d273233962e54ab1c965e81505f861645c0f0247905cb0eab2e96cdcdd29ed7`
+Mac          | 37.9                    | 26.4                  | `6cd886af8492d876f09092ed8554cd8604b04e4df5e260cdd4820bdfe084efd8`
+Windows      | 47.5                    | 32.4                  | `49b333b89d3cf749c468270e944070ab60b3dc0a01ceb7f42c4ba6766fc299ba`
+Linux        | 61.5                    | 36.3                  | `7901bde9dfc6e75adccfe304a1abb057a5e3c795cec74fdce61d52251aa151ac`
+Mac GUI      | 61.2                    | 45.8                  | `090f7fe54f12ce8b6cbd31356ceb28809dece48a4ee4ffd61dd06d26db39b9c9`
+Windows GUI  | 69.4                    | 50.6                  | `b899153d6e5506c1bd25dbf3dbb3867370868b35acb5c1d829cd1a5250ec3733`
+Linux GUI    | 86.6                    | 56.5                  | `2438c83285ca426e7b06c5709f10b60a9298d28eb7aa0402d6edad70635d17bf`
 
 Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built using Docker.
 
