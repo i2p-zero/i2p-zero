@@ -13,9 +13,7 @@ import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import org.json.*;
 
 import java.io.*;
 import java.math.BigInteger;
@@ -77,10 +75,10 @@ public class TunnelControl implements Runnable {
         File tunnelControlConfigFile = new File(tunnelControlConfigDir, "tunnels.json");
         if (tunnelControlConfigFile.exists()) {
           tunnels.clear();
-          JSONObject root = (JSONObject) new JSONParser().parse(Files.readString(tunnelControlConfigFile.toPath()));
-          JSONArray list = (JSONArray) root.get("tunnels");
-          list.stream().forEach((o)->{
-            JSONObject obj = (JSONObject) o;
+          JSONObject root = new JSONObject(Files.readString(tunnelControlConfigFile.toPath()));
+          JSONArray list = root.getJSONArray("tunnels");
+          for(int i=0; i<list.length(); i++) {
+            JSONObject obj = list.getJSONObject(i);
             String type = (String) obj.get("type");
             switch (type) {
               case "server":
@@ -99,7 +97,7 @@ public class TunnelControl implements Runnable {
                 tunnels.add(new HttpClientTunnel(Integer.parseInt((String) obj.get("port")), routerWrapper));
                 break;
             }
-          });
+          }
           fireChangeEvent();
         }
 
@@ -116,7 +114,7 @@ public class TunnelControl implements Runnable {
           JSONObject entry = new JSONObject();
           entry.put("type", t.getType());
           if(includeState) entry.put("state", t.getState());
-          tunnelsArray.add(entry);
+          tunnelsArray.put(entry);
           switch (t.getType()) {
             case "server":
             case "eepsite":
@@ -145,7 +143,7 @@ public class TunnelControl implements Runnable {
               break;
           }
         }
-        return root.toJSONString();
+        return root.toString(2);
       }
       catch (Exception e) {
         throw new RuntimeException(e);

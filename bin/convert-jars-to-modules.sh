@@ -9,6 +9,7 @@ fi
 source "$basedir/bin/java-config.sh"
 
 cp "$basedir"/import/jetty-lib/*.jar "$basedir/import/lib/"
+cp "$basedir"/import/org-json/*.jar "$basedir/import/lib/"
 
 rm -fr "$basedir/target/lib-combined"
 rm -fr "$basedir/target/lib-combined-tmp"
@@ -45,7 +46,7 @@ echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/mo
 
 
 echo "*** Creating new combined modular jar"
-"$JAVA_HOME"/bin/javac --module-path "$combinedJarPath/combined" --patch-module combined="$combinedJarPath" "$basedir/target/module-info/combined/module-info.java"
+"$JAVA_HOME"/bin/javac --enable-preview -source 14 --module-path "$combinedJarPath/combined" --patch-module combined="$combinedJarPath" "$basedir/target/module-info/combined/module-info.java"
 cp $combinedJarPath "$basedir/target/modules/"
 "$JAVA_HOME"/bin/jar uf "$basedir/target/modules/combined.jar" -C "$basedir/target/module-info/combined" module-info.class
 

@@ -8,9 +8,7 @@ import net.i2p.router.RouterContext;
 import net.i2p.router.networkdb.kademlia.FloodfillNetworkDatabaseFacade;
 import net.i2p.router.transport.FIFOBandwidthRefiller;
 import net.i2p.router.transport.TransportUtil;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
+import org.json.*;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -180,7 +178,7 @@ public class RouterWrapper {
     try {
       File configFile = new File(i2PConfigDir, "config.json");
       if (configFile.exists()) {
-        JSONObject root = (JSONObject) new JSONParser().parse(Files.readString(configFile.toPath()));
+        JSONObject root = new JSONObject(Files.readString(configFile.toPath()));
         return ((Long) root.get("bandwidthLimitKBps")).intValue();
       } else return defaultBandwidthKBps;
     }
@@ -229,12 +227,12 @@ public class RouterWrapper {
 
     try {
       File configFile = new File(i2PConfigDir, "config.json");
-      JSONObject root = new JSONObject();;
+      JSONObject root = new JSONObject();
       if (configFile.exists()) {
-        root = (JSONObject) new JSONParser().parse(Files.readString(configFile.toPath()));
+        root = new JSONObject(Files.readString(configFile.toPath()));
       }
       root.put("bandwidthLimitKBps", n);
-      Files.writeString(configFile.toPath(), root.toJSONString());
+      Files.writeString(configFile.toPath(), root.toString(2));
     }
     catch (Exception e) {
       throw new RuntimeException(e);

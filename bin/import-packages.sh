@@ -17,7 +17,7 @@ fi
 
 cd "$basedir/import/i2p.i2p"
 git fetch
-git checkout tags/i2p-0.9.45
+git checkout tags/i2p-0.9.47
 cd ..
 
 if [ ! -d "$basedir/import/jdks" ]; then
@@ -27,19 +27,24 @@ if [ ! -d "$basedir/import/jdks" ]; then
   wget --directory-prefix=jdks/mac $JDK_DOWNLOAD_URL_MAC
   wget --directory-prefix=jdks/win $JDK_DOWNLOAD_URL_WIN
 
-  tar zxvf jdks/linux/$JDK_DOWNLOAD_FILENAME_LINUX -C jdks/linux/
-  tar zxvf jdks/mac/$JDK_DOWNLOAD_FILENAME_MAC -C jdks/mac/
-  unzip jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
+  tar zxf jdks/linux/$JDK_DOWNLOAD_FILENAME_LINUX -C jdks/linux/
+  tar zxf jdks/mac/$JDK_DOWNLOAD_FILENAME_MAC -C jdks/mac/
+  unzip -q jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
 fi
 
 if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
   wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.7-bin.tar.gz
-  tar zxvf apache-ant-1.10.7-bin.tar.gz
+  tar zxf apache-ant-1.10.7-bin.tar.gz
 fi
 
 if [ ! -d "$basedir/import/commons-compress-1.20" ]; then
   mkdir -p commons-compress-1.20
   wget --directory-prefix=commons-compress-1.20 https://repo1.maven.org/maven2/org/apache/commons/commons-compress/1.20/commons-compress-1.20.jar
+fi
+
+if [ ! -d "$basedir/import/org-json" ]; then
+  mkdir -p org-json
+  wget --directory-prefix=org-json https://repo1.maven.org/maven2/org/json/json/20200518/json-20200518.jar
 fi
 
 if [ ! -d "$basedir/import/jetty-lib" ]; then
@@ -62,9 +67,9 @@ if [ ! -d "$basedir/import/javafx-sdks" ]; then
   wget --directory-prefix=javafx-sdks/mac $JAVAFX_SDK_DOWNLOAD_URL_MAC
   wget --directory-prefix=javafx-sdks/win $JAVAFX_SDK_DOWNLOAD_URL_WIN
 
-  unzip javafx-sdks/linux/`basename $JAVAFX_SDK_DOWNLOAD_URL_LINUX` -d javafx-sdks/linux/
-  unzip javafx-sdks/mac/`basename $JAVAFX_SDK_DOWNLOAD_URL_MAC` -d javafx-sdks/mac/
-  unzip javafx-sdks/win/`basename $JAVAFX_SDK_DOWNLOAD_URL_WIN` -d javafx-sdks/win/
+  unzip -q javafx-sdks/linux/`basename $JAVAFX_SDK_DOWNLOAD_URL_LINUX` -d javafx-sdks/linux/
+  unzip -q javafx-sdks/mac/`basename $JAVAFX_SDK_DOWNLOAD_URL_MAC` -d javafx-sdks/mac/
+  unzip -q javafx-sdks/win/`basename $JAVAFX_SDK_DOWNLOAD_URL_WIN` -d javafx-sdks/win/
 fi
 
 if [ ! -d "$basedir/import/javafx-jmods" ]; then
@@ -74,14 +79,14 @@ if [ ! -d "$basedir/import/javafx-jmods" ]; then
   wget --directory-prefix=javafx-jmods/mac $JAVAFX_JMODS_DOWNLOAD_URL_MAC
   wget --directory-prefix=javafx-jmods/win $JAVAFX_JMODS_DOWNLOAD_URL_WIN
 
-  unzip javafx-jmods/linux/$JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX -d javafx-jmods/linux/
-  unzip javafx-jmods/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
-  unzip javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
+  unzip -q javafx-jmods/linux/$JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX -d javafx-jmods/linux/
+  unzip -q javafx-jmods/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
+  unzip -q javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
 fi
 
 if [ ! -d "$basedir/import/jpackage" ]; then
   mkdir -p jpackage/linux jpackage/win
-  unzip $JAVA_HOME_LINUX/jmods/jdk.incubator.jpackage.jmod -d jpackage/linux/
-  unzip $JAVA_HOME_WIN/jmods/jdk.incubator.jpackage.jmod -d jpackage/win/
+  unzip -q $JAVA_HOME_LINUX/jmods/jdk.incubator.jpackage.jmod -d jpackage/linux/
+  unzip -q $JAVA_HOME_WIN/jmods/jdk.incubator.jpackage.jmod -d jpackage/win/
 fi
 
