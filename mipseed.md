@@ -7,10 +7,11 @@
 6. Create a server tunnel for incoming I2P connections by typing: `router/bin/tunnel-control.sh server.create.vanity 127.0.0.1 8061 none xyz` replacing `xyz` with a 3 alphanumeric character vanity prefix for your public b32.i2p address. This command will take a few minutes to complete, depending on how fast your CPU is. If you do not want a vanity prefix, use the command: `router/bin/tunnel-control.sh server.create 127.0.0.1 8061`
 7. The command above will result in an I2P address being printed to the command line, which will end with `.b32.i2p`. This is your new I2P address.
 8. You now need to keep a backup of your private keys to your I2P address on another computer for safekeeping. Do this by taking a backup of the `~/.i2p-zero/config/tunnels.json` file
-9. Run monerod by typing the following, replacing `XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p` with your own I2P address that was printed from step 6: `monerod --tx-proxy i2p,127.0.0.1:8060 --add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p --add-peer spn4ef3gddveqxkco6fhh7epyxnvdmei4w6hioiiunfvvljxgcoa.b32.i2p --add-peer dsc7fyzzultm7y6pmx2avu6tze3usc7d27nkbzs5qwuujplxcmzq.b32.i2p --add-peer sel36x6fibfzujwvt4hf5gxolz6kd3jpvbjqg6o3ud2xtionyl2q.b32.i2p --add-peer yht4tm2slhyue42zy5p2dn3sft2ffjjrpuy7oc2lpbhifcidml4q.b32.i2p --anonymous-inbound XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p,127.0.0.1:8061 --prune-blockchain --detach`
-
+9. Run monerod by typing the following, replacing `XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p` with your own I2P address that was printed from step 6: `monerod --tx-proxy i2p,127.0.0.1:8060 --anonymous-inbound XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p,127.0.0.1:8061 --prune-blockchain --detach`
 
 That's it! You are now running a mipseed, which will itself be seeded by the manually added mipseeds specified with the --add-peer entries passed to monerod.
+
+Note: monerod versions v0.17.1.3 onwards comes with a list of hardcoded monerod peers accessible via I2p which are used to then discover further I2P peers. You can manually add peers to the list by passing `--add-peer` flags to the `monerod` command above. E.g. `--add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p`
 
 If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented [here](monerod-with-i2p-zero.md#setting-up-linux-services-so-that-monerod-and-i2p-zero-are-automatically-started).
 

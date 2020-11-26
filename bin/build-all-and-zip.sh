@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 if [ $(uname -s) = Darwin ]; then
     basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))

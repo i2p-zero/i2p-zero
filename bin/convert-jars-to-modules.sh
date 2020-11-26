@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 if [ $(uname -s) = Darwin ]; then
     basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
@@ -46,7 +48,7 @@ echo 'uses org.eclipse.jetty.http.HttpFieldPreEncoder; }' >> "$basedir/target/mo
 
 
 echo "*** Creating new combined modular jar"
-"$JAVA_HOME"/bin/javac --enable-preview -source 14 --module-path "$combinedJarPath/combined" --patch-module combined="$combinedJarPath" "$basedir/target/module-info/combined/module-info.java"
+"$JAVA_HOME"/bin/javac --module-path "$combinedJarPath/combined" --patch-module combined="$combinedJarPath" "$basedir/target/module-info/combined/module-info.java"
 cp $combinedJarPath "$basedir/target/modules/"
 "$JAVA_HOME"/bin/jar uf "$basedir/target/modules/combined.jar" -C "$basedir/target/module-info/combined" module-info.class
 

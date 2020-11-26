@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 if [ $(uname -s) = Darwin ]; then
     basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
@@ -8,13 +10,14 @@ fi
 
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
+# Get latest JDK version from https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot
 JDK_VERSION=14.0.1+7
-JDK_MAJOR_VERSION=`echo $JDK_VERSION | cut -f1 -d"."`
+JDK_MAJOR_VERSION=`echo $JDK_VERSION | cut -f1 -d"." | cut -f1 -d+`
 JDK_VERSION_URL_ENC=`echo "$JDK_VERSION" | sed 's/+/%2B/g'`
 JDK_VERSION_URL_ENC2=`echo "$JDK_VERSION" | sed 's/+/_/g'`
-JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_linux_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
-JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_mac_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
-JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk14-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_windows_hotspot_${JDK_VERSION_URL_ENC2}.zip
+JDK_DOWNLOAD_URL_LINUX=https://github.com/AdoptOpenJDK/openjdk${JDK_MAJOR_VERSION}-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_linux_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_MAC=https://github.com/AdoptOpenJDK/openjdk${JDK_MAJOR_VERSION}-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_mac_hotspot_${JDK_VERSION_URL_ENC2}.tar.gz
+JDK_DOWNLOAD_URL_WIN=https://github.com/AdoptOpenJDK/openjdk${JDK_MAJOR_VERSION}-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/OpenJDK${JDK_MAJOR_VERSION}U-jdk_x64_windows_hotspot_${JDK_VERSION_URL_ENC2}.zip
 
 JDK_DOWNLOAD_FILENAME_LINUX="${JDK_DOWNLOAD_URL_LINUX##*/}"
 JDK_DOWNLOAD_FILENAME_MAC="${JDK_DOWNLOAD_URL_MAC##*/}"
@@ -24,6 +27,7 @@ JAVA_HOME_LINUX=$basedir/import/jdks/linux/jdk-$JDK_VERSION
 JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-$JDK_VERSION/Contents/Home
 JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-$JDK_VERSION
 
+# JavaFX from https://gluonhq.com/products/javafx/
 JAVAFX_VERSION=14
 JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip

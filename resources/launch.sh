@@ -6,4 +6,4 @@ else
     basedir=$(dirname $(dirname $(readlink -fm $0)))
 fi
 
-"$basedir"/bin/java -cp "$basedir/i2p.base/jbigi.jar" -m org.getmonero.i2p.zero
+"$basedir"/bin/java --enable-preview -cp "$basedir/i2p.base/jbigi.jar" -m org.getmonero.i2p.zero

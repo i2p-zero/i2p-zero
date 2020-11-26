@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 if [ $(uname -s) = Darwin ]; then
     basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
@@ -9,7 +11,7 @@ fi
 source "$basedir/bin/java-config.sh"
 
 echo "*** Compiling CLI"
-"$JAVA_HOME"/bin/javac --enable-preview -source 14 --module-path "$basedir/target/modules/combined.jar" -d "$basedir/target/classes/org.getmonero.i2p.zero" $(find "$basedir/org.getmonero.i2p.zero/src" -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path "$basedir/target/modules/combined.jar" -d "$basedir/target/classes/org.getmonero.i2p.zero" $(find "$basedir/org.getmonero.i2p.zero/src" -name '*.java')
 cp "$basedir/org.getmonero.i2p.zero/src/org/getmonero/i2p/zero/VERSION" "$basedir/target/classes/org.getmonero.i2p.zero/org/getmonero/i2p/zero/"
 
 echo "*** Packaging CLI as a modular jar"
@@ -17,7 +19,7 @@ echo "*** Packaging CLI as a modular jar"
 normalizeZip "$basedir/target/org.getmonero.i2p.zero.jar"
 
 echo "*** Compiling GUI"
-"$JAVA_HOME"/bin/javac --enable-preview -source 14 --module-path "$basedir/target/org.getmonero.i2p.zero.jar:$basedir/target/modules/combined.jar:$basedir/import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib" -d "$basedir/target/classes/org.getmonero.i2p.zero.gui" $(find "$basedir/org.getmonero.i2p.zero.gui/src" -name '*.java')
+"$JAVA_HOME"/bin/javac --module-path "$basedir/target/org.getmonero.i2p.zero.jar:$basedir/target/modules/combined.jar:$basedir/import/javafx-sdks/linux/javafx-sdk-$JAVAFX_VERSION/lib" -d "$basedir/target/classes/org.getmonero.i2p.zero.gui" $(find "$basedir/org.getmonero.i2p.zero.gui/src" -name '*.java')
 
 cp -r "$basedir/org.getmonero.i2p.zero.gui/src/org/getmonero/i2p/zero/gui/"*.{css,png,fxml,ttf} "$basedir/target/classes/org.getmonero.i2p.zero.gui/org/getmonero/i2p/zero/gui/"
 

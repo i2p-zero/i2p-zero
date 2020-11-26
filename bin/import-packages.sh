@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+set -o pipefail
 
 if [ $(uname -s) = Darwin ]; then
     basedir=$(dirname $(cd "$(dirname "$0")"; pwd -P))
@@ -79,14 +81,18 @@ if [ ! -d "$basedir/import/javafx-jmods" ]; then
   wget --directory-prefix=javafx-jmods/mac $JAVAFX_JMODS_DOWNLOAD_URL_MAC
   wget --directory-prefix=javafx-jmods/win $JAVAFX_JMODS_DOWNLOAD_URL_WIN
 
+  set +e
   unzip -q javafx-jmods/linux/$JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX -d javafx-jmods/linux/
   unzip -q javafx-jmods/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
   unzip -q javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
+  set -e
 fi
 
 if [ ! -d "$basedir/import/jpackage" ]; then
   mkdir -p jpackage/linux jpackage/win
+  set +e
   unzip -q $JAVA_HOME_LINUX/jmods/jdk.incubator.jpackage.jmod -d jpackage/linux/
   unzip -q $JAVA_HOME_WIN/jmods/jdk.incubator.jpackage.jmod -d jpackage/win/
+  set -e
 fi
 

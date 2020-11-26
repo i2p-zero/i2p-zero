@@ -98,6 +98,17 @@ public class Controller {
     return (Stage) rootBorderPane.getScene().getWindow();
   }
 
+  public static class DialogRefs {
+    public Scene scene;
+    public Stage stage;
+    public AddTunnelController controller;
+    public DialogRefs(Scene scene, Stage stage, AddTunnelController controller) {
+      this.scene = scene;
+      this.stage = stage;
+      this.controller = controller;
+    }
+  }
+
   @FXML private void initialize() {
 
     // set up copy-cell-to-clipboard functionality
@@ -134,7 +145,6 @@ public class Controller {
       tunnelRemoveButton.setDisable(true);
     });
 
-    record DialogRefs(Scene scene, Stage stage, AddTunnelController controller){};
     Supplier<DialogRefs> showAddTunnelDialog = ()->{
       try {
         Stage dialogStage = new Stage();
