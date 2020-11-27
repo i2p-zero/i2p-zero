@@ -11,7 +11,7 @@
 
 That's it! You are now running a mipseed, which will itself be seeded by the manually added mipseeds specified with the --add-peer entries passed to monerod.
 
-Note: monerod versions v0.17.1.3 onwards comes with a list of hardcoded monerod peers accessible via I2p which are used to then discover further I2P peers. You can manually add peers to the list by passing `--add-peer` flags to the `monerod` command above. E.g. `--add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p`
+Note: monerod versions v0.17.1.3 onwards comes with a list of hardcoded monerod peers accessible via I2P which are used to then discover further I2P peers. You can manually add peers to the list by passing `--add-peer` flags to the `monerod` command above. E.g. `--add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p`
 
 If you are running Linux, it would be useful to set this all up to run automatically if the machine is ever rebooted. You can do this by creating systemd service files, as documented [here](monerod-with-i2p-zero.md#setting-up-linux-services-so-that-monerod-and-i2p-zero-are-automatically-started).
 

@@ -8,9 +8,7 @@
 7. The command above will result in an I2P address being printed to the command line, which will end with `.b32.i2p`. This is your new I2P address.
 8. Run monerod by typing the following, replacing `XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p` with your own I2P address that was printed from step 6: `monerod --tx-proxy i2p,127.0.0.1:8060 --anonymous-inbound XXXXXXXXXXXXXXXXXXXXXXXXXXXXX.b32.i2p,127.0.0.1:8061 --prune-blockchain --detach`
 
-That's it! Do not replace the dsc****.b32.i2p address with yours, only replace the XXXXXXX.b32.i2p one. The dsc****.b32.i2p is a seed node that will help you discover other I2P-accessible monero nodes.
-
-Note: monerod versions v0.17.1.3 onwards comes with a list of hardcoded monerod peers accessible via I2p which are used to then discover further I2P peers. You can manually add peers to the list by passing `--add-peer` flags to the `monerod` command above. E.g. `--add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p`
+Note: monerod versions v0.17.1.3 onwards comes with a list of hardcoded monerod peers accessible via I2P which are used to then discover further I2P peers. You can manually add peers to the list by passing `--add-peer` flags to the `monerod` command above. E.g. `--add-peer core5hzivg4v5ttxbor4a3haja6dssksqsmiootlptnsrfsgwqqa.b32.i2p`
 
 ## Setting up Linux services so that monerod and I2P-zero are automatically started
 
