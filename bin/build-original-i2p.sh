@@ -15,14 +15,14 @@ cd "$basedir/import"
 # build the jars we're going to modularize
 cd "$basedir/import/i2p.i2p"
 export LG2=en
-"$basedir"/import/apache-ant-1.10.7/bin/ant buildRouter buildI2PTunnelJars buildSAM jbigi
+"$basedir"/import/apache-ant-1.10.7/bin/ant buildRouter buildI2PTunnelJars buildSAM jbigi buildAddressbook
 cd ..
 
 
 # copy the jars that we're going to modularize
 rm -fr "$basedir/import/lib"
 mkdir -p "$basedir/import/lib"
-for i in i2ptunnel.jar i2p.jar mstreaming.jar router.jar sam.jar streaming.jar; do cp "$basedir/import/i2p.i2p/build/$i" "$basedir/import/lib/"; done
+for i in addressbook.jar i2ptunnel.jar i2p.jar mstreaming.jar router.jar sam.jar streaming.jar; do cp "$basedir/import/i2p.i2p/build/$i" "$basedir/import/lib/"; done
 
 # build a minimal i2p.base dir
 rm -fr "$basedir/import/i2p.base"
