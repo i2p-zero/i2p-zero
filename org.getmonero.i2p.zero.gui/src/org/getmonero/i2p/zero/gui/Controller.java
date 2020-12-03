@@ -361,10 +361,12 @@ public class Controller {
       }
       var tunnelList = getRouterWrapper().getTunnelControl().getTunnelList();
       tunnelList.addChangeListener(tunnels->{
-        tunnelTableList.clear();
-        tunnels.stream().filter(Tunnel::getEnabled).forEach(tunnelTableList::add);
+        Platform.runLater(() -> {
+          tunnelTableList.clear();
+          tunnels.stream().filter(Tunnel::getEnabled).forEach(tunnelTableList::add);
+        });
       });
-      getRouterWrapper().getTunnelControl().getTunnelList().fireChangeEvent();
+      Platform.runLater(() -> getRouterWrapper().getTunnelControl().getTunnelList().fireChangeEvent());
     }).start();
   }
 
