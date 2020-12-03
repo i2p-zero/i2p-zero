@@ -27,14 +27,14 @@ Download the latest binary releases for Mac/Windows/Linux here: https://github.c
 
 The zero-dependency distribution sizes are as follows:
 
-OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.19 Reproducible build SHA-256
+OS           | Uncompressed size (MB)  | Compressed size (MB)  | v1.20 Reproducible build SHA-256
 ------------ | ----------------------- | --------------------- | ------------------------------------------------------------------
-Mac          | 37.9                    | 26.4                  | `89d59663efb2c7b23ba33c6045f228d87b2d075a0a7c7474885ff3bf13619744`
-Windows      | 47.5                    | 32.4                  | `09f7041b68e34c66cdd786151910e662beaeee7cde45ee6047adf67fc2e1d283`
-Linux        | 61.5                    | 36.3                  | `7eb8967e6f691a621e55bd8ef54ceea5fd567a1ed229dd6768c138d749066330`
-Mac GUI      | 61.2                    | 45.8                  | `e86b78a0d3f497daa9fd6d90b2210836534422496a2856d309d341b868572631`
-Windows GUI  | 69.4                    | 50.6                  | `27dc2013a8a6ecd96a1f3c5d8c3c79484b05db73499231553446104dc1b2ba18`
-Linux GUI    | 86.6                    | 56.5                  | `7c296373c14437689edfad9cbae1ea635ca72c6b2cfe224e4b090aced141c721`
+Mac          | 38.5                    | 26.5                  | `9d35c9d31e7c8c820736f7437e02d928f325f4197cf19c7720196c1e586ce1a1`
+Windows      | 47.8                    | 32.4                  | `37c38e66a1f4935a21c2514eb4692827834ec8bd9c2dfc11d6871f7a07dbdd16`
+Linux        | 61.3                    | 36.6                  | `7e7216b281624ec464b55217284017576d109eaba7b35f7e4994ae2a78634de7`
+Mac GUI      | 61.2                    | 45.9                  | `9278fce1196555fd9823d74b716cb0370bac26b964a50b4e9a11eae0f2107eb4`
+Windows GUI  | 70.3                    | 50.7                  | `20723da50684c6a6581b36f8c7a90e9d63baf0e4848e0b781a343ad1791ab2a0`
+Linux GUI    | 87.4                    | 56.9                  | `1852ecf426d87c6931b163964fa55ddc09da60ede217da1f033a6f78acce2ad1`
 
 Note: Reproducible builds are currently experimental. Due to JDK differences, Builds on Mac will consistently have different hashes than builds on Linux. Official releases will always be built using Docker.
 

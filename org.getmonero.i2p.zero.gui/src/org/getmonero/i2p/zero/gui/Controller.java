@@ -415,9 +415,11 @@ public class Controller {
       });
     });
     routerWrapper.start(()->{
-      helpTextArea.setText("You are running I2P-zero version " + UpdateCheck.currentVersion + "\n\n"
-        + "For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others.\n\n"
-        + helpTextArea.getText());
+      Platform.runLater(() -> {
+        helpTextArea.setText("You are running I2P-zero version " + UpdateCheck.currentVersion + "\n\n"
+          + "For best performance, please open port " + routerWrapper.routerExternalPort + " on your firewall for incoming UDP and TCP connections. This port has been randomly assigned to you. For privacy reasons, please do not share this port with others.\n\n"
+          + helpTextArea.getText());
+      });
     });
 
   }

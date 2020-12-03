@@ -11,7 +11,7 @@ fi
 export JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF8
 
 # Get latest JDK version from https://adoptopenjdk.net/releases.html?variant=openjdk15&jvmVariant=hotspot
-JDK_VERSION=14.0.1+7
+JDK_VERSION=14.0.2+12
 JDK_MAJOR_VERSION=`echo $JDK_VERSION | cut -f1 -d"." | cut -f1 -d+`
 JDK_VERSION_URL_ENC=`echo "$JDK_VERSION" | sed 's/+/%2B/g'`
 JDK_VERSION_URL_ENC2=`echo "$JDK_VERSION" | sed 's/+/_/g'`
@@ -28,7 +28,7 @@ JAVA_HOME_MAC=$basedir/import/jdks/mac/jdk-$JDK_VERSION/Contents/Home
 JAVA_HOME_WIN=$basedir/import/jdks/win/jdk-$JDK_VERSION
 
 # JavaFX from https://gluonhq.com/products/javafx/
-JAVAFX_VERSION=14
+JAVAFX_VERSION=15.0.1
 JAVAFX_SDK_DOWNLOAD_URL_LINUX=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_linux-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_MAC=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_osx-x64_bin-sdk.zip
 JAVAFX_SDK_DOWNLOAD_URL_WIN=https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/openjfx-${JAVAFX_VERSION}_windows-x64_bin-sdk.zip
