@@ -19,6 +19,7 @@ function buildZero
 	!system "chmod +x build-docker.sh"
 	!system ./build-docker.sh
 	!system "unzip dist-zip/i2p-zero-win-gui.*.zip"
+	!system "rm -rf I2P-Zero"
 	!system "mv i2p-zero-win-gui.* I2P-Zero"
 functionEnd
 
@@ -33,9 +34,6 @@ function installZero
 
 		CreateShortcut "$SMPROGRAMS\Run I2P-Zero.lnk" "$ZEROINSTDIR\router\i2p-zero.exe"
 	${EndIf}
-
-
-
 
 functionEnd
 
