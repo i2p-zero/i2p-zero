@@ -2,7 +2,9 @@
 !define ZERONAME "I2P-Zero"
 !define I2P64INSTDIR "$PROGRAMFILES64\I2P\"
 !define I2P32INSTDIR "$PROGRAMFILES32\I2P\"
-!define ZEROINSTDIR "$PROGRAMFILES64\${APPNAME}\"
+!define ZEROINSTDIR "$PROGRAMFILES64\${ZERONAME}\"
+# Include the logic library for checking file exists.
+!include LogicLib.nsh
 
 function buildZero
 	!system "echo '#! /usr/bin/env sh' > build-docker.sh"
@@ -24,15 +26,15 @@ function buildZero
 functionEnd
 
 function installZero
-	${If} ${FileExists} `$I2P64INSTDIR\I2P.exe`
-		SetOutPath $ZEROINSTDIR
-	${If} ${FileExists} `$I2P32INSTDIR\I2P.exe`
-		SetOutPath $ZEROINSTDIR
+	${If} ${FileExists} "${I2P64INSTDIR}\I2P.exe"
+		SetOutPath "${ZEROINSTDIR}"
+	${If} ${FileExists} "${I2P32INSTDIR}\I2P.exe"
+		SetOutPath "${ZEROINSTDIR}"
 	${Else}
-		SetOutPath $ZEROINSTDIR
+		SetOutPath "${ZEROINSTDIR}"
 		File /a /r "./I2P-Zero/"
 
-		CreateShortcut "$SMPROGRAMS\Run I2P-Zero.lnk" "$ZEROINSTDIR\router\i2p-zero.exe"
+		CreateShortcut "$SMPROGRAMS\Run I2P-Zero.lnk" "${ZEROINSTDIR}\router\i2p-zero.exe"
 	${EndIf}
 
 functionEnd
