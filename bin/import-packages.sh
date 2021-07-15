@@ -13,14 +13,21 @@ source "$basedir/bin/java-config.sh"
 mkdir -p "$basedir/import"
 cd "$basedir/import"
 
-if [ ! -d "$basedir/import/i2p.i2p" ]; then
-  git clone https://github.com/i2p/i2p.i2p.git
+i2pTag="i2p-0.9.48"
+
+if [ -d "$basedir/import/i2p.i2p" ]; then
+  cd "$basedir/import/i2p.i2p"
+  # check if we've shallow-copied the commit for the required i2p tag
+  if [[ ! ("$(git tag)" == "$i2pTag" && "$(git rev-list -n 1 $i2pTag)" == "$(git rev-parse HEAD)") ]]; then
+    cd ..
+    rm -fr "$basedir/import/i2p.i2p"
+  else
+    cd ..
+  fi
+else
+  git clone --branch $i2pTag --depth 1 https://github.com/i2p/i2p.i2p.git
 fi
 
-cd "$basedir/import/i2p.i2p"
-git fetch
-git checkout tags/i2p-0.9.48
-cd ..
 
 if [ ! -d "$basedir/import/jdks" ]; then
   mkdir -p jdks
