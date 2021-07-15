@@ -54,7 +54,7 @@ containerId=$(docker run -td --rm ubuntu)
 docker exec -ti $containerId bash -c  '\
   apt-get update \
   && apt-get -y install git wget zip unzip \
-  && git clone https://github.com/i2p-zero/i2p-zero.git \
+  && git clone https://github.com/i2p-zero/i2p-zero.git --depth 1 \
   && cd i2p-zero && bash bin/build-all-and-zip.sh'
 docker cp $containerId:/i2p-zero/dist-zip ./
 docker container stop $containerId
@@ -70,7 +70,7 @@ containerId=$(sudo docker run -td --rm ubuntu)
 sudo docker exec -ti $containerId bash -c  '\
   apt-get update \
   && apt-get -y install git wget zip unzip \
-  && git clone https://github.com/i2p-zero/i2p-zero.git \
+  && git clone https://github.com/i2p-zero/i2p-zero.git --depth 1 \
   && cd i2p-zero && bash bin/build-all-and-zip.sh'
 sudo docker cp $containerId:/i2p-zero/dist-zip ./
 sudo docker container stop $containerId
