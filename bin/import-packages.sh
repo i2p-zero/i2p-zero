@@ -29,17 +29,15 @@ else
 fi
 
 
-if [ ! -d "$basedir/import/jdks" ]; then
-  mkdir -p jdks
-  mkdir -p jdks/linux jdks/mac jdks/win
-  wget --directory-prefix=jdks/linux $JDK_DOWNLOAD_URL_LINUX
-  wget --directory-prefix=jdks/mac $JDK_DOWNLOAD_URL_MAC
-  wget --directory-prefix=jdks/win $JDK_DOWNLOAD_URL_WIN
+for target in ${TARGETS};do
+  if [ ! -d "$basedir/import/jdks/${target}" ]; then
+    mkdir -p jdks/${target}
 
-  tar zxf jdks/linux/$JDK_DOWNLOAD_FILENAME_LINUX -C jdks/linux/
-  tar zxf jdks/mac/$JDK_DOWNLOAD_FILENAME_MAC -C jdks/mac/
-  unzip -q jdks/win/$JDK_DOWNLOAD_FILENAME_WIN -d jdks/win/
-fi
+    JDK_FILENAME=${variables["JDK_DOWNLOAD_FILENAME_$target"]}
+    wget --directory-prefix=jdks/${target} "https://github.com/AdoptOpenJDK/openjdk${JDK_MAJOR_VERSION}-binaries/releases/download/jdk-${JDK_VERSION_URL_ENC}/${JDK_FILENAME}"
+    ${variables["DECOMPRESS_$target"]} jdks/${target}/${JDK_FILENAME}
+  fi
+done;
 
 if [ ! -d "$basedir/import/apache-ant-1.10.7" ]; then
   wget https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.7-bin.tar.gz
@@ -68,38 +66,30 @@ if [ ! -d "$basedir/import/jetty-lib" ]; then
   wget --directory-prefix=jetty-lib https://repo1.maven.org/maven2/org/eclipse/jetty/jetty-jmx/9.4.26.v20200117/jetty-jmx-9.4.26.v20200117.jar
 fi
 
-if [ ! -d "$basedir/import/javafx-sdks" ]; then
-  mkdir -p javafx-sdks
-  mkdir -p javafx-sdks/linux javafx-sdks/mac javafx-sdks/win
+for target in ${TARGETS};do
+  if [ ! -d "$basedir/import/javafx-sdks/${target}" ]; then
+    mkdir -p javafx-sdks/${target}
+    SDK_FILENAME=${variables["JAVAFX_SDK_FILENAME_$target"]}
+    wget --directory-prefix=javafx-sdks/${target} https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/${SDK_FILENAME}
+    unzip -q javafx-sdks/${target}/${SDK_FILENAME} -d javafx-sdks/${target}/
+  fi
+done;
 
-  wget --directory-prefix=javafx-sdks/linux $JAVAFX_SDK_DOWNLOAD_URL_LINUX
-  wget --directory-prefix=javafx-sdks/mac $JAVAFX_SDK_DOWNLOAD_URL_MAC
-  wget --directory-prefix=javafx-sdks/win $JAVAFX_SDK_DOWNLOAD_URL_WIN
+for target in ${TARGETS};do
+  if [ ! -d "$basedir/import/javafx-jmods/${target}" ]; then
+    mkdir -p javafx-jmods/${target}
+    wget --directory-prefix=javafx-jmods/${target} https://download2.gluonhq.com/openjfx/$JAVAFX_VERSION/${variables["JAVAFX_JMODS_FILENAME_$target"]}
+    set +e
+    unzip -q javafx-jmods/${target}/${variables["JAVAFX_JMODS_FILENAME_$target"]} -d javafx-jmods/${target}/
+    set -e
+  fi
+done;
 
-  unzip -q javafx-sdks/linux/`basename $JAVAFX_SDK_DOWNLOAD_URL_LINUX` -d javafx-sdks/linux/
-  unzip -q javafx-sdks/mac/`basename $JAVAFX_SDK_DOWNLOAD_URL_MAC` -d javafx-sdks/mac/
-  unzip -q javafx-sdks/win/`basename $JAVAFX_SDK_DOWNLOAD_URL_WIN` -d javafx-sdks/win/
-fi
-
-if [ ! -d "$basedir/import/javafx-jmods" ]; then
-  mkdir -p javafx-jmods
-  mkdir -p javafx-jmods/linux javafx-jmods/mac javafx-jmods/win
-  wget --directory-prefix=javafx-jmods/linux $JAVAFX_JMODS_DOWNLOAD_URL_LINUX
-  wget --directory-prefix=javafx-jmods/mac $JAVAFX_JMODS_DOWNLOAD_URL_MAC
-  wget --directory-prefix=javafx-jmods/win $JAVAFX_JMODS_DOWNLOAD_URL_WIN
-
-  set +e
-  unzip -q javafx-jmods/linux/$JAVAFX_JMODS_DOWNLOAD_FILENAME_LINUX -d javafx-jmods/linux/
-  unzip -q javafx-jmods/mac/$JAVAFX_JMODS_DOWNLOAD_FILENAME_MAC -d javafx-jmods/mac/
-  unzip -q javafx-jmods/win/$JAVAFX_JMODS_DOWNLOAD_FILENAME_WIN -d javafx-jmods/win/
-  set -e
-fi
-
-if [ ! -d "$basedir/import/jpackage" ]; then
-  mkdir -p jpackage/linux jpackage/win
-  set +e
-  unzip -q $JAVA_HOME_LINUX/jmods/jdk.incubator.jpackage.jmod -d jpackage/linux/
-  unzip -q $JAVA_HOME_WIN/jmods/jdk.incubator.jpackage.jmod -d jpackage/win/
-  set -e
-fi
-
+for target in ${TARGETS};do
+  if [ ${target} != "mac" ] && [ ! -d "$basedir/import/jpackage/${target}" ]; then
+    mkdir -p jpackage/${target}
+    set +e
+    unzip -q jdks/${target}/${variables["JAVA_HOME_$target"]}/jmods/jdk.incubator.jpackage.jmod -d jpackage/${target}/
+    set -e
+  fi
+done;

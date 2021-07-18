@@ -27,34 +27,35 @@ echo "*** Packaging GUI as a modular jar"
 "$JAVA_HOME"/bin/jar --create --file "$basedir/target/org.getmonero.i2p.zero.gui.jar" --main-class org.getmonero.i2p.zero.gui.Gui -C "$basedir/target/classes/org.getmonero.i2p.zero.gui" .
 normalizeZip "$basedir/target/org.getmonero.i2p.zero.gui.jar"
 
-rm -fr "$basedir/dist"
-for i in linux mac win linux-gui mac-gui win-gui; do mkdir -p "$basedir/dist/$i"; done
+for target in ${TARGETS}; do
+  for i in ${target} ${target}-gui; do
+    rm -fr "$basedir/dist/$i"
+    mkdir -p "$basedir/dist/$i"
+  done
+done
 
 # create OS specific launchers which will bundle together the code and a minimal JVM
-for i in linux mac win; do
+for i in ${TARGETS}; do
   echo "*** Performing jlink ($i)"
 
-  case $i in
-    linux )
-        JAVA_HOME_VARIANT=${JAVA_HOME_LINUX} ;;
-    mac )
-        JAVA_HOME_VARIANT=${JAVA_HOME_MAC} ;;
-    win )
-        JAVA_HOME_VARIANT=${JAVA_HOME_WIN} ;;
-  esac
+  JAVA_HOME_VARIANT=$basedir/import/jdks/${i}/${variables["JAVA_HOME_$i"]}
   echo "Using JAVA_HOME_VARIANT: $JAVA_HOME_VARIANT"
   "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":"$basedir/target/modules":"$basedir/target/org.getmonero.i2p.zero.jar" --add-modules combined,org.getmonero.i2p.zero --output "$basedir/dist/$i/router" --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
   "$JAVA_HOME"/bin/jlink --module-path "${JAVA_HOME_VARIANT}/jmods":"$basedir/import/javafx-jmods/$i/javafx-jmods-${JAVAFX_VERSION}":"$basedir/target/modules":"$basedir/target/org.getmonero.i2p.zero.jar":"$basedir/target/org.getmonero.i2p.zero.gui.jar" --add-modules combined,org.getmonero.i2p.zero,org.getmonero.i2p.zero.gui,javafx.controls,javafx.fxml,java.desktop --output "$basedir/dist/$i-gui/router" --compress 2 --no-header-files --no-man-pages --order-resources=**/module-info.class,/java.base/java/lang/**,**javafx**
 done
 
-for i in mac-gui; do
-  cp "$basedir/resources/launch-gui.sh" "$basedir/dist/$i/router/bin/"
+if [[ "$TARGETS" =~ "mac" ]]; then
+  cp "$basedir/resources/launch-gui.sh" "$basedir/dist/mac-gui/router/bin/"
+fi
+
+for target in ${TARGETS}; do
+  for i in ${target} ${target}-gui; do
+    cp -r "$basedir/import/i2p.base" "$basedir/dist/$i/router/";
+  done
 done
 
-for i in linux mac win linux-gui mac-gui win-gui; do cp -r "$basedir/import/i2p.base" "$basedir/dist/$i/router/"; done
-
 # remove unnecessary native libs from jbigi.jar
-for i in linux mac win; do
+for i in ${TARGETS}; do
   for j in freebsd linux mac win; do
     if [ "$i" != "$j" ]; then
       if [ "$j" = "mac" ]; then j="osx"; fi
@@ -67,45 +68,55 @@ for i in linux mac win; do
 done
 
 
-
 # build mac gui app structure
-mv "$basedir/dist/mac-gui/router" "$basedir/dist/mac-gui/router-tmp"
-mkdir -p "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
-cp -R "$basedir/resources/i2p-zero.app" "$basedir/dist/mac-gui/router/"
-mv "$basedir/dist/mac-gui/router-tmp"/* "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
-rm -fr "$basedir/dist/mac-gui/router-tmp"
+if [[ "$TARGETS" =~ "mac" ]]; then
+  mv "$basedir/dist/mac-gui/router" "$basedir/dist/mac-gui/router-tmp"
+  mkdir -p "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
+  cp -R "$basedir/resources/i2p-zero.app" "$basedir/dist/mac-gui/router/"
+  mv "$basedir/dist/mac-gui/router-tmp"/* "$basedir/dist/mac-gui/router/i2p-zero.app/Contents/MacOS/"
+  rm -fr "$basedir/dist/mac-gui/router-tmp"
+fi
 
 
 # build linux and linux-gui app structure
-for i in linux linux-gui; do
-  mv "$basedir/dist/$i/router" "$basedir/dist/$i/router-tmp"
-  mkdir -p "$basedir/dist/$i/router/bin"
-  mkdir -p "$basedir/dist/$i/router/lib"
-  cp "$basedir/import/jpackage/linux/classes/jdk/incubator/jpackage/internal/resources/jpackageapplauncher" "$basedir/dist/$i/router/bin/i2p-zero"
-  chmod +x "$basedir/dist/$i/router/bin/i2p-zero"
-  mkdir -p "$basedir/dist/$i/router/lib/app"
-  cp "$basedir/resources/i2p-zero.$i.cfg" "$basedir/dist/$i/router/lib/app/i2p-zero.cfg"
-  mv "$basedir/dist/$i/router-tmp" "$basedir/dist/$i/router/lib/runtime"
-  cp "$basedir/import/jpackage/linux/classes/jdk/incubator/jpackage/internal/resources/libapplauncher.so" "$basedir/dist/$i/router/lib/"
-done
+if [[ "$TARGETS" =~ "linux" ]]; then
+  for i in linux linux-gui; do
+    mv "$basedir/dist/$i/router" "$basedir/dist/$i/router-tmp"
+    mkdir -p "$basedir/dist/$i/router/bin"
+    mkdir -p "$basedir/dist/$i/router/lib"
+    cp "$basedir/import/jpackage/linux/classes/jdk/incubator/jpackage/internal/resources/jpackageapplauncher" "$basedir/dist/$i/router/bin/i2p-zero"
+    chmod +x "$basedir/dist/$i/router/bin/i2p-zero"
+    mkdir -p "$basedir/dist/$i/router/lib/app"
+    cp "$basedir/resources/i2p-zero.$i.cfg" "$basedir/dist/$i/router/lib/app/i2p-zero.cfg"
+    mv "$basedir/dist/$i/router-tmp" "$basedir/dist/$i/router/lib/runtime"
+    cp "$basedir/import/jpackage/linux/classes/jdk/incubator/jpackage/internal/resources/libapplauncher.so" "$basedir/dist/$i/router/lib/"
+  done
 
-cp "$basedir/i2p-zero.png" "$basedir/dist/linux-gui/router/lib/"
+  cp "$basedir/i2p-zero.png" "$basedir/dist/linux-gui/router/lib/"
+fi
+
 
 # build win and win-gui app structure
-for i in win win-gui; do
-  mv "$basedir/dist/$i/router" "$basedir/dist/$i/router-tmp"
-  mkdir -p "$basedir/dist/$i/router/app"
-  cp "$basedir/resources/i2p-zero.$i.cfg" "$basedir/dist/$i/router/app/i2p-zero.cfg"
-  mv "$basedir/dist/$i/router-tmp" "$basedir/dist/$i/router/runtime"
-  cp "$basedir/resources/launcher.exe" "$basedir/dist/$i/router/i2p-zero.exe"
-  cp "$basedir/import/jpackage/win/classes/jdk/incubator/jpackage/internal/resources/applauncher.dll" "$basedir/dist/$i/router/"
+if [[ "$TARGETS" =~ "win" ]]; then
+  for i in win win-gui; do
+    mv "$basedir/dist/$i/router" "$basedir/dist/$i/router-tmp"
+    mkdir -p "$basedir/dist/$i/router/app"
+    cp "$basedir/resources/i2p-zero.$i.cfg" "$basedir/dist/$i/router/app/i2p-zero.cfg"
+    mv "$basedir/dist/$i/router-tmp" "$basedir/dist/$i/router/runtime"
+    cp "$basedir/resources/launcher.exe" "$basedir/dist/$i/router/i2p-zero.exe"
+    cp "$basedir/import/jpackage/win/classes/jdk/incubator/jpackage/internal/resources/applauncher.dll" "$basedir/dist/$i/router/"
+  done
+fi
+
+for i in ${TARGETS}; do
+  if [ ${i} != "win" ]; then
+    cp "$basedir/resources/tunnel-control.sh" "$basedir/dist/$i/router/bin/"
+  fi
 done
 
-for i in linux mac; do
-  cp "$basedir/resources/tunnel-control.sh" "$basedir/dist/$i/router/bin/"
-done
-
-cp "$basedir/resources/launch.sh" "$basedir/dist/mac/router/bin/"
+if [[ "$TARGETS" =~ "mac" ]]; then
+  cp "$basedir/resources/launch.sh" "$basedir/dist/mac/router/bin/"
+fi
 
 # show distribution sizes
 du -sk "$basedir/dist/"* | awk '{printf "%.1f MB %s\n",$1/1024,$2}'
