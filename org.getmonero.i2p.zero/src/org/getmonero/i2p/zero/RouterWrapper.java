@@ -45,13 +45,20 @@ public class RouterWrapper {
     routerProperties.put("i2p.dir.config", System.getProperty("user.home") + File.separator + ".i2p-zero" + File.separator + "config");
 
     i2PConfigDir = new File(routerProperties.getProperty("i2p.dir.config"));
-    if(!i2PConfigDir.exists()) i2PConfigDir.mkdirs();
+    boolean createdConfigDir = false;
+    if(!i2PConfigDir.exists()) {
+      i2PConfigDir.mkdirs();
+      createdConfigDir = true;
+    }
 
     i2PBaseDir = new File(routerProperties.getProperty("i2p.dir.base"));
     if(!i2PBaseDir.exists()) {
       i2PBaseDir.mkdirs();
       copyFolderRecursively(Path.of(routerProperties.getProperty("i2p.dir.base.template")), i2PBaseDir.toPath());
     }
+
+    if(createdConfigDir)
+      copyFolderRecursively(i2PBaseDir.toPath().resolve("hosts.txt") , i2PConfigDir.toPath().resolve("hosts.txt"));
   }
 
   public Router getRouter() {
@@ -100,7 +107,7 @@ public class RouterWrapper {
           while(true) {
             if(router.isAlive()) {                  
               try {
-                File routerConfigFile = new File(i2PBaseDir, "router.config");
+                File routerConfigFile = new File(i2PConfigDir, "router.config");
                 if(!(routerConfigFile.exists() && routerConfigFile.canRead())) {
                   Thread.sleep(100);
                   continue;
