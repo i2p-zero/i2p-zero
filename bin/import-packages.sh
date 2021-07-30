@@ -13,7 +13,7 @@ source "$basedir/bin/java-config.sh"
 mkdir -p "$basedir/import"
 cd "$basedir/import"
 
-i2pTag="i2p-0.9.48"
+i2pTag="i2p-0.9.50"
 
 if [ -d "$basedir/import/i2p.i2p" ]; then
   cd "$basedir/import/i2p.i2p"
