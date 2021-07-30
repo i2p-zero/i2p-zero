@@ -34,3 +34,5 @@ for i in blocklist.txt hosts.txt certificates; do cp -r "$basedir/import/i2p.i2p
 mkdir -p "$basedir/import/i2p.base/geoip"
 for i in dohservers.txt countries.txt; do cp -r "$basedir/import/i2p.i2p/core/resources/$i" "$basedir/import/i2p.base/geoip/"; done
 cp "$basedir/import/i2p.i2p/router/resources/continents.txt" "$basedir/import/i2p.base/geoip/"
+cp "$basedir/import/i2p.i2p/installer/resources/GeoLite2-Country.mmdb.gz" "$basedir/import/i2p.base/geoip/"
+gunzip "$basedir/import/i2p.base/geoip/GeoLite2-Country.mmdb.gz"
